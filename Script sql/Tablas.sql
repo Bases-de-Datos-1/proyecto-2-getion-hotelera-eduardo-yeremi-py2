@@ -15,7 +15,13 @@ CREATE TABLE Roles (
 );
 
 
+-- Tabla de Paises, para que queden mejor la direcciones y codigos de telefono:
+CREATE TABLE Paises (
+    IdPais SMALLINT IDENTITY(1,1) PRIMARY KEY,
+    NombrePais Varchar(30) NOT NULL,
+    CodigoPais Varchar(7) NOT NULL
 
+);
 
 
 -- Tabla Provinvia (para la direccion)
@@ -207,7 +213,11 @@ CREATE TABLE Cliente (
     Cedula VARCHAR(15) PRIMARY KEY,
     NombreCompleto VARCHAR(50) NOT NULL,
     TipoIdentificacion VARCHAR(20) NOT NULL,
-    PaisResidencia VARCHAR(50) NOT NULL,
+
+    -- Esto va a cambiar ahora para que funcione con la tabla de paises:
+    -- PaisResidencia VARCHAR(50) NOT NULL,
+    IdPais SMALLINT NOT NULL, -- Esta es la nuva forma de optener el lugar de residencia de los clientes.
+
     FechaNacimiento DATE CHECK (FechaNacimiento < GETDATE()) NOT NULL,
     CorreoElectronico Varchar(50) NOT NULL UNIQUE,
     --IdDireccion SMALLINT NULL,
@@ -231,16 +241,19 @@ CREATE TABLE Cliente (
 
     --CONSTRAINT FK_Cliente_Rol FOREIGN KEY (IdRol) REFERENCES Roles(IdRol), -- Correcciones para el rol del usuario
 
+    -- Relacionar al cliente con su pais
+    CONSTRAINT FK_Client_Pais FOREIGN KEY (IdPais) REFERENCES Paises(IdPais),
 
 );
 
--- Tabla: Telefono
+-- Tabla: Telefono de los clientes
 CREATE TABLE Telefono (
     IdTelefono SMALLINT IDENTITY(1,1) PRIMARY KEY,
     IdUsuario VARCHAR(15) NOT NULL,
-    CodigoPais VARCHAR(5) NULL,
+    --IdPais SMALLINT NOT NULL, -- Correccion: Esto ahora se puede puede optener desde el pais de residencia del cliente.
     NumeroTelefonico VARCHAR(20) NOT NULL,
-    CONSTRAINT FK_Telefono_Cliente FOREIGN KEY (IdUsuario) REFERENCES Cliente(Cedula)
+    CONSTRAINT FK_Telefono_Cliente FOREIGN KEY (IdUsuario) REFERENCES Cliente(Cedula),
+    --CONSTRAINT FK_Telefono_Pais FOREIGN KEY (IdPais) REFERENCES Paises(IdPais)
 );
 
 -- Tabla: Reservacion
@@ -294,8 +307,7 @@ CREATE TABLE EmpresaRecreacion (
     CONSTRAINT FK_Empresa_Recreacion_Distrito FOREIGN KEY (IdDistrito) REFERENCES Distrito(IdDistrito),
 
     --CONSTRAINT FK_Empresa_Hospedaje_Rol FOREIGN KEY (IdRol) REFERENCES Roles(IdRol), -- Correcciones para el rol del usuario
-
-
+    
 );
 
 -- Tabla: ServiciosRecreacion
