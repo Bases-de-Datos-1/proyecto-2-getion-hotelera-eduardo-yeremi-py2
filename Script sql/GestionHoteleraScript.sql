@@ -7,6 +7,16 @@ GO
 -- EXCEP sp_configure filestream_access_level, 2
 -- RECONFIGURE
 
+--- === Agregado de Roles para el proyecto 2
+-- Primero se crea la table que tendra definidos los dos roles disponibles.
+CREATE TABLE Roles (
+    IdRol SMALLINT IDENTITY(1,1) PRIMARY KEY,
+    NombreRol Varchar(20) NOT NULL
+);
+
+
+
+
 
 -- Tabla Provinvia (para la direccion)
 CREATE TABLE Provincia (
@@ -65,12 +75,14 @@ CREATE TABLE EmpresaHospedaje (
 
     -- Coreccion, se agrega, la contraseña para lo que serian las empresas.
     Contraseña VARCHAR(30) NOT NULL, -- Para esta hay que agregar validaciones de formato, pero pueden hacerse en la parte de la interfaz
-
+    IdRol SMALLINT NOT NULL, -- Rol de las empresas.
 
     -- Constraing del para las tablas nuevas del proyecto 2.
     CONSTRAINT FK_Empresa_Provincia FOREIGN KEY (IdProvincia) REFERENCES Provincia(IdProvincia),
     CONSTRAINT FK_Empresa_Canton FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton),
     CONSTRAINT FK_Empresa_Distrito FOREIGN KEY (IdDistrito) REFERENCES Distrito(IdDistrito),
+
+    CONSTRAINT FK_Empresa_Rol FOREIGN KEY (IdRol) REFERENCES Roles(IdRol), -- Correcciones para el rol del usuario
     -- Fin de la correccion
 
     CONSTRAINT FK_Tipo_Hotel_Empresa FOREIGN KEY (IdTipoHotel) REFERENCES TipoInstalacion(IdTipoInstalacion)
@@ -206,6 +218,8 @@ CREATE TABLE Cliente (
     IdDistrito SMALLINT NULL,
 
     Contraseña VARCHAR(30) NOT NULL, -- Se agrega la contraseña para los clientes, para que tengan ancceso
+    IdRol SMALLINT NOT NULL, -- Rol de las empresas.
+    
     -- Fin de las correcciones
 
     -- Correcciones del proyecto 2.
@@ -214,6 +228,9 @@ CREATE TABLE Cliente (
     CONSTRAINT FK_Cliente_Provincia FOREIGN KEY (IdProvincia) REFERENCES Provincia(IdProvincia),
     CONSTRAINT FK_Cliente_Canton FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton),
     CONSTRAINT FK_Clienten_Distrito FOREIGN KEY (IdDistrito) REFERENCES Distrito(IdDistrito),
+
+    CONSTRAINT FK_Cliente_Rol FOREIGN KEY (IdRol) REFERENCES Roles(IdRol), -- Correcciones para el rol del usuario
+
 
 );
 
@@ -262,11 +279,12 @@ CREATE TABLE EmpresaRecreacion (
     IdProvincia SMALLINT NOT NULL,
     IdCanton SMALLINT NOT NULL,
     IdDistrito SMALLINT NOT NULL,
-    SenasExactas VARCHAR(150) NOT NULL
+    SenasExactas VARCHAR(150) NOT NULL,
     -- Fin de las corre
 
     -- Correccion de Contraseñas y Roles para el proyecto 2.
     Contraseña VARCHAR(30) NOT NULL, -- Para esta hay que agregar validaciones de formato, pero pueden hacerse en la parte de la interfaz
+    IdRol SMALLINT NOT NULL, -- Rol de las empresas.
 
     --CONSTRAINT FK_Empresa_Recreacion_Direccion FOREIGN KEY (IdDireccion) REFERENCES Direccion(IdDireccion)
 
@@ -274,6 +292,9 @@ CREATE TABLE EmpresaRecreacion (
     CONSTRAINT FK_Empresa_Recreacion_Provincia FOREIGN KEY (IdProvincia) REFERENCES Provincia(IdProvincia),
     CONSTRAINT FK_Empresa_Recreacion_Canton FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton),
     CONSTRAINT FK_Empresa_Recreacion_Distrito FOREIGN KEY (IdDistrito) REFERENCES Distrito(IdDistrito),
+
+    CONSTRAINT FK_Empresa_Hospedaje_Rol FOREIGN KEY (IdRol) REFERENCES Roles(IdRol), -- Correcciones para el rol del usuario
+
 
 );
 
