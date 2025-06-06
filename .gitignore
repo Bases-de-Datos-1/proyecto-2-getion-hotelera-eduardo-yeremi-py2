@@ -402,3 +402,4 @@ FodyWeavers.xsd
 
 # Extras:
 .qodo/
+.vscode/settings.json
