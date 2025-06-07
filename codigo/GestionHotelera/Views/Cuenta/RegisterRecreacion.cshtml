@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Registro de Empresa de Recreación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+@section Scripts {
+    <script src="~/js/auth.js"></script>
+}
+
+<div class="login-container">
+    <h2>Registro - Empresa de Recreación</h2>
+
+    @using (Html.BeginForm("RegisterRecreacion", "Cuenta", FormMethod.Post))
+    {
+        <div class="form-group">
+            <label for="CedulaJuridica">Cédula Jurídica</label>
+            @Html.TextBox("CedulaJuridica", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="NombreEmpresa">Nombre de la empresa</label>
+            @Html.TextBox("NombreEmpresa", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="CorreoElectronico">Correo electrónico</label>
+            @Html.TextBox("CorreoElectronico", null, new { @class = "form-control", type = "email", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="Contraseña">Contraseña</label>
+            @Html.Password("Contraseña", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="ConfirmarContraseña">Confirmar contraseña</label>
+            @Html.Password("ConfirmarContraseña", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="Telefono">Teléfono</label>
+            @Html.TextBox("Telefono", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="DireccionExacta">Dirección exacta</label>
+            @Html.TextArea("DireccionExacta", null, new { @class = "form-control", rows = "3", required = "required" })
+        </div>
+
+        <div class="form-group">
+            <label for="IdDistrito">Distrito</label>
+            @Html.TextBox("IdDistrito", null, new { @class = "form-control", required = "required" })
+        </div>
+
+        <button type="submit" class="btn btn-success">Registrarse</button>
+    }
+
+    <p class="register-link">¿Ya tienes cuenta? <a href="@Url.Action("Login", "Cuenta")">Inicia sesión</a></p>
+
+    <p class="text-center mt-3">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Register", "Cuenta")">Volver al selector</a>
+    </p>
+</div>
+

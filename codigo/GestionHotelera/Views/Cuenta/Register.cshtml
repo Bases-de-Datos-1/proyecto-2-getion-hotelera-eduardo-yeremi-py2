@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Tipo de Registro";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/auth.css" />
+}
+
+<div class="login-container text-center">
+    <h2>Crear cuenta</h2>
+    <p class="mb-4">¿Qué tipo de cuenta desea crear?</p>
+
+    <div class="d-grid gap-3">
+        <a class="btn btn-outline-primary btn-lg" href="@Url.Action("RegisterCliente", "Cuenta")">Cliente</a>
+        <a class="btn btn-outline-success btn-lg" href="@Url.Action("RegisterHospedaje", "Cuenta")">Empresa de Hospedaje</a>
+        <a class="btn btn-outline-warning btn-lg" href="@Url.Action("RegisterRecreacion", "Cuenta")">Empresa de Recreación</a>
+    </div>
+
+    <p class="text-center mt-4">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Home")">Volver al inicio</a>
+    </p>
+</div>
