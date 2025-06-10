@@ -149,6 +149,49 @@ FROM ListaComodidades LC
 JOIN  Comodidad C ON LC.IdComodidad = C.IdComodidad;
 GO
 
+-- Vista para tener los datos de las camas disponibles.
+CREATE VIEW view_tiposCama AS
+SELECT
+    *
+FROM TipoCama; 
+GO
+
+-- Vista para optener los datos de las redes sociales disponibles.
+CREATE VIEW view_RedesSociales AS
+SELECT
+    *
+FROM RedesSociales; 
+GO
+
+-- Vista para optener los datos de los paises.
+CREATE VIEW view_Paises AS
+SELECT
+    *
+FROM Paises; 
+GO
+
+
+-- Vista para optener los datos las Provincias. 
+CREATE VIEW view_Provincias AS
+SELECT
+    *
+FROM Provincia; 
+GO
+
+
+-- Vista para optener los datos de los cantones.
+CREATE VIEW view_Cantones AS
+SELECT
+    *
+FROM Canton; 
+GO
+
+-- Vista para optener los datos de los distritos
+CREATE VIEW view_Distritos AS
+SELECT
+    *
+FROM Distrito; 
+GO
 
 
 --  ++++++++++ = Vistas para lo que seria relacionado con la optencion de datos de la empresa de recreacion = +++++++++++++++++++

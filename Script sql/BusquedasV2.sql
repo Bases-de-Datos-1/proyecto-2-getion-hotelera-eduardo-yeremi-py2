@@ -475,6 +475,9 @@ BEGIN
 END;
 GO
 
+
+
+
 -- ======================= Algunas busquedas para empresa de recreacion ===================================
 
 -- Busar empresa de recreacion por id:
@@ -577,3 +580,64 @@ BEGIN
     WHERE CedulaCliente = @Cedula;
 END;
 GO
+
+
+-- ======================= Algunas busquedas para la optencion de datos generales ===================================
+-- Procedimiento para optener los datos de los tipos de camas presentes en el sistema.
+CREATE PROCEDURE sp_OptenerTiposCama
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT * FROM view_tiposCama;
+END;
+GO
+
+-- Procedure para optener los datos de las redes sociales:
+CREATE PROCEDURE sp_ObtenerRedesSociales
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_RedesSociales;
+END;
+GO
+
+-- Procedure para optener los paises.
+CREATE PROCEDURE sp_ObtenerPaises
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_Paises;
+END;
+GO
+
+-- Para optener las provincias:
+CREATE PROCEDURE sp_ObtenerProvincias
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_Provincias;
+END;
+GO
+
+
+-- Para optener los cantones:
+CREATE PROCEDURE sp_ObtenerCantones
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_Cantones;
+END;
+GO
+
+-- Para optener los distritos:
+CREATE PROCEDURE sp_ObtenerDistritos
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_Distritos;
+END;
+GO
+
+
+
