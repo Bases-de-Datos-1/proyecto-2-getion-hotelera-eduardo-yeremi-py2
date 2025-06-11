@@ -582,6 +582,85 @@ END;
 GO
 
 
+-- ======================= Nuevos reportes y busquedas ===================================
+
+-- Reporte según tipo de habitación, cuáles reservas finalizadas han sido utilizadas por rango de fechas.
+CREATE PROCEDURE sp_ReporteReservasFinalizadasPorTipoHabitacion
+    @ListaTiposHabitacion VARCHAR(100),
+    @FechaInicio DATE,
+    @FechaFin DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        R.IdReservacion,
+        R.FechaHoraIngreso,
+        R.FechaHoraSalida,
+        R.CantidadPersonas,
+        R.Vehiculo,
+        R.PrecioTotal,
+        R.IdCliente,
+        R.Cliente,
+        R.CorreoElectronico,
+        R.PaisResidencia,
+        R.Edad,
+        R.IdHabitacion,
+        R.TipoHabitacion,
+        R.PrecioPorNoche,
+        R.IdEmpresa,
+        R.NombreEmpresa,
+        R.ReferenciaGPS
+    FROM view_Reservaciones R
+    WHERE R.IdTipoHabitacion IN (SELECT value FROM STRING_SPLIT(@ListaTiposHabitacion, ','))
+      AND R.Estado = 'Cerrado'
+      AND R.FechaHoraSalida <= @FechaFin
+      AND R.FechaHoraIngreso >= @FechaInicio;
+END;
+GO
+
+-- Conocer el rango de edades de las personas que han realizado las reservas en el hotel.
+CREATE PROCEDURE sp_RangoEdadesClientesConReservas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        MIN(C.Edad) AS EdadMinima,
+        MAX(C.Edad) AS EdadMaxima
+    FROM view_Clientes C
+    WHERE EXISTS (SELECT 1 FROM view_Reservaciones R WHERE R.IdCliente = C.Cedula);
+END;
+GO
+
+-- Conocer cuáles son los hoteles de mayor demanda por fecha y ubicación.
+CREATE PROCEDURE sp_HotelesMayorDemandaPorFechaUbicacion
+    @Fecha DATE,
+    @IdProvincia SMALLINT = NULL,
+    @IdCanton SMALLINT = NULL,
+    @IdDistrito SMALLINT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        R.IdEmpresa,
+        R.NombreEmpresa,
+        COUNT(R.IdReservacion) AS CantidadReservas
+    FROM view_Reservaciones R
+    WHERE CAST(R.FechaHoraIngreso AS DATE) <= @Fecha AND CAST(R.FechaHoraSalida AS DATE) >= @Fecha
+      AND (@IdProvincia IS NULL OR R.IdProvinciaEmpresa = @IdProvincia)
+      AND (@IdCanton IS NULL OR (@IdProvincia IS NOT NULL AND R.IdCantonEmpresa = @IdCanton))
+      AND (@IdDistrito IS NULL OR (@IdCanton IS NOT NULL AND R.IdDistritoEmpresa = @IdDistrito))
+    GROUP BY
+        R.IdEmpresa,
+        R.NombreEmpresa
+    ORDER BY
+        CantidadReservas DESC;
+END;
+GO
+
+
 -- ======================= Algunas busquedas para la optencion de datos generales ===================================
 -- Procedimiento para optener los datos de los tipos de camas presentes en el sistema.
 CREATE PROCEDURE sp_OptenerTiposCama
