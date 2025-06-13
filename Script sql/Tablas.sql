@@ -4,15 +4,16 @@ GO
 USE SistemaDeGestionHotelera;
 GO
 
+
 -- EXCEP sp_configure filestream_access_level, 2
 -- RECONFIGURE
 
 --- === Agregado de Roles para el proyecto 2
 -- Primero se crea la table que tendra definidos los dos roles disponibles.
-CREATE TABLE Roles (
-    IdRol SMALLINT IDENTITY(1,1) PRIMARY KEY,
-    NombreRol Varchar(20) NOT NULL
-);
+-- CREATE TABLE Roles (
+--     IdRol SMALLINT IDENTITY(1,1) PRIMARY KEY,
+--     NombreRol Varchar(20) NOT NULL
+-- );
 
 
 -- Tabla de Paises, para que queden mejor la direcciones y codigos de telefono:
@@ -256,6 +257,8 @@ CREATE TABLE Telefono (
     --CONSTRAINT FK_Telefono_Pais FOREIGN KEY (IdPais) REFERENCES Paises(IdPais)
 );
 
+-- ====== Apartado de reservas y facturaciones =====
+
 -- Tabla: Reservacion
 CREATE TABLE Reservacion (
     IdReservacion SMALLINT IDENTITY(1,1) PRIMARY KEY,
@@ -282,6 +285,30 @@ CREATE TABLE Facturacion (
     CONSTRAINT FK_Facturacion_Reservacion FOREIGN KEY (IdReservacion) REFERENCES Reservacion(IdReservacion)
 );
 
+-- Esta seria la tabla que se encarga de registrar de forma temporal los datos de las reservas 
+-- Aqui se quedan hasta que la empresa acepte la reservacion.
+-- Seria como una tabla temporaral.
+CREATE TABLE ReservasTemporales (
+    IdReservacionTemporal SMALLINT IDENTITY(1,1) PRIMARY KEY,
+    IdEmpresa VARCHAR(15) NOT NULL,
+    IdCliente VARCHAR(15) NOT NULL,
+    IdHabitacion SMALLINT NOT NULL,
+    FechaHoraIngreso DATETIME CHECK (FechaHoraIngreso >= GETDATE()) NOT NULL,
+    FechaHoraSalida DATETIME NOT NULL,
+    CantidadPersonas TINYINT CHECK (CantidadPersonas > 0) NOT NULL,
+    Vehiculo VARCHAR(2) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
+
+    -- Agregar el estado de la reserva.
+    --Estado Varchar(20) NOT NULL CHECK (Estado IN ('Activo', 'Cerrado')),
+    CONSTRAINT FK_Reservacion_Temporal_Empresa FOREIGN KEY (IdEmpresa) REFERENCES EmpresaHospedaje(CedulaJuridica), -- Asociar con cual empresa pertenece.
+    CONSTRAINT FK_Reservacion_Temporal_Cliente FOREIGN KEY (IdCliente) REFERENCES Cliente(Cedula),
+    CONSTRAINT FK_Reservacio_Temporal_Habitacion FOREIGN KEY (IdHabitacion) REFERENCES DatosHabitacion(IdDatosHabitacion)
+
+);
+
+
+
+-- ====== Fin del apartado de reservas y facturaciones =====
 
 -- Tabla: EmpresaRecreacion
 CREATE TABLE EmpresaRecreacion (

@@ -1842,6 +1842,35 @@ BEGIN
 END;
 GO
 
+-- Actualizar pero solo el estado.
+CREATE PROCEDURE sp_CerrarReservacion
+    @IdReservacion SMALLINT,
+    @Resultado SMALLINT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM Reservacion WHERE IdReservacion = @IdReservacion AND Estado = 'Activo')
+        BEGIN
+            UPDATE Reservacion
+            SET Estado = 'Cerrado'
+            WHERE IdReservacion = @IdReservacion;
+
+            SET @Resultado = 1; 
+        END
+        ELSE
+        BEGIN
+            SET @Resultado = -1;
+        END
+    END TRY
+    BEGIN CATCH
+        --PRINT 'Error en sp_CerrarReservacion: ' + ERROR_MESSAGE();
+        SET @Resultado = -99; 
+    END CATCH
+END;
+GO
+
 
 
 -- Eliminar:
@@ -1969,7 +1998,57 @@ END;
 GO
 
 
+-- ========================== Para la tabla que almacena temporalmente los datos de las reservaciones.
+-- Agregar:
+CREATE PROCEDURE sp_InsertarReservaTemporal
+    @IdEmpresa VARCHAR(15),
+    @IdCliente VARCHAR(15),
+    @IdHabitacion SMALLINT,
+    @FechaHoraIngreso DATETIME,
+    @FechaHoraSalida DATETIME,
+    @CantidadPersonas TINYINT,
+    @Vehiculo VARCHAR(2),
+    @Resultado SMALLINT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        INSERT INTO ReservasTemporales (IdEmpresa, IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo)
+        VALUES (@IdEmpresa, @IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo);
 
+        SET @Resultado = 1; 
+    END TRY
+    BEGIN CATCH
+        -- PRINT 'Error en sp_InsertarReservaTemporal: ' + ERROR_MESSAGE();
+        SET @Resultado = -99;
+    END CATCH
+END;
+GO
+
+-- Eliminar:
+CREATE PROCEDURE sp_EliminarReservaTemporal
+    @IdReservacionTemporal SMALLINT,
+    @Resultado SMALLINT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM ReservasTemporales WHERE IdReservacionTemporal = @IdReservacionTemporal)
+        BEGIN
+            DELETE FROM ReservasTemporales WHERE IdReservacionTemporal = @IdReservacionTemporal;
+            SET @Resultado = 1; 
+        END
+        ELSE
+        BEGIN
+            SET @Resultado = -1;
+        END
+    END TRY
+    BEGIN CATCH
+        --PRINT 'Error en sp_EliminarReservaTemporal: ' + ERROR_MESSAGE();
+        SET @Resultado = -99;
+    END CATCH
+END;
+GO
 
 -- ========================== Para la tabla de EmpresaRecreacion:
 
@@ -2388,6 +2467,89 @@ BEGIN
     BEGIN CATCH
         -- PRINT 'Error en sp_EliminarListaActividades: ' + ERROR_MESSAGE();
         SET @Resultado = -99;
+    END CATCH
+END;
+GO
+
+
+
+
+
+
+
+
+-- Para la parte de autenticacion, lo que seria el inicio de sesion.
+
+-- Para las empresas de hospedaje:
+CREATE PROCEDURE sp_VerificarEmpresaHospedaje
+    @Correo VARCHAR(50),
+    @Contrasena VARCHAR(30),
+    @IdEmpresa VARCHAR(15) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    BEGIN TRY
+        SELECT @IdEmpresa = IdEmpresa
+        FROM view_EmpresaHospedajeCredenciales 
+        WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
+
+        IF @IdEmpresa IS NULL -- Me da ansiedad pero es mas rapido asi.
+            SET @IdEmpresa = -1;
+
+    END TRY
+    BEGIN CATCH
+        --PRINT 'Error en sp_VerificarEmpresaHospedaje: ' + ERROR_MESSAGE();
+        SET @IdEmpresa = -99; 
+    END CATCH
+END;
+GO
+
+-- Para los clientes:
+CREATE PROCEDURE sp_VerificarCliente
+    @Correo VARCHAR(50),
+    @Contrasena VARCHAR(30),
+    @IdCliente VARCHAR(15) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        SELECT @IdCliente = IdCliente
+        FROM view_ClientesCredenciales 
+        WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
+
+        IF @IdCliente IS NULL 
+            SET @IdCliente = -1;
+
+    END TRY
+    BEGIN CATCH
+        --PRINT 'Error en sp_VerificarCliente: ' + ERROR_MESSAGE();
+        SET @IdCliente = -99;
+    END CATCH
+END;
+GO
+
+-- Para la empresa de recreacion:
+CREATE PROCEDURE sp_VerificarEmpresaRecreacion
+    @Correo VARCHAR(50),
+    @Contrasena VARCHAR(30),
+    @IdEmpresa VARCHAR(15) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    BEGIN TRY
+        SELECT @IdEmpresa = IdEmpresa
+        FROM view_EmpresaRecreacionCredenciales 
+        WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
+
+        IF @IdEmpresa IS NULL
+            SET @IdEmpresa = -1;
+    END TRY
+    BEGIN CATCH
+        --PRINT 'Error en sp_VerificarEmpresaRecreacion: ' + ERROR_MESSAGE();
+        SET @IdEmpresa = -99; 
     END CATCH
 END;
 GO

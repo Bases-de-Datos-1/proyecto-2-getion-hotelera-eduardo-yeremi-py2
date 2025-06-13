@@ -93,6 +93,7 @@ GO
 CREATE VIEW view_Habitaciones AS
 SELECT
     DH.IdDatosHabitacion,
+    TH.IdTipoHabitacion,
     DH.Numero AS NumeroHabitacion,
     TH.Nombre AS TipoHabitacion,
     TH.Precio,
@@ -118,18 +119,19 @@ JOIN Canton C ON EH.IdCanton = C.IdCanton
 JOIN Distrito D ON EH.IdDistrito = D.IdDistrito
 -- LEFT JOIN ListaComodidades LC ON TH.IdTipoHabitacion = LC.IdTipoHabitacion
 -- LEFT JOIN Comodidad CO ON LC.IdComodidad = CO.IdComodidad
-GROUP BY
-    DH.IdDatosHabitacion,
-    DH.Numero,
-    TH.Nombre,
-    TH.Precio,
-    TC.NombreCama,
-    EH.CedulaJuridica,
-    EH.NombreHotel,
-    P.NombreProvincia,
-    C.NombreCanton,
-    D.NombreDistrito,
-    EH.Barrio;
+--GROUP BY
+    --DH.IdDatosHabitacion,
+    --DH.Numero,
+    --TH.Nombre,
+    --TH.Precio,
+	--TC.IdTipoCama,
+    --TC.NombreCama,
+    --EH.CedulaJuridica,
+    --EH.NombreHotel,
+    --P.NombreProvincia,
+    --C.NombreCanton,
+    --D.NombreDistrito,
+    --EH.Barrio;
 GO
 
 -- Vista para tener los datos de las imagenes de las habitaciones.
@@ -240,15 +242,15 @@ JOIN Canton C ON ER.IdCanton = C.IdCanton
 JOIN Distrito D ON ER.IdDistrito = D.IdDistrito
 -- LEFT JOIN ListaActividades LA ON SR.IdServicio = LA.IdServicio
 -- LEFT JOIN Actividad A ON LA.IdActividad = A.IdActividad
-GROUP BY -- En teoria esta parte ya no la ocupa.
-    SR.IdServicio,
-    SR.NombreServicio,
-    SR.Precio,
-    ER.CedulaJuridica,
-    ER.NombreEmpresa,
-    P.NombreProvincia,
-    C.NombreCanton,
-    D.NombreDistrito;
+--GROUP BY -- En teoria esta parte ya no la ocupa.
+    --SR.IdServicio,
+    --SR.NombreServicio,
+    --SR.Precio,
+    --ER.CedulaJuridica,
+    --ER.NombreEmpresa,
+    --P.NombreProvincia,
+    --C.NombreCanton,
+    --D.NombreDistrito;
 GO
 
 -- Vista para las actividades que tenga una empresa de recreacion o un servicio en especifico. 
@@ -279,9 +281,11 @@ SELECT
     R.CantidadPersonas,
     DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) * TH.Precio AS PrecioTotal,
     -- Datos de la habitacion
+	DH.IdDatosHabitacion,
     DH.Numero AS NumeroHabitacion,
     TH.Nombre AS TipoHabitacion,
     TH.Precio,
+	TH.IdTipoHabitacion,
     -- Datos del cliente.
     C.Cedula AS CedulaCliente,
     C.NombreCompleto AS Cliente,
@@ -314,7 +318,7 @@ SELECT
     R.CantidadPersonas,
     R.Vehiculo,
     DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) * TH.Precio AS PrecioTotal, -- Calculo del precio total.
-
+	R.Estado,
     -- Datos del Cliente
     C.Cedula AS IdCliente,
     C.NombreCompleto AS Cliente,
@@ -326,6 +330,7 @@ SELECT
     DH.IdDatosHabitacion AS IdHabitacion,
     TH.Nombre AS TipoHabitacion,
     TH.Precio AS PrecioPorNoche,
+	TH.IdTipoHabitacion,
 
     -- Datos de la empresa.
     EH.CedulaJuridica AS IdEmpresaHospedaje,
@@ -409,3 +414,64 @@ LEFT JOIN Paises PA ON C.IdPais = PA.IdPais;
 GO
 
 
+
+
+-- +++++++ Para lo que seria trabajar con la parte de reservaciones, la optencion de los datos de las tablas
+CREATE VIEW view_ReservasTemporales AS
+SELECT 
+    RT.IdReservacionTemporal,
+    RT.FechaHoraIngreso,
+    RT.FechaHoraSalida,
+    RT.CantidadPersonas,
+    RT.Vehiculo,
+
+    -- Datos del Cliente
+    C.Cedula AS IdCliente,
+    C.NombreCompleto AS NombreCliente,
+    
+    -- Datos de la Empresa de Hospedaje
+    EH.CedulaJuridica AS IdEmpresaHospedaje,
+    EH.NombreHotel AS NombreEmpresa,
+
+    -- Datos de la Habitacion
+    DH.IdDatosHabitacion AS IdHabitacion,
+    TH.Nombre AS TipoHabitacion,
+    TH.Precio AS PrecioPorNoche
+    
+FROM ReservasTemporales RT
+JOIN Cliente C ON RT.IdCliente = C.Cedula
+JOIN EmpresaHospedaje EH ON RT.IdEmpresa = EH.CedulaJuridica
+JOIN DatosHabitacion DH ON RT.IdHabitacion = DH.IdDatosHabitacion
+JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion;
+GO
+
+
+
+
+-- ++++++++ Vistas para lo que seria la parte de autenticacion --- 
+--Para la empresa de hospedaje.
+CREATE VIEW view_EmpresaHospedajeCredenciales AS
+SELECT 
+    CedulaJuridica AS IdEmpresa,
+    CorreoElectronico,
+    Contrasena
+FROM EmpresaHospedaje;
+GO
+
+-- Para los clientes.
+CREATE VIEW view_ClientesCredenciales  AS
+SELECT 
+    Cedula AS IdCliente,
+    CorreoElectronico,
+    Contrasena
+FROM Cliente;
+GO
+
+-- Para la empresa de recreacion.
+CREATE VIEW view_EmpresaRecreacionCredenciales  AS
+SELECT 
+    CedulaJuridica AS IdEmpresa,
+    CorreoElectronico,
+    Contrasena
+FROM EmpresaRecreacion;
+GO

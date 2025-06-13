@@ -7,7 +7,6 @@
 CREATE PROCEDURE sp_BuscarEmpresasHospedaje
     @NombreHotel VARCHAR(50) = NULL,
     @IdTipoHotel SMALLINT = NULL,
-    @ReferenciaGPS GEOGRAPHY = NULL,
     @ListaServicios VARCHAR(100) = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
@@ -17,11 +16,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT DISTINCT EH.* -- Devolver todos los datos de la vista, no vaya a ser que nos dalta algunos.
+    SELECT DISTINCT         
+        EH.CedulaJuridica, EH.NombreHotel, EH.TipoHotel, 
+        EH.IdProvincia, EH.Provincia, EH.IdCanton, EH.Canton, 
+        EH.IdDistrito, EH.Distrito, EH.Barrio, EH.SenasExactas, 
+        EH.CorreoElectronico, EH.SitioWeb
     FROM view_EmpresasHospedaje EH
     WHERE (@NombreHotel IS NULL OR EH.NombreHotel LIKE '%' + @NombreHotel + '%')
     AND (@IdTipoHotel IS NULL OR EH.IdTipoInstalacion = @IdTipoHotel)
-    AND (@ReferenciaGPS IS NULL OR EH.ReferenciaGPS = @ReferenciaGPS)
     AND (@IdProvincia IS NULL OR EH.IdProvincia = @IdProvincia)
     AND (@IdCanton IS NULL OR EH.IdCanton = @IdCanton)
     AND (@IdDistrito IS NULL OR EH.IdDistrito = @IdDistrito)
@@ -608,9 +610,9 @@ BEGIN
         R.IdHabitacion,
         R.TipoHabitacion,
         R.PrecioPorNoche,
-        R.IdEmpresa,
-        R.NombreEmpresa,
-        R.ReferenciaGPS
+        R.IdEmpresaHospedaje,
+        R.NombreEmpresa
+      
     FROM view_Reservaciones R
     WHERE R.IdTipoHabitacion IN (SELECT value FROM STRING_SPLIT(@ListaTiposHabitacion, ','))
       AND R.Estado = 'Cerrado'
@@ -625,15 +627,15 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT
-        MIN(C.Edad) AS EdadMinima,
+    SELECT 
+        MIN(C.Edad) AS EdadMinima, 
         MAX(C.Edad) AS EdadMaxima
     FROM view_Clientes C
-    WHERE EXISTS (SELECT 1 FROM view_Reservaciones R WHERE R.IdCliente = C.Cedula);
+    JOIN view_Reservaciones R ON C.Cedula = R.IdCliente;
 END;
 GO
 
--- Conocer cuáles son los hoteles de mayor demanda por fecha y ubicación.
+-- Conocer cuáles son los hoteles de mayor demanda por fecha y ubicación. 
 CREATE PROCEDURE sp_HotelesMayorDemandaPorFechaUbicacion
     @Fecha DATE,
     @IdProvincia SMALLINT = NULL,
@@ -644,17 +646,18 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        R.IdEmpresa,
-        R.NombreEmpresa,
+        R.IdEmpresaHospedaje,
+        E.NombreHotel AS NombreEmpresa,
         COUNT(R.IdReservacion) AS CantidadReservas
     FROM view_Reservaciones R
-    WHERE CAST(R.FechaHoraIngreso AS DATE) <= @Fecha AND CAST(R.FechaHoraSalida AS DATE) >= @Fecha
-      AND (@IdProvincia IS NULL OR R.IdProvinciaEmpresa = @IdProvincia)
-      AND (@IdCanton IS NULL OR (@IdProvincia IS NOT NULL AND R.IdCantonEmpresa = @IdCanton))
-      AND (@IdDistrito IS NULL OR (@IdCanton IS NOT NULL AND R.IdDistritoEmpresa = @IdDistrito))
+    JOIN view_EmpresasHospedaje E ON R.IdEmpresaHospedaje = E.CedulaJuridica
+    WHERE CAST(R.FechaHoraIngreso AS DATE) <= @Fecha -- Se hace el CAST por que el original esta en DateTime.
+      AND CAST(R.FechaHoraSalida AS DATE) >= @Fecha
+      AND (@IdProvincia IS NULL OR E.IdProvincia = @IdProvincia)
+      AND (@IdCanton IS NULL OR E.IdCanton = @IdCanton)
+      AND (@IdDistrito IS NULL OR E.IdDistrito = @IdDistrito)
     GROUP BY
-        R.IdEmpresa,
-        R.NombreEmpresa
+        R.IdEmpresaHospedaje, E.NombreHotel
     ORDER BY
         CantidadReservas DESC;
 END;
