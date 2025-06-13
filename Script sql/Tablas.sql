@@ -265,6 +265,10 @@ CREATE TABLE Reservacion (
     FechaHoraSalida DATETIME NOT NULL,
     CantidadPersonas TINYINT CHECK (CantidadPersonas > 0) NOT NULL,
     Vehiculo VARCHAR(2) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
+
+    -- Agregar el estado de la reserva.
+    Estado Varchar(20) NOT NULL CHECK (Estado IN ('Activo', 'Cerrado')),
+
     CONSTRAINT FK_Reservacion_Cliente FOREIGN KEY (IdCliente) REFERENCES Cliente(Cedula),
     CONSTRAINT FK_Reservacio_Habitacion FOREIGN KEY (IdHabitacion) REFERENCES DatosHabitacion(IdDatosHabitacion)
 );
