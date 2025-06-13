@@ -675,6 +675,24 @@ BEGIN
 END;
 GO
 
+-- Para optener los servicios de establecimientos
+CREATE PROCEDURE sp_OptenerServiciosEstablecimientos
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_ServiciosEstablecimientos;
+END;
+GO
+
+-- Para optener los los datos de los tipos de instalaciones disponibles.
+CREATE PROCEDURE sp_OptenerTiposEstablecimientos
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_TiposEstablecimientos;
+END;
+GO
+
 -- Procedure para optener los datos de las redes sociales:
 CREATE PROCEDURE sp_ObtenerRedesSociales
 AS

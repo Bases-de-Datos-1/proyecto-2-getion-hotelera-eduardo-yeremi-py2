@@ -158,6 +158,20 @@ SELECT
 FROM TipoCama; 
 GO
 
+-- Vista para tener los datos de los servicios de establecimientos disponibles.
+CREATE VIEW view_ServiciosEstablecimientos AS
+SELECT
+    *
+FROM ServiciosEstablecimiento; 
+GO
+
+-- Vista para optener los datos de las tipos de instalaciones disponibles.
+CREATE VIEW view_TiposEstablecimientos AS
+SELECT
+    *
+FROM TipoInstalacion; 
+GO
+
 -- Vista para optener los datos de las redes sociales disponibles.
 CREATE VIEW view_RedesSociales AS
 SELECT
