@@ -152,7 +152,8 @@ namespace GestionHotelera.Services
         }
 
 
-
+        // Ahora seria para las solicitudes de datos basicos.
+        
 
 
 

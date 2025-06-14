@@ -34,13 +34,21 @@ CREATE TABLE Provincia (
 -- Tabla de Canton
 CREATE TABLE Canton (
     IdCanton SMALLINT IDENTITY(1,1) PRIMARY KEY,
-    NombreCanton Varchar(30) NOT NULL
+    NombreCanton Varchar(30) NOT NULL,
+    IdProvincia SMALLINT NOT NULL,
+
+    CONSTRAINT FK_Canton_Provincia FOREIGN KEY (IdProvincia) REFERENCES Provincia(IdProvincia)
+
 );
 
 -- Tabla de Distrito
 CREATE TABLE Distrito (
     IdDistrito SMALLINT IDENTITY(1,1) PRIMARY KEY,
-    NombreDistrito Varchar(30) NOT NULL
+    NombreDistrito Varchar(30) NOT NULL,
+    IdCanton  SMALLINT NOT NULL,
+
+    CONSTRAINT FK_Distrito_Canton FOREIGN KEY (IdCanton) REFERENCES Canton(IdCanton)
+
 );
 
 

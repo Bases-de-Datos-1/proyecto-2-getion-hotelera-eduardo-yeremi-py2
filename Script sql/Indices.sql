@@ -38,38 +38,38 @@ CREATE NONCLUSTERED INDEX I_Cliente_Cedula
 ON Cliente (Cedula);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Cliente_CorreoElectronico
+CREATE NONCLUSTERED INDEX I_Cliente_CorreoElectronico
 ON Cliente (CorreoElectronico);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Reservacion_IdReservacion
+CREATE NONCLUSTERED INDEX I_Reservacion_IdReservacion
 ON Reservacion (IdReservacion);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Reservacion_HabitacionDates
+CREATE NONCLUSTERED INDEX I_Reservacion_HabitacionDates
 ON Reservacion (IdHabitacion, FechaHoraIngreso, FechaHoraSalida);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Facturacion_IdFacturacion
+CREATE NONCLUSTERED INDEX I_Facturacion_IdFacturacion
 ON Facturacion (IdFacturacion);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Facturacion_IdReservacion
+CREATE NONCLUSTERED INDEX I_Facturacion_IdReservacion
 ON Facturacion (IdReservacion);
 GO
 
-CREATE NONCLUSTERED INDEX IX_ServiciosRecreacion_IdServicio
+CREATE NONCLUSTERED INDEX I_ServiciosRecreacion_IdServicio
 ON ServiciosRecreacion (IdServicio);
 GO
 
-CREATE NONCLUSTERED INDEX IX_ServiciosRecreacion_IdEmpresa
+CREATE NONCLUSTERED INDEX I_ServiciosRecreacion_IdEmpresa
 ON ServiciosRecreacion (IdEmpresa);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Actividad_IdActividad
+CREATE NONCLUSTERED INDEX I_Actividad_IdActividad
 ON Actividad (IdActividad);
 GO
 
-CREATE NONCLUSTERED INDEX IX_Actividad_IdEmpresa
+CREATE NONCLUSTERED INDEX I_Actividad_IdEmpresa
 ON Actividad (IdEmpresa);
 GO

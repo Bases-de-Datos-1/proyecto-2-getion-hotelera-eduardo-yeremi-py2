@@ -1,3 +1,7 @@
+USE SistemaDeGestionHotelera;
+GO
+
+
 -- - Busqueda general V2:
 -- ========================== Apartado de busquedas V2 =========================:
 
