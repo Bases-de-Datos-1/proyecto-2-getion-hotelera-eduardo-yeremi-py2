@@ -1,0 +1,245 @@
+﻿@{
+    ViewData["Title"] = "Explorar - Menú Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .menu-layout {
+            display: flex;
+            gap: 30px;
+            margin: 40px 20px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            border-radius: 10px;
+            height: fit-content;
+        }
+
+            .sidebar h4 {
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .sidebar .btn-type {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                font-weight: 500;
+                display: block;
+                margin-bottom: 5px;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 8px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+            }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .results {
+            flex-grow: 1;
+        }
+
+        .result-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+            .result-card img {
+                width: 160px;
+                height: 100px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+        .result-info h5 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .top-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+            .top-buttons a {
+                padding: 10px 15px;
+                background-color: #007bff;
+                color: white;
+                border-radius: 6px;
+                text-decoration: none;
+            }
+
+                .top-buttons a:hover {
+                    background-color: #0056b3;
+                }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin: 0 20px 30px 20px;
+        }
+
+            .search-bar input {
+                flex: 1;
+                padding: 10px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+            }
+
+            .search-bar button {
+                padding: 10px 15px;
+                border: none;
+                background-color: #343a40;
+                color: white;
+                border-radius: 6px;
+            }
+    </style>
+}
+
+<div class="top-buttons">
+    <a href="/Home/Index">← Volver</a>
+    <div>
+        <a href="/Cliente/Perfil">Modificar perfil</a>
+        <a href="/Cliente/Reservas">Ver reservaciones</a>
+    </div>
+</div>
+
+<div class="search-bar">
+    <input type="text" placeholder="Buscar..." />
+    <button>🔍</button>
+</div>
+
+<div class="menu-layout">
+    <div class="sidebar">
+        <h4>Tipo:</h4>
+        <button class="btn btn-outline-dark btn-type">Hospedaje</button>
+        <button class="btn btn-outline-dark btn-type">Empr. Hospedaje</button>
+        <button class="btn btn-outline-dark btn-type">Empr. Recreación</button>
+        <button class="btn btn-outline-dark btn-type">Servicios</button>
+
+        <hr />
+
+        <h4>Filtros</h4>
+
+        <div class="form-group">
+            <label>Fecha de entrada:</label>
+            <input type="date" name="FechaEntrada" />
+        </div>
+
+        <div class="form-group">
+            <label>Fecha de salida:</label>
+            <input type="date" name="FechaSalida" />
+        </div>
+
+        <div class="form-group">
+            <label>Tipo de cama:</label>
+            <select name="TipoCama">
+                <option value="">-- Seleccione --</option>
+                <option>Cama Individual</option>
+                <option>Cama Grande</option>
+                <option>Cama King size</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Rango de precio:</label>
+            <input type="number" name="PrecioMin" placeholder="Min ₡" />
+            <input type="number" name="PrecioMax" placeholder="Max ₡" />
+        </div>
+
+        <div class="form-group">
+            <label>Ubicación:</label>
+            <select name="Provincia">
+                <option>Provincia</option>
+                <option>Limón</option>
+                <option>San José</option>
+            </select>
+            <select name="Canton">
+                <option>Cantón</option>
+            </select>
+            <select name="Distrito">
+                <option>Distrito</option>
+            </select>
+            <select name="Barrio">
+                <option>Barrio</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Comodidades:</label>
+            <div class="tag-list">
+                <span class="tag">WiFi</span>
+                <span class="tag">Piscina</span>
+                <span class="tag">A/C</span>
+                <span class="tag">Parqueo</span>
+                <span class="tag">Comida</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Actividades disponibles:</label>
+            <div class="tag-list">
+                <span class="tag">Tour en bote</span>
+                <span class="tag">Tour en lancha</span>
+                <span class="tag">Kayak</span>
+                <span class="tag">Senderismo</span>
+                <span class="tag">Transporte</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="results">
+        <div class="result-card">
+            <img src="https://via.placeholder.com/160" alt="Hotel" />
+            <div class="result-info">
+                <h5>Hotel Paraíso Caribeño</h5>
+                <p>Puerto Viejo, Limón</p>
+                <p>₡75.000 por noche</p>
+            </div>
+        </div>
+
+        <div class="result-card">
+            <img src="https://via.placeholder.com/160" alt="Tour" />
+            <div class="result-info">
+                <h5>Aventura Marina Caribe</h5>
+                <p>Puerto Viejo, Limón</p>
+                <p>₡32.000 por actividad</p>
+            </div>
+        </div>
+    </div>
+</div>
