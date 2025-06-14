@@ -1,63 +1,123 @@
 ﻿@{
-    ViewBag.Title = "Registro de Empresa de Hospedaje";
+    ViewData["Title"] = "Registro Empresa de Hospedaje";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/auth.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+    <style>
+        .form-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            animation: fadeIn 0.7s ease;
+        }
+
+            .form-container h2 {
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #28a745;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+            button:hover {
+                background-color: #1e7e34;
+            }
+
+        .back-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+            .back-link a {
+                color: #555;
+                text-decoration: none;
+            }
+
+                .back-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
 }
 
-@section Scripts {
-    <script src="~/js/auth.js"></script>
-}
-
-<div class="login-container">
+<div class="form-container">
     <h2>Registro - Empresa de Hospedaje</h2>
 
-    @using (Html.BeginForm("RegisterHospedaje", "Cuenta", FormMethod.Post))
-    {
+    <form method="post" action="/Cuenta/RegisterHospedaje">
         <div class="form-group">
-            <label for="CedulaJuridica">Cédula Jurídica</label>
-            @Html.TextBox("CedulaJuridica", null, new { @class = "form-control", required = "required" })
+            <label for="cedulaJuridica">Cédula Jurídica</label>
+            <input type="text" id="cedulaJuridica" name="CedulaJuridica" required />
         </div>
 
         <div class="form-group">
-            <label for="NombreHotel">Nombre del hotel</label>
-            @Html.TextBox("NombreHotel", null, new { @class = "form-control", required = "required" })
+            <label for="nombre">Nombre de la Empresa</label>
+            <input type="text" id="nombre" name="NombreEmpresa" required />
         </div>
 
         <div class="form-group">
-            <label for="CorreoElectronico">Correo electrónico</label>
-            @Html.TextBox("CorreoElectronico", null, new { @class = "form-control", type = "email", required = "required" })
+            <label for="provincia">Provincia</label>
+            <input type="text" id="provincia" name="Provincia" required />
         </div>
 
         <div class="form-group">
-            <label for="Contraseña">Contraseña</label>
-            @Html.Password("Contraseña", null, new { @class = "form-control", required = "required" })
+            <label for="canton">Cantón</label>
+            <input type="text" id="canton" name="Canton" required />
         </div>
 
         <div class="form-group">
-            <label for="ConfirmarContraseña">Confirmar contraseña</label>
-            @Html.Password("ConfirmarContraseña", null, new { @class = "form-control", required = "required" })
+            <label for="distrito">Distrito</label>
+            <input type="text" id="distrito" name="Distrito" required />
         </div>
 
         <div class="form-group">
-            <label for="Telefono">Teléfono</label>
-            @Html.TextBox("Telefono", null, new { @class = "form-control", required = "required" })
+            <label for="correo">Correo Electrónico</label>
+            <input type="email" id="correo" name="CorreoElectronico" required />
         </div>
 
         <div class="form-group">
-            <label for="DireccionExacta">Dirección exacta</label>
-            @Html.TextArea("DireccionExacta", null, new { @class = "form-control", rows = "3", required = "required" })
+            <label for="contrasena">Contraseña</label>
+            <input type="password" id="contrasena" name="Contrasena" required />
         </div>
 
         <div class="form-group">
-            <label for="IdDistrito">Distrito</label>
-            @Html.TextBox("IdDistrito", null, new { @class = "form-control", required = "required" })
-            @* Más adelante podemos cargarlo como un dropdown de distritos *@
+            <label for="confirmar">Confirmar Contraseña</label>
+            <input type="password" id="confirmar" name="ConfirmarContrasena" required />
         </div>
 
-        <button type="submit" class="btn btn-success">Registrarse</button>
-    }
+        <button type="submit">Registrarse</button>
+    </form>
 
-    <p class="register-link">¿Ya tienes cuenta? <a href="@Url.Action("Login", "Cuenta")">Inicia sesión
+    <div class="back-link">
+        <p><a href="/Cuenta/Register">← Volver al selector</a></p>
+    </div>
+</div>

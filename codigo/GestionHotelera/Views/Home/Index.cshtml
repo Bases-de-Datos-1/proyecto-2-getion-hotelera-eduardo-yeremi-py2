@@ -1,14 +1,19 @@
-﻿@{
-    ViewBag.Title = "Inicio";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Inicio - GestionHotelera</title>
+    <link rel="stylesheet" href="/css/auth.css" />
+</head>
+<body>
+    <div class="hero-section">
+        <h1 class="hero-title">Bienvenido a GestionHotelera</h1>
+        <p class="hero-subtitle">Tu sistema integral para hospedajes y actividades recreativas.</p>
 
-<div class="text-center mt-5">
-    <h1 class="display-4">Bienvenido al Sistema de Gestión Hotelera</h1>
-    <p class="lead">Seleccione una opción para continuar</p>
-
-    <div class="mt-4">
-        <a class="btn btn-primary btn-lg me-3" href="@Url.Action("Login", "Cuenta")">Iniciar Sesión</a>
-        <a class="btn btn-success btn-lg" href="@Url.Action("Register", "Cuenta")">Registrarse</a>
+        <div class="btn-group">
+            <a class="btn btn-primary" href="/Cuenta/Login">Iniciar Sesión</a>
+            <a class="btn btn-success" href="/Cuenta/Register">Registrarse</a>
+        </div>
     </div>
-</div>
+</body>
+</html>

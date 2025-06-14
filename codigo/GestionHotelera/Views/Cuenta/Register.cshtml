@@ -1,23 +1,105 @@
 ﻿@{
-    ViewBag.Title = "Tipo de Registro";
+    ViewData["Title"] = "Seleccionar tipo de registro";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/auth.css" />
+    <link rel="stylesheet" href="/css/auth.css" />
+    <style>
+        .container-selector {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 60px 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .register-card {
+            background-color: #ffffff;
+            width: 280px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+            .register-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .register-card h3 {
+                margin-top: 15px;
+                margin-bottom: 10px;
+                font-size: 1.3rem;
+            }
+
+            .register-card p {
+                font-size: 0.95rem;
+                color: #666;
+            }
+
+            .register-card a {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border-radius: 8px;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+                .register-card a:hover {
+                    background-color: #0056b3;
+                }
+
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+            .back-link a {
+                color: #555;
+                text-decoration: none;
+            }
+
+                .back-link a:hover {
+                    text-decoration: underline;
+                }
+
+        .register-icon {
+            font-size: 40px;
+            color: #007bff;
+        }
+    </style>
 }
 
-<div class="login-container text-center">
-    <h2>Crear cuenta</h2>
-    <p class="mb-4">¿Qué tipo de cuenta desea crear?</p>
-
-    <div class="d-grid gap-3">
-        <a class="btn btn-outline-primary btn-lg" href="@Url.Action("RegisterCliente", "Cuenta")">Cliente</a>
-        <a class="btn btn-outline-success btn-lg" href="@Url.Action("RegisterHospedaje", "Cuenta")">Empresa de Hospedaje</a>
-        <a class="btn btn-outline-warning btn-lg" href="@Url.Action("RegisterRecreacion", "Cuenta")">Empresa de Recreación</a>
+<div class="container-selector">
+    <div class="register-card">
+        <div class="register-icon">👤</div>
+        <h3>Cliente</h3>
+        <p>Regístrate como cliente para explorar hoteles y actividades recreativas.</p>
+        <a href="/Cuenta/RegisterCliente">Seleccionar</a>
     </div>
 
-    <p class="text-center mt-4">
-        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Home")">Volver al inicio</a>
-    </p>
+    <div class="register-card">
+        <div class="register-icon">🏨</div>
+        <h3>Empresa de Hospedaje</h3>
+        <p>Registra tu hotel y gestiona sus servicios e instalaciones.</p>
+        <a href="/Cuenta/RegisterHospedaje">Seleccionar</a>
+    </div>
+
+    <div class="register-card">
+        <div class="register-icon">🎡</div>
+        <h3>Empresa de Recreación</h3>
+        <p>Publica actividades para que los clientes las puedan reservar.</p>
+        <a href="/Cuenta/RegisterRecreacion">Seleccionar</a>
+    </div>
+</div>
+
+<div class="back-link">
+    <a href="/Home/Index">← Volver al inicio</a>
 </div>
