@@ -1,4 +1,9 @@
+using GestionHotelera.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Agregar los servicios de bases de datos.
+builder.Services.AddSingleton<DataBasesServices>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
