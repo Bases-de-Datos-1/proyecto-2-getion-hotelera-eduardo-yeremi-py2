@@ -1,14 +1,17 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlTypes;
+using System.Diagnostics;
+using System.Globalization;
 using GestionHotelera.Models;
+using GestionHotelera.Models.ClientesModels;
 using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.RegistrarModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Diagnostics;
-using GestionHotelera.Models.ClientesModels;
+using Microsoft.SqlServer.Types;
 namespace GestionHotelera.Services
 {
     
@@ -600,11 +603,21 @@ namespace GestionHotelera.Services
                 Direction = ParameterDirection.Output 
             };
 
-            SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt) // Esto es un tipo de dato especial por lo tanto tuvimos que amarlo por aparte.
+
+            var textoGps = $"POINT({model.Longitud.ToString(CultureInfo.InvariantCulture)} {model.Latitud.ToString(CultureInfo.InvariantCulture)})";
+            var referenciaGeografica = SqlGeography.STPointFromText(new SqlChars(textoGps), 4326);
+
+            SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt)
             {
                 UdtTypeName = "geography",
-                Value = $"POINT({model.Longitud} {model.Latitud})"
+                Value = referenciaGeografica
             };
+
+            //SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt) // Esto es un tipo de dato especial por lo tanto tuvimos que amarlo por aparte.
+            //{
+            //    UdtTypeName = "geography",
+            //    Value = $"POINT({model.Longitud} {model.Latitud})"
+            //};
 
             // Crear la lista de parametros.
             var parametros = new SqlParameter[]

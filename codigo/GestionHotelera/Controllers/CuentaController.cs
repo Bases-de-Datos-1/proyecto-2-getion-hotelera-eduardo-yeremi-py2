@@ -1,4 +1,6 @@
-﻿using GestionHotelera.Models;
+﻿using System.Globalization;
+using System.Reflection;
+using GestionHotelera.Models;
 using GestionHotelera.Models.RegistrarModels;
 using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
@@ -80,7 +82,7 @@ namespace GestionHotelera.Controllers
             int estadoRegistro =  _dataBaseServices.RegistrarClienteBD(dataRequest);
             Console.WriteLine($"Estado del registro del cliente: {estadoRegistro}");
             // Redireccionar a la ventana.
-            return Json(new { Estado = true });
+            return Json(new { Estado = estadoRegistro });
             // Volver a lanzar la ventana del regitro en caso de error.
 
 
@@ -88,14 +90,56 @@ namespace GestionHotelera.Controllers
 
 
 
-
+        // Este seria para desplegar la ventana del registro de cuentas de empresas de hospedaje.
         // Cuenta/RegisterHospedaje
-        [HttpGet]
+        //[HttpGet]
         public IActionResult RegisterHospedaje()
         {
-            return View();
+
+            // Obtener los datos necesarios que se desplegaran en la ventana.
+            var datosGenerales = new RegistroEmpresaHospedajeViewModel
+            {
+                //ListaTiposCamas = _dataBaseServices.ObtenerTiposCamas(),
+                ListaTiposInstalaciones = _dataBaseServices.OptenerTipoInstalacionesBD(),
+                ListaServiciosHotel = _dataBaseServices.OptenerServiciosHotelesBD(),
+                Provincias = _dataBaseServices.ObtenerProvinciasConCantonesYDistritos()
+            };
+
+            // Lanzar la ventana y que lleve los datos necesarios.
+            return View(datosGenerales);
         }
 
+        // Funcion para recibir los datos del registro de cuentas de empresas de hospedaje.
+        //[Consumes("application/x-www-form-urlencoded")]
+        //[Produces("application/json")]
+        //[RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = long.MaxValue)]
+        //[ValidateAntiForgeryToken]
+        [HttpPost]
+        public JsonResult RegistrarCuentaEmpresaHospedaje(RegistrarEmpresaHospedajeModel dataRequest)// RegistrarEmpresaHospedajeModel dataRequest
+        {
+
+            // Vean, hay algo raro en los datos de latitud y longitud, algo con el culture o algo asi es, por eso se tiene que hacer esta converssion manual.
+            string latitudStr = Request.Form["Latitud"].ToString().Replace(",", ".");
+            string longitudStr = Request.Form["Longitud"].ToString().Replace(",", ".");
+
+            if (double.TryParse(latitudStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat))
+                dataRequest.Latitud = lat;
+
+            if (double.TryParse(longitudStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lng))
+                dataRequest.Longitud = lng;
+
+            //CultureInfo.CurrentCulture = new CultureInfo("en-US");
+            //Console.WriteLine($"Lat: {dataRequest.Latitud}, Lng: {dataRequest.Longitud}");
+            //Console.WriteLine($"Latitud RAW: {Request.Form["Latitud"]}");
+            //Console.WriteLine($"Longitud RAW: {Request.Form["Longitud"]}");
+            //Console.WriteLine($"Model.Latitud: {dataRequest.Latitud}");
+            //Console.WriteLine($"Model.Longitud: {dataRequest.Longitud}");
+
+            var resultado = _dataBaseServices.ProcesarRegistroEmpresaHospedaje(dataRequest);
+
+            return resultado;
+            //return Json(new { estado = false }); ;
+        }
 
         // Cuenta/RegisterRecreacion
         [HttpGet]
@@ -103,5 +147,15 @@ namespace GestionHotelera.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public JsonResult RegistrarEmpresaDeRecreacion(RegistrarEmpresaRecreacionModel dataRequest) { 
+        
+            int resultado = _dataBaseServices.RegistrarEmpresaRecreacionBD(dataRequest);
+
+            return Json(new { Estado = resultado });
+        }
+
+
     }
 }

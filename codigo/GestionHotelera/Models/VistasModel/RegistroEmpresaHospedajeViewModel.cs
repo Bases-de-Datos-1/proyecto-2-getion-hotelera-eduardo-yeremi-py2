@@ -6,7 +6,7 @@ namespace GestionHotelera.Models.VistasModel
     public class RegistroEmpresaHospedajeViewModel
     {
 
-        //public List<TipoCamasModel> ListaTiposCamas { get; set; } = new List<TipoCamasModel>();
+        //public List<Red> ListaTiposCamas { get; set; } = new List<TipoCamasModel>();
 
         public List<TipoInstalacionModel> ListaTiposInstalaciones { get; set; } = new List<TipoInstalacionModel>();
 
