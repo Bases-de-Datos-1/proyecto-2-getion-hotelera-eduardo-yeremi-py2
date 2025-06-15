@@ -1,6 +1,7 @@
 using System.Data;
 using System.Diagnostics;
 using GestionHotelera.Models;
+using GestionHotelera.Models.ClientesModels;
 using GestionHotelera.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +34,7 @@ namespace GestionHotelera.Controllers
             //{
             //    Console.WriteLine($"Tipo de cama: {row["NombreCama"]}");
             //}
-
+            ClienteModel cliente = _dataBaseServices.ProcesarOptencionDeDatosCliente("7320140");
             List<ProvinciasModel> provincias = _dataBaseServices.ObtenerProvinciasConCantonesYDistritos();
             Console.WriteLine("Provincias obtenidas:");
             foreach (var provincia in provincias)

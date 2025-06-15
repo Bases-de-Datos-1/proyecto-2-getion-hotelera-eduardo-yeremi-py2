@@ -8,6 +8,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GestionHotelera.Models.ClientesModels;
 namespace GestionHotelera.Services
 {
     
@@ -765,10 +766,99 @@ namespace GestionHotelera.Services
 
 
         // >>> ===== Funciones para optener los datos de un cliente especifico. ===== <<<
+
+        // Funcion general para el proceso de optencion de datos de los clientes.
+        public ClienteModel ProcesarOptencionDeDatosCliente(string cedula)
+        {
+            ClienteModel cliente = ObtenerDatosGeneralesClienteDB(cedula);
+            if (cliente == null) { 
+                return null;
+            }
+
+            cliente.Telefonos = ObtenerTelefonosClienteDB(cedula);
+            return cliente;
+
+        }
+
         // Optener el registro del cliente por su ID.
+        public ClienteModel ObtenerDatosGeneralesClienteDB(string cedula)
+        {
+            // Establecer el parametro del cliente a buscar.
+            SqlParameter[] parametros = {
+                new SqlParameter("@Cedula", cedula)
+            };
+
+            // Si no se encentran datos del cliente se devuelve un null, con eso podemos indicar que el cliente no se encontro.
+            DataTable tabla = EjecutarProcedimientoConParametros("sp_ObtenerDatosCliente", parametros);
+            if (tabla.Rows.Count == 0) { 
+                return null;
+            }
+
+            // Puede traer mas de una fila.
+            DataRow row = tabla.Rows[0];
+
+            //Devolver los datos del cliente.
+            return new ClienteModel
+            {
+                Cedula = row["Cedula"].ToString(),
+
+                NombreCompleto = row["NombreCompleto"].ToString(),
+
+                TipoIdentificacion = row["TipoIdentificacion"].ToString(),
+
+                IdPais = Convert.ToInt32(row["IdPais"]),
+
+                PaisResidencia = row["PaisResidencia"].ToString(),
+
+                FechaNacimiento = DateOnly.FromDateTime(Convert.ToDateTime(row["FechaNacimiento"])), // Este viene en date time.
+
+                Edad = Convert.ToInt32(row["Edad"]),
+
+                CorreoElectronico = row["CorreoElectronico"].ToString(),
+
+
+                // Estos valores de la ubicacion pueden ser null dependiendo del pais de residencia del cliente.
+                IdProvincia = row["IdProvincia"] != DBNull.Value ? Convert.ToInt32(row["IdProvincia"]) : 0, 
+                NombreProvincia = row["Provincia"]?.ToString(),
+
+                IdCanton = row["IdCanton"] != DBNull.Value ? Convert.ToInt32(row["IdCanton"]) : 0,
+                NombreCanton = row["Canton"]?.ToString(),
+
+                IdDistrito = row["IdDistrito"] != DBNull.Value ? Convert.ToInt32(row["IdDistrito"]) : 0,
+                NombreDistrito = row["Distrito"]?.ToString()
+            };
+        }
+
+
 
         // Optener los telefonos del cliente.
+        public List<TelefonoClienteModel> ObtenerTelefonosClienteDB(string cedula)
+        {
+            // Establecer el parametro con la cedula del cliente.
+            SqlParameter[] parametros = {
+                new SqlParameter("@Cedula", cedula)
+            };
 
+            // Extraer el resultdo con los datos del cliente, si el cliente existe tiene al menos 1 telefono registrado.
+            DataTable tabla = EjecutarProcedimientoConParametros("sp_ObtenerTelefonosCliente", parametros);
+            List<TelefonoClienteModel> telefonos = new();
+
+            // Sacar y guardar los datos que llegaron.
+            foreach (DataRow fila in tabla.Rows)
+            {
+                telefonos.Add(new TelefonoClienteModel
+                {
+                    IdTelefono = Convert.ToInt32(fila["IdTelefono"]),
+                    Cedula = fila["CedulaCliente"].ToString(),
+                    NombreCompleto = fila["NombreCliente"].ToString(),
+                    NumeroTelefonico = fila["NumeroTelefonico"].ToString(),
+                    CodigoPais = fila["CodigoPais"].ToString()
+                });
+            }
+
+            // Devolver el resultado.
+            return telefonos;
+        }
 
     }
 }
