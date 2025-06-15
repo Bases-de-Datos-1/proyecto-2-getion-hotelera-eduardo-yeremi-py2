@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using GestionHotelera.Models;
+using GestionHotelera.Models.EmpresaHospedajeModels;
+using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.RegistrarModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,8 @@ namespace GestionHotelera.Services
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("ConexionClientes"); // Inicia la cadena de conexion con los datos de los clientes por defecto.
         }
+
+        // >>> ===== Funciones para la comunicacion con la base de datos. ===== <<<
 
         public SqlConnection IniciarConexion()
         {
@@ -79,26 +83,7 @@ namespace GestionHotelera.Services
                 }
             }
         }
-        /*
-         
-            // Crear parámetros para el procedimiento almacenado
-            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
-            {
-                Direction = ParameterDirection.Output // Definir como parámetro de salida
-            };
 
-            SqlParameter idServicioParam = new("@IdServicio", SqlDbType.SmallInt) { Value = 10 };
-            SqlParameter idActividadParam = new("@IdActividad", SqlDbType.SmallInt) { Value = 5 };
-            SqlParameter idEmpresaParam = new("@IdEmpresa", SqlDbType.VarChar, 15) { Value = "EMPRESA123" };
-
-            // Ejecutar el procedimiento almacenado
-            int resultado = dbService.EjecutarProcedimientoIUD("sp_EliminarListaActividades", 
-                new SqlParameter[] { idServicioParam, idActividadParam, idEmpresaParam, resultadoParam });
-
-            // Mostrar el estado del procedimiento
-            Console.WriteLine($"Estado del procedimiento: {resultado}");
-      
-         */
 
         // Esta funcion seria para ejecutar procedimientos que solo realizar selects de vistas. Devuleve los resultados den un DataTable.
         public DataTable EjecutarProcedimientoBasico(string nombreProcedimiento)
@@ -161,6 +146,10 @@ namespace GestionHotelera.Services
             }
         }
 
+
+
+
+        // >>> ===== Funciones para optener datos generales que se ocupan para el funcionamiento de la pagina. ===== <<<
 
         // Optener los datos de los paises registrados en el sistema.
         public List<PaisesModel> ObtenerPaises()
@@ -253,7 +242,6 @@ namespace GestionHotelera.Services
         }
 
 
-
         // Optener los datos de los distritos registrados.
         public List<DistritoModel> ObtenerDistritosPorCanton(int idCanton)
         {
@@ -305,7 +293,134 @@ namespace GestionHotelera.Services
         }
 
 
+        // Optener los tipos de camas que haya registrados en el sistema.
+        public List<TipoCamasModel> OptenerTiposCamasBD()
+        {
 
+            List<TipoCamasModel> tiposCamas = new List<TipoCamasModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable tiposCamaRegistrados = EjecutarProcedimientoBasico("sp_OptenerTiposCama");
+                if (tiposCamaRegistrados != null && tiposCamaRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in tiposCamaRegistrados.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var tipos = new TipoCamasModel
+                        {
+                            IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
+                            NombreCama = row["NombreCama"].ToString(),
+
+                        };
+                        tiposCamas.Add(tipos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo los tipos de cama: {ex.Message}");
+            }
+            return tiposCamas;
+        }
+
+        // Optener los tipos de instalciones que esten registrados, pero esto no es para optener los tipos de instalaciones de una empresa.
+        public List<TipoInstalacionModel> OptenerTipoInstalacionesBD()
+        {
+
+            List<TipoInstalacionModel> tiposInstalaciones = new List<TipoInstalacionModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable tiposInstalacionesRegistrados = EjecutarProcedimientoBasico("sp_OptenerTiposEstablecimientos");
+                if (tiposInstalacionesRegistrados != null && tiposInstalacionesRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in tiposInstalacionesRegistrados.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var tipos = new TipoInstalacionModel
+                        {
+                            IdTipoInstalacion = Convert.ToInt32(row["IdTipoInstalacion"]),
+                            NombreInstalacion = row["NombreInstalacion"].ToString(),
+
+                        };
+                        tiposInstalaciones.Add(tipos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo los tipos de instalaciones: {ex.Message}");
+            }
+            return tiposInstalaciones;
+        }
+
+        // Optener los servicios registrados en el sistema, pero esto no es para optener los servicios asociados a una empresa.
+        public List<ServiciosHotelModel> OptenerServiciosHotelesBD()
+        {
+
+            List<ServiciosHotelModel> comodidadesHoteles = new List<ServiciosHotelModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable serviciosHotelesRegistrados = EjecutarProcedimientoBasico("sp_OptenerServiciosEstablecimientos");
+                if (serviciosHotelesRegistrados != null && serviciosHotelesRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in serviciosHotelesRegistrados.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var tipos = new ServiciosHotelModel
+                        {
+                            IdServicio = Convert.ToInt32(row["IdServicio"]),
+                            NombreServicio = row["NombreServicio"].ToString(),
+
+                        };
+                        comodidadesHoteles.Add(tipos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo las comodidades de los hoteles: {ex.Message}");
+            }
+            return comodidadesHoteles;
+        }
+
+        // Optener la redes sociales que esten registradas, esto no es para optnener las redes sociales de las empresas.
+        public List<RedesSocialesModel> OptenerRedesSocialesBD()
+        {
+
+            List<RedesSocialesModel> redesSociales = new List<RedesSocialesModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable redesSocialesRegistradas = EjecutarProcedimientoBasico("sp_OptenerServiciosEstablecimientos");
+                if (redesSocialesRegistradas != null && redesSocialesRegistradas.Rows.Count > 0)
+                {
+                    foreach (DataRow row in redesSocialesRegistradas.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var tipos = new RedesSocialesModel
+                        {
+                            IdRedSocial = Convert.ToInt32(row["IdRedSocial"]),
+                            NombreRedSocial = row["Nombre"].ToString(),
+
+                        };
+                        redesSociales.Add(tipos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo las comodidades de las redes sociales: {ex.Message}");
+            }
+            return redesSociales;
+        }
+
+
+
+
+        // >>> ===== Funciones el registros de los clientes. ===== <<<
 
         // Funcion para el registro de los clientes en la base de datos.
         public int RegistrarClienteBD(RegistrarClienteModel model)
@@ -383,5 +498,73 @@ namespace GestionHotelera.Services
                 }
             }
         }
+
+
+
+
+        // >>> ===== Funciones para el registro de las empresas de hospedaje. ===== <<<
+
+        // Registrar la cuenta de una empresa de hospedaje.
+        //public int RegistrarEmpresaHospedajeBD(RegistrarEmpresaHospedajeModel model)
+        //{
+        //    Console.WriteLine("Iniciando proceso de registro de empresa de hospedaje.");
+        //    CambiarConexion("Administrador");
+        //    // Parametro de salida para el resultado.
+        //    SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+        //    {
+        //        Direction = ParameterDirection.Output
+        //    };
+        //    // Armar la cadena de parametros del procedimiento.
+        //    var parametrosEmpresa = new SqlParameter[]
+        //    {
+        //        new("@IdEmpresa", model.IdEmpresa),
+        //        new("@NombreEmpresa", model.NombreEmpresa),
+        //        new("@IdPais", model.IdPais),
+        //        new("@IdProvincia", (object?)model.IdProvincia ?? DBNull.Value),
+        //        new("@IdCanton", (object?)model.IdCanton ?? DBNull.Value),
+        //        new("@IdDistrito", (object?)model.IdDistrito ?? DBNull.Value),
+        //        new("@CorreoElectronico", model.CorreoElectronico),
+        //        new("@Contrasena", model.Contrasena),
+        //        resultadoParam
+        //    };
+        //    // Ejecutar el procedimiento
+        //    int resultado = EjecutarProcedimientoIUD("sp_AgregarEmpresaHospedaje", parametrosEmpresa);
+        //    CambiarConexion("Cliente");
+        //    Console.WriteLine("Finalizando proceso de registro de empresa de hospedaje.");
+        //    return resultado;
+        //}
+
+        // >>> ===== Funciones para el registro de las empresas de Recreacion. ===== <<<
+
+
+
+
+
+        // >>> ===== Funciones para optener los datos de una empresa de hospedaje especifica. ===== <<<
+        // Optener el registro de la empresa de hoespedaje por su ID.
+
+        // Optener las comodidades del hotel
+
+        // Optener las redes sociales del hotel.
+
+        // Optener los telefonos del hotel.
+
+
+
+
+        // >>> ===== Funciones para optener los datos de una empresa de recreacion especifica. ===== <<<
+        // Optener el registro de la empresa de recreacion por su ID.
+
+        // Optener los servicios de la empresa de hospedaje.
+
+        // Optener las actividades especificas de cada servicio. 
+
+
+        // >>> ===== Funciones para optener los datos de un cliente especifico. ===== <<<
+        // Optener el registro del cliente por su ID.
+
+        // Optener los telefonos del cliente.
+
+
     }
 }
