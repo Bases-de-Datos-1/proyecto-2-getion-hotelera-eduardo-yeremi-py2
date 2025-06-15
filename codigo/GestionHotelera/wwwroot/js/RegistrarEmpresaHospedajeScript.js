@@ -1,7 +1,14 @@
-﻿//window.location.href = '@Url.Action("Informacion", "Currency")';
+﻿
+//<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+//<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+//<div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
 
-// Para lo que seria el ir actualizando el valor que se muestra en el imput de la ubicacion.
+//<!--Campos ocultos para guardar coordenadas-- >
+//<input type="hidden" id="Latitud" name="Latitud" />
+//<input type="hidden" id="Longitud" name="Longitud" />
+
+// Para lo que seria el ir actualizando el valor que se muestra en el imput de la ubicacion. // Cambiar lo de pais.
 function iniciarUbicacionesDinamicas() {
 
     // Seleccionamos los elementos.
@@ -47,26 +54,55 @@ function iniciarUbicacionesDinamicas() {
 // Inciar el listener al evento submit del forms.
 function inciarListenerFormRegitroClientes() {
 
-   // document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById("formRegistrarCliente");
-        console.log("Evento argregado");
+    // document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("formRegistrarCliente");
+    console.log("Evento argregado");
 
-        // Validar que se encuentre el formulario.
-        if (!form) {
-            console.log("For no encontrado");
+    // Validar que se encuentre el formulario.
+    if (!form) {
+        console.log("For no encontrado");
 
-            return;
-        }
+        return;
+    }
 
-        form.addEventListener("submit", function (event) {
-            event.preventDefault(); 
-            console.log("Empezando envio del formulario");
-            //const formData = new FormData(form);
-            registrarCliente();
-        });
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        console.log("Empezando envio del formulario");
+        //const formData = new FormData(form);
+        registrarCliente();
+    });
     //});
 
 }
+
+// Para inciar el listener del mapa.
+function inicarConfiguracionMapa() {
+    const map = L.map('map').setView([9.934739, -84.087502], 13); // San José, CR
+
+    // Agregar el mapa base (puede cambiarse a otro proveedor si querés)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function (e) {
+        const { lat, lng } = e.latlng;
+
+        // Eliminar el marcador anterior si ya hay uno
+        if (marker) map.removeLayer(marker);
+
+        // Agregar un nuevo marcador
+        marker = L.marker([lat, lng]).addTo(map);
+
+        // Guardar las coordenadas en los inputs ocultos
+        document.getElementById("Latitud").value = lat;
+        document.getElementById("Longitud").value = lng;
+    });
+
+}
+
+
 
 // Funcion para la parte del registro de cliente.
 async function registrarCliente() {
@@ -125,11 +161,11 @@ async function enviarDatosRegistroCliente() {
 
 
 
+
+
 // Esto es para que el DOM carge y se puedan ejecutar las funciones que seleccionan elementos del DOM.
 document.addEventListener("DOMContentLoaded", function () {
-    iniciarUbicacionesDinamicas();
-    inciarListenerFormRegitroClientes();
+    //iniciarUbicacionesDinamicas();
+    //inciarListenerFormRegitroClientes();
+    //inicarConfiguracionMapa();
 });
-
-
-

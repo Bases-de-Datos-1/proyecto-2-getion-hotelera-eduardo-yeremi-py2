@@ -257,10 +257,8 @@ VALUES
     ('Instagram'),
     ('Twitter'),
     ('TikTok'),
-    ('Snapchat'),
     ('YouTube'),
-    ('WhatsApp'),
-    ('Telegram');
+    ('WhatsApp');
 
 -- >>> ==== Para lo que seria la tabla de Tipos de camas. ==== <<<
 INSERT INTO TipoCama (NombreCama) VALUES

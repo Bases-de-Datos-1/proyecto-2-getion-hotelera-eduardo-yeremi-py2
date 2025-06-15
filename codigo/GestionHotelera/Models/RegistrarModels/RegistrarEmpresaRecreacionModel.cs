@@ -14,13 +14,8 @@
 
         public string Distrito { get; set; }
 
+        public string SenasExactas { get; set; }
 
-        // Datos de la instalcion:
-        public int Instalacion { get; set; }
-
-        public string Comodidades { get; set; } // Esto deberia de ser una lista de comodidades, cambiarlo despues.
-
-        
         // Datos de contacto.
         public string CorreoElectronico { get; set; }
 
@@ -33,7 +28,6 @@
         public string Contrasena { get; set; }
 
         public string ConfirmarContrasena { get; set; }
-
 
     }
 }
