@@ -1,14 +1,4 @@
-﻿
-//<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-//<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-//<div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
-
-//<!--Campos ocultos para guardar coordenadas-- >
-//<input type="hidden" id="Latitud" name="Latitud" />
-//<input type="hidden" id="Longitud" name="Longitud" />
-
-// Para lo que seria el ir actualizando el valor que se muestra en el imput de la ubicacion. // Cambiar lo de pais.
+﻿// Para lo que seria el ir actualizando el valor que se muestra en el imput de la ubicacion. // Cambiar lo de pais.
 function iniciarUbicacionesDinamicas() {
 
     // Seleccionamos los elementos.
@@ -19,7 +9,7 @@ function iniciarUbicacionesDinamicas() {
     //const ubicacionCR = document.getElementById("ubicacionCR");
 
     // Validar que se pudo optener todo.!paisSelect || || !ubicacionCR
-    if (!provinciaSelect || !cantonSelect || !distritoSelect ) {
+    if (!provinciaSelect || !cantonSelect || !distritoSelect) {
 
         return;
     }
@@ -55,7 +45,7 @@ function iniciarUbicacionesDinamicas() {
 function inciarListenerFormRegitroEmpresa() {
 
     // document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("formRegistroEmpresaHospedaje");
+    const form = document.getElementById("formRegistrarEmpresaRecreacion");
     console.log("Evento argregado");
 
     // Validar que se encuentre el formulario.
@@ -72,38 +62,6 @@ function inciarListenerFormRegitroEmpresa() {
         registrarEmpresa();
     });
     //});
-
-}
-
-// Para inciar el listener del mapa.
-function inicarConfiguracionMapa() {
-
-    console.log("Iniciando configuracion del mapa.");
-    const map = L.map('map').setView([9.934739, -84.087502], 13); // San José, CR
-
-    // Agregar el mapa base (puede cambiarse a otro proveedor si querés)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    let marker;
-
-    map.on('click', function (e) {
-        const { lat, lng } = e.latlng;
-
-        // Eliminar el marcador anterior si ya hay uno
-        if (marker) map.removeLayer(marker);
-
-        // Agregar un nuevo marcador
-        marker = L.marker([lat, lng]).addTo(map);
-
-        // Guardar las coordenadas en los inputs ocultos
-        document.getElementById("latitud").value = lat.toString().replace(',', '.');
-        document.getElementById("longitud").value = lng.toString().replace(',', '.');
-        //document.getElementById("latitud").value = lat.toFixed(8);
-        //document.getElementById("longitud").value = lng.toFixed(8);
-
-    });
 
 }
 
@@ -138,24 +96,23 @@ async function enviarDatosRegistroEmpresa() {
 
     // Obtener los datos del formulario.
 
-    const formData = new FormData(document.getElementById("formRegistroEmpresaHospedaje"));
+    const formData = new FormData(document.getElementById("formRegistrarEmpresaRecreacion"));
     // Enviar los datos al controlador.
+
     try {
-        const response = await fetch('/Cuenta/RegistrarCuentaEmpresaHospedaje', {
+        const response = await fetch('/Cuenta/RegistrarEmpresaDeRecreacion', {
             method: 'POST',
             body: formData
         });
         if (response.ok) {
-
             const resultado = await response.json();
             console.log("Datos del regitro de la empresa: ", resultado);
-            let result = resultado.estadoGeneral;
-
-            if (result[0] === 1) {
+            //let result = resultado.estadoGeneral;
+            if (resultado.estado === 1) {
                 alert("Empresa hospedaje registrado exitosamente.");
                 //window.location.href = '@Url.Action("Cuenta", "Login")';
 
-                //window.location.href = '/Cliente/Informacion'; // Redirigir a la pagina de informacion del cliente.
+                window.location.href = '/Cliente/Login'; // Redirigir a la pagina de informacion del cliente.
             } else {
                 alert("Error al registrar el cliente: " + result.message);
             }
@@ -177,5 +134,4 @@ async function enviarDatosRegistroEmpresa() {
 document.addEventListener("DOMContentLoaded", function () {
     iniciarUbicacionesDinamicas();
     inciarListenerFormRegitroEmpresa();
-    inicarConfiguracionMapa();
 });

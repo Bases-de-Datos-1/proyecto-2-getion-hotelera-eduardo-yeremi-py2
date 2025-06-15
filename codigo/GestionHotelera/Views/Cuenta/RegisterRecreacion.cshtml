@@ -2,6 +2,7 @@
     ViewData["Title"] = "Registro Empresa de Recreación";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@model GestionHotelera.Models.VistasModel.RegistroEmpresaRecreacionViewModel;
 
 @section Styles {
     <link rel="stylesheet" href="/css/auth.css" />
@@ -73,7 +74,7 @@
 <div class="form-container">
     <h2>Registro - Empresa de Recreación</h2>
 
-    <form method="post" action="/Cuenta/RegisterRecreacion">
+    <form id="formRegistrarEmpresaRecreacion">
         <div class="form-group">
             <label for="cedulaJuridica">Cédula Jurídica</label>
             <input type="text" id="cedulaJuridica" name="CedulaJuridica" required />
@@ -85,18 +86,45 @@
         </div>
 
         <div class="form-group">
+            <label for="nombrePersona">Nombre de la perosona a contactar: </label>
+            <input type="text" id="nombrePerosna" name="PersonaAContactar" required />
+        </div>
+
+        @* Para la parte de ubicaciones. *@
+        <div class="form-group">
             <label for="provincia">Provincia</label>
-            <input type="text" id="provincia" name="Provincia" required />
+            <select id="provincia" name="Provincia">
+                <option value="0">Seleccione una provincia</option>
+                @foreach (var provincia in Model.Provincias)
+                {
+                    <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                }
+            </select>
         </div>
 
         <div class="form-group">
             <label for="canton">Cantón</label>
-            <input type="text" id="canton" name="Canton" required />
+            <select id="canton" name="Canton">
+                <option value="0">Seleccione un cantón</option>
+            </select>
         </div>
 
         <div class="form-group">
             <label for="distrito">Distrito</label>
-            <input type="text" id="distrito" name="Distrito" required />
+            <select id="distrito" name="Distrito">
+                <option value="0">Seleccione un distrito</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="senasExactas">Señas exactas: </label>
+            <input type="text" id="senasExactas" name="SenasExactas" required />
+        </div>
+
+
+        <div class="form-group">
+            <label for="telefono1ID">Numero telefonico (Obligatorio)</label>
+            <input type="number" id="telefono1ID" name="Telefono" required />
         </div>
 
         <div class="form-group">
@@ -121,3 +149,11 @@
         <p><a href="/Cuenta/Register">← Volver al selector</a></p>
     </div>
 </div>
+
+<script>
+    // Guardar los datos en las ventanas para usarlo en un archivo aparte.
+    window.listaCantones = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones)));
+    window.listaDistritos = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones).SelectMany(c => c.Distritos)));
+</script>
+
+<script src="~/js/RegistrarEmpresaRecreacionScript.js"></script>

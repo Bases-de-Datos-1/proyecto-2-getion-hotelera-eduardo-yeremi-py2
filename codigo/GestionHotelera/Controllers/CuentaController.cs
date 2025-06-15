@@ -145,7 +145,14 @@ namespace GestionHotelera.Controllers
         [HttpGet]
         public IActionResult RegisterRecreacion()
         {
-            return View();
+            // Obtener los datos necesarios que se desplegaran en la ventana.
+            var datosGenerales = new RegistroEmpresaRecreacionViewModel
+            {
+                Provincias = _dataBaseServices.ObtenerProvinciasConCantonesYDistritos()
+            };
+
+            // Lanzar la ventana y que lleve los datos necesarios.
+            return View(datosGenerales);
         }
 
         [HttpPost]
