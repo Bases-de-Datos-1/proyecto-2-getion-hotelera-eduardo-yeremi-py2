@@ -6,6 +6,15 @@ using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
 using Microsoft.AspNetCore.Mvc;
 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Json;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Session;
+using System.Diagnostics;
+
 namespace GestionHotelera.Controllers
 {
     public class CuentaController : Controller
@@ -21,21 +30,86 @@ namespace GestionHotelera.Controllers
         }
 
 
+        // Uso del sessiion, esto es para almacenar datos en una session.:
+        //HttpContext.Session.SetString("TipoUsuario", "Cliente");
+        //HttpContext.Session.SetString("UsuarioID", "603250123");
+        //HttpContext.Session.SetInt32("Contrasena", 1); 
+
+        //string id = HttpContext.Session.GetString("UserEmail");
+        //int? tipo = HttpContext.Session.GetInt32("TipoUsuario");
+
+        
+
         // Este seria para desplegar lo que seria la pagina de registro.
         // Cuenta/Login
         public IActionResult Login()
         {
+            //string id = HttpContext.Session.GetString("UserEmail");
             return View();
         }
 
         // Este seria para la comprobar el inicio de sesion.
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public IActionResult Login(LoginViewModelV2 dataRequest)
         {
-            if (email == "admin@example.com" && password == "123456")
+            Console.WriteLine($"Iniciando verificacion");
+
+            // Aqui se elegiria cual cual vista deberia de realizar la validacion.
+            if (dataRequest.TipoUsuario == "Cliente")
             {
-                return RedirectToAction("Index", "Home");
+                string resultado = _dataBaseServices.VerificarCuentaCliente(dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                Console.WriteLine($"Resultado de la verificacion del cliente: {resultado}");
+
+                if (resultado != "Fallo" && resultado != "FalloI")
+                {
+                    return RedirectToAction("Menu", "Cliente");
+
+                }
+                else
+                {
+                    ViewBag.Error = "Credenciales incorrectas";
+                    return View();
+                }
             }
+            else if (dataRequest.TipoUsuario == "EmpresaHospedaje")
+            {
+                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                Console.WriteLine($"Resultado de la verificacion del Empresa Hospedaje: {resultado}");
+
+
+                if (resultado != "Fallo" && resultado != "FalloI")
+                {
+                    return RedirectToAction("Menu", "Cliente");
+
+                }
+                else
+                {
+                    ViewBag.Error = "Credenciales incorrectas";
+                    return View();
+                }
+            }
+            else if (dataRequest.TipoUsuario == "EmpresaRecreacion")
+            {
+                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                Console.WriteLine($"Resultado de la verificacion del Empresa Recreacion: {resultado}");
+
+                if (resultado != "Fallo" && resultado != "FalloI")
+                {
+                    return RedirectToAction("Menu", "Cliente");
+
+                }
+                else
+                {
+                    ViewBag.Error = "Credenciales incorrectas";
+                    return View();
+                }
+            }
+
+
+            //if (email == "admin@example.com" && password == "123456")
+            //{
+            //    return RedirectToAction("Index", "Home");
+            //}
             else
             {
                 ViewBag.Error = "Credenciales incorrectas";

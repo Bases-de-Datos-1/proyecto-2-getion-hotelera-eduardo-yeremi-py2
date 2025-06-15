@@ -2495,12 +2495,12 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdEmpresa IS NULL -- Me da ansiedad pero es mas rapido asi.
-            SET @IdEmpresa = -1;
+            SET @IdEmpresa = 'Fallo';
 
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarEmpresaHospedaje: ' + ERROR_MESSAGE();
-        SET @IdEmpresa = -99; 
+        SET @IdEmpresa = 'FalloI'; 
     END CATCH
 END;
 GO
@@ -2520,12 +2520,12 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdCliente IS NULL 
-            SET @IdCliente = -1;
+            SET @IdCliente = 'Fallo';
 
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarCliente: ' + ERROR_MESSAGE();
-        SET @IdCliente = -99;
+        SET @IdCliente = 'FalloI';
     END CATCH
 END;
 GO
@@ -2545,11 +2545,11 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdEmpresa IS NULL
-            SET @IdEmpresa = -1;
+            SET @IdEmpresa = 'Fallo';
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarEmpresaRecreacion: ' + ERROR_MESSAGE();
-        SET @IdEmpresa = -99; 
+        SET @IdEmpresa = 'FalloI'; 
     END CATCH
 END;
 GO

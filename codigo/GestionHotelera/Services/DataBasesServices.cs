@@ -153,6 +153,31 @@ namespace GestionHotelera.Services
             }
         }
 
+        // Funcion para ejecutar una funcion para que tenga parametros y el de salida sea un tipo string:
+        public string EjecutarProcedimientoConParametroSalidaTexto(string nombreProcedimiento, SqlParameter[] parametros)
+        {
+            using (var conn = IniciarConexion())
+            {
+                using (var cmd = new SqlCommand(nombreProcedimiento, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(parametros);
+
+                    SqlParameter parametroSalida = parametros.FirstOrDefault(p => p.Direction == ParameterDirection.Output);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        return parametroSalida?.Value?.ToString() ?? "FalloI";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error ejecutando procedimiento (texto): {ex.Message}");
+                        return "FalloI";
+                    }
+                }
+            }
+        }
 
 
 
@@ -872,6 +897,60 @@ namespace GestionHotelera.Services
             // Devolver el resultado.
             return telefonos;
         }
+
+
+
+
+
+        // >>> ===== Funciones para la autenticacion de los usuarios en la base de datos. ===== <<<
+        // Funcion para verificar la cuenta de los clientes.
+        public string VerificarCuentaCliente(string correo, string contrasena)
+        {
+
+            SqlParameter idClienteParam = new("@IdCliente", SqlDbType.VarChar, 15)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@Correo", correo),
+                new("@Contrasena", contrasena),
+                idClienteParam
+            };
+
+            string resultado = EjecutarProcedimientoConParametroSalidaTexto("sp_VerificarCliente", parametros);
+            //EjecutarProcedimientoIUD("sp_VerificarCliente", parametros);
+
+
+            return resultado;
+        }
+
+
+        // Funcion para verificar la cuentas de las empresas.
+        public string VerificarCuentaEmpresa(string procedimiento, string correo, string contrasena)
+        {
+            //CambiarConexion("Administrador");
+
+            SqlParameter idEmpresaParam = new("@IdEmpresa", SqlDbType.VarChar, 15)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@Correo", correo),
+                new("@Contrasena", contrasena),
+                idEmpresaParam
+            };
+
+            string resultado = EjecutarProcedimientoConParametroSalidaTexto(procedimiento, parametros);
+
+            //CambiarConexion("Cliente");
+
+            return resultado;
+        }
+
 
     }
 }

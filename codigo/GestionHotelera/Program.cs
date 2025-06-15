@@ -5,6 +5,21 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar los servicios de bases de datos.
 builder.Services.AddSingleton<DataBasesServices>();
 
+// Habilitar la sesion.
+//builder.Services.AddSession();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -22,6 +37,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseSession();// La otra parte para activar la sesion.
 
 app.UseAuthorization();
 
