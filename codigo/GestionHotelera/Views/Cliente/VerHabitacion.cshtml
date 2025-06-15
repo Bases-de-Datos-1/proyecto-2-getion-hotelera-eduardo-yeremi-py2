@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "Ver habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .habitacion-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            background-color: #555;
+            padding: 25px;
+            color: white;
+            border-radius: 10px;
+        }
+
+            .habitacion-container img {
+                width: 100%;
+                border-radius: 8px;
+                height: auto;
+            }
+
+        .habitacion-header {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .habitacion-sub {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .seccion {
+            margin-top: 20px;
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+            .seccion h4 {
+                margin-bottom: 10px;
+                color: #ddd;
+            }
+
+        .comodidades span {
+            display: inline-block;
+            background-color: #2e7d32;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 4px 6px 0 0;
+        }
+
+        .formulario-reserva input,
+        .formulario-reserva select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: 4px;
+            border: none;
+        }
+
+        .formulario-reserva label {
+            font-weight: bold;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .formulario-reserva button {
+            background-color: #1a7567;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .volver {
+            margin-bottom: 20px;
+            display: inline-block;
+            background-color: #6c757d;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .mapa {
+            background-color: #333;
+            color: #ccc;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .btn-ver-empresa {
+            margin-top: 15px;
+            display: inline-block;
+            background-color: #2e7d32;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+}
+
+<a href="/Cliente/VerReservaciones" class="volver">← Atrás</a>
+
+<div class="habitacion-container">
+    <!-- Izquierda: Detalles -->
+    <div>
+        <div class="habitacion-header">Villa caribeña exclusiva</div>
+        <div class="habitacion-sub">📍 Puerto viejo, Limón</div>
+
+        <img src="https://images.unsplash.com/photo-1560347876-aeef00ee58a1" alt="Habitación" />
+
+        <div class="seccion">
+            <h4>Descripción:</h4>
+            <p>Hermosa casa en la naturaleza del caribe</p>
+            <p><strong>Tipo de cama:</strong> Cama king size</p>
+            <p><strong>Precio:</strong> 126 000 colones / noche</p>
+        </div>
+
+        <div class="seccion">
+            <h4>Comodidades:</h4>
+            <div class="comodidades">
+                <span>WIFI</span>
+                <span>Piscina</span>
+                <span>A/C</span>
+            </div>
+        </div>
+
+        <div class="seccion">
+            <h4>Ubicación:</h4>
+            <div class="mapa">🗺 Mapa no disponible</div>
+            <p><strong>Provincia:</strong> Limón</p>
+            <p><strong>Cantón:</strong> Talamanca</p>
+            <p><strong>Distrito:</strong> Puerto Viejo</p>
+            <p><strong>Barrio:</strong> Playa negra</p>
+            <p><strong>Señas:</strong> Sobre la carretera principal a mano derecha, 50 m norte de la entrada a puerto</p>
+            <p><strong>Número de habitación:</strong> 1</p>
+        </div>
+
+        <a href="#" class="btn-ver-empresa">Ver empresa</a>
+    </div>
+
+    <!-- Derecha: Reservar -->
+    <div class="seccion formulario-reserva">
+        <h4>Reservar esta habitación:</h4>
+        <label>Fecha y hora de entrada:</label>
+        <input type="datetime-local" />
+
+        <label>Fecha y hora de salida:</label>
+        <input type="datetime-local" />
+
+        <label>Cantidad de personas:</label>
+        <input type="number" placeholder="Ingrese la cantidad" />
+
+        <label>
+            <input type="checkbox" />
+            ¿Posee vehículo?
+        </label>
+
+        <button>Reservar</button>
+    </div>
+</div>
