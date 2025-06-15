@@ -2,6 +2,9 @@
     ViewData["Title"] = "Registro de Cliente";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@model GestionHotelera.Models.VistasModel.RegistroClienteViewModel;
+
+
 
 @section Styles {
     <link rel="stylesheet" href="/css/auth.css" />
@@ -73,7 +76,11 @@
 <div class="form-container">
     <h2>Registro de Cliente</h2>
 
-    <form method="post" action="/Cuenta/RegisterCliente">
+    @* Esto seria para el registro de los datos de los clientes *@
+    @* <form id="formRegistrarCliente" method="post" action="/Cuenta/RegistrarCuentaCliente"> /[Controlador]/[Metodo] *@ 
+       
+    <form id="formRegistrarCliente">
+ 
         <div class="form-group">
             <label for="cedula">Cédula</label>
             <input type="text" id="cedula" name="Cedula" required />
@@ -87,8 +94,8 @@
         <div class="form-group">
             <label for="tipoIdentificacion">Tipo de identificación</label>
             <select id="tipoIdentificacion" name="TipoIdentificacion" required>
-                <option value="">Seleccione...</option>
                 <option value="Nacional">Nacional</option>
+                <option value="TIM">Cedula de menores</option>
                 <option value="DIMEX">DIMEX</option>
                 <option value="Pasaporte">Pasaporte</option>
             </select>
@@ -96,7 +103,41 @@
 
         <div class="form-group">
             <label for="pais">País de residencia</label>
-            <input type="text" id="pais" name="PaisResidencia" required />
+            @* <input type="text" id="pais" name="PaisResidencia" required /> *@
+            <select id="pais" name="paisResidencia" required>
+                @foreach (var pais in Model.Paises)
+                {
+                    <option value="@pais.IdPais">@pais.NombrePais</option>
+                }
+            </select>
+        </div>
+
+        @* Esto seria para la ubicacion en caso de ser de costa rica *@
+        <div id="ubicacionCR" style="display: none;">
+            <div class="form-group">
+                <label for="provincia">Provincia</label>
+                <select id="provincia" name="IdProvincia">
+                    @* <option value="">Seleccione una provincia</option> *@
+                    @foreach (var provincia in Model.Provincias)
+                    {
+                        <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                    }
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="canton">Cantón</label>
+                <select id="canton" name="IdCanton">
+                    @* <option value="">Seleccione un cantón</option> *@
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="distrito">Distrito</label>
+                <select id="distrito" name="IdDistrito">
+                    @* <option value="">Seleccione un distrito</option> *@
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
@@ -109,6 +150,26 @@
             <input type="email" id="correo" name="CorreoElectronico" required />
         </div>
 
+        @*Telefono 1 del cliente*@
+        <div class="form-group">
+            <label for="telefono1ID">Numero telefonico (Obligatorio)</label>
+            <input type="number" id="telefono1ID" name="telefono1" required />
+        </div>
+
+        @*Telefono 2 del cliente*@
+        <div class="form-group">
+            <label for="telefono2ID">Numero telefonico (Opcional)</label>
+            <input type="number" id="telefono2ID" name="telefono2" />
+
+        </div>
+
+        @*Telefono 3 del cliente*@
+        <div class="form-group">
+            <label for="telefono3ID">Numero telefonico (Opcional)</label>
+            <input type="number" id="telefono3ID" name="telefono3" />
+
+        </div>
+
         <div class="form-group">
             <label for="contrasena">Contraseña</label>
             <input type="password" id="contrasena" name="Contrasena" required />
@@ -119,10 +180,19 @@
             <input type="password" id="confirmar" name="ConfirmarContrasena" required />
         </div>
 
-        <button type="submit">Registrarse</button>
+        <button type="submit">Registrarse</button> 
+        @* <button type="button" onclick="registrarCliente()">Registrar</button> *@
     </form>
 
     <div class="back-link">
         <p><a href="/Cuenta/Register">← Volver al selector</a></p>
     </div>
 </div>
+
+<script>
+    // Guardar los datos en las ventanas para usarlo en un archivo aparte.
+    window.listaCantones = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones)));
+    window.listaDistritos = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones).SelectMany(c => c.Distritos)));
+</script>
+
+<script src="~/js/RegistrarClienteScript.js"></script>

@@ -1,4 +1,6 @@
 ﻿using System.Data;
+using GestionHotelera.Models;
+using GestionHotelera.Models.RegistrarModels;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 namespace GestionHotelera.Services
@@ -51,6 +53,12 @@ namespace GestionHotelera.Services
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddRange(parametros); // Agregar los parametros al comando.
 
+                    //foreach (SqlParameter param in cmd.Parameters)
+                    //{
+                    //    Console.WriteLine($"-> Nombre: {param.ParameterName}, Dirección: {param.Direction}, Valor: {param.Value}");
+                    //}
+
+
                     // Aqui se identifica el parametro de salida, el cual devolvera el resultado de la consulta.
                     SqlParameter outputParam = parametros.FirstOrDefault(p => p.Direction == ParameterDirection.Output);
 
@@ -58,7 +66,9 @@ namespace GestionHotelera.Services
                     {
                         // Ejecutar el comando y devolver el resultado.
                         cmd.ExecuteNonQuery();
-                        return outputParam?.Value is int result ? result : -99;
+                        //return outputParam?.Value is int result ? result : -1000;
+                        return Convert.ToInt32(outputParam?.Value ?? -1000); // Esto era por que el parametro de salida era smallint y aqui esperaba optener un int.
+
                     }
                     catch (Exception ex)
                     {
@@ -152,10 +162,226 @@ namespace GestionHotelera.Services
         }
 
 
-        // Ahora seria para las solicitudes de datos basicos.
-        
+        // Optener los datos de los paises registrados en el sistema.
+        public List<PaisesModel> ObtenerPaises()
+        {
+            List<PaisesModel> paises = new List<PaisesModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los paises.
+                DataTable paisesRegistrados = EjecutarProcedimientoBasico("sp_ObtenerPaises");
+                if (paisesRegistrados != null && paisesRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in paisesRegistrados.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var pais = new PaisesModel
+                        {
+                            IdPais = Convert.ToInt32(row["IdPais"]),
+                            NombrePais = row["NombrePais"].ToString(),
+                            CodigoPais = row["CodigoPais"].ToString()
+                        };
+                        paises.Add(pais);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo paises: {ex.Message}");
+            }
+            return paises;
+        }
+
+
+        // Optener los datos de las provincias registradas.
+        public List<ProvinciasModel> ObtenerProvincias()
+        {
+            List<ProvinciasModel> provincias = new List<ProvinciasModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener las provincias.
+                DataTable provinciasRegistradas = EjecutarProcedimientoBasico("sp_ObtenerProvincias");
+                if (provinciasRegistradas != null && provinciasRegistradas.Rows.Count > 0)
+                {
+                    foreach (DataRow row in provinciasRegistradas.Rows)
+                    {
+                        // Crear un nuevo objeto ProvinciasModel y asignar los valores de la fila.
+                        var provincia = new ProvinciasModel
+                        {
+                            IdProvincia = Convert.ToInt32(row["IdProvincia"]),
+                            NombreProvincia = row["NombreProvincia"].ToString()
+                        };
+                        provincias.Add(provincia);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo provincias: {ex.Message}");
+            }
+            return provincias;
+        }
+
+        // Optener los datos de los cantones registrados.
+        public List<CantonModel> ObtenerCantonesPorProvincia(int idProvincia)
+        {
+            List<CantonModel> cantones = new List<CantonModel>();
+            try
+            {
+                SqlParameter parametro = new("@IdProvincia", SqlDbType.SmallInt) { Value = idProvincia };
+                DataTable cantonesRegistrados = EjecutarProcedimientoConParametros("sp_ObtenerCantonesPorProvincia", new[] { parametro });
+
+                if (cantonesRegistrados != null && cantonesRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in cantonesRegistrados.Rows)
+                    {
+                        var canton = new CantonModel
+                        {
+                            IdCanton = Convert.ToInt32(row["IdCanton"]),
+                            NombreCanton = row["NombreCanton"].ToString(),
+                            IdProvincia = Convert.ToInt32(row["IdProvincia"])
+                        };
+                        cantones.Add(canton);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo cantones: {ex.Message}");
+            }
+            return cantones;
+        }
 
 
 
+        // Optener los datos de los distritos registrados.
+        public List<DistritoModel> ObtenerDistritosPorCanton(int idCanton)
+        {
+            List<DistritoModel> distritos = new List<DistritoModel>();
+            try
+            {
+                SqlParameter parametro = new("@IdCanton", SqlDbType.SmallInt) { Value = idCanton };
+                DataTable distritosRegistrados = EjecutarProcedimientoConParametros("sp_ObtenerDistritosPorCanton", new[] { parametro });
+
+                if (distritosRegistrados != null && distritosRegistrados.Rows.Count > 0)
+                {
+                    foreach (DataRow row in distritosRegistrados.Rows)
+                    {
+                        var distrito = new DistritoModel
+                        {
+                            IdDistrito = Convert.ToInt32(row["IdDistrito"]),
+                            NombreDistrito = row["NombreDistrito"].ToString(),
+                            IdCanton = Convert.ToInt32(row["IdCanton"])
+                        };
+                        distritos.Add(distrito);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error obteniendo distritos: {ex.Message}");
+            }
+            return distritos;
+        }
+
+
+        // Ahora vamos a unificar los datos de las provicnias, cantones y distritos.
+        public List<ProvinciasModel> ObtenerProvinciasConCantonesYDistritos()
+        {
+            // Se optiene  todas las provincias.
+            List<ProvinciasModel> provincias = ObtenerProvincias();
+            foreach (var provincia in provincias)
+            {
+                // Se optienen los cantones de la provincia actual.
+                provincia.Cantones = ObtenerCantonesPorProvincia(provincia.IdProvincia);
+                foreach (var canton in provincia.Cantones)
+                {
+                    // Se optienen los distritos del canton actual.
+                    canton.Distritos = ObtenerDistritosPorCanton(canton.IdCanton);
+                }
+            }
+            //Console.WriteLine($"Provincias con cantones y distritos obtenidos.");
+            return provincias;
+        }
+
+
+
+
+        // Funcion para el registro de los clientes en la base de datos.
+        public int RegistrarClienteBD(RegistrarClienteModel model)
+        {
+            Console.WriteLine("Iniciando proceso de registro de clientes.");
+            CambiarConexion("Administrador");
+            // Parametro de salida para el resultado.
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Armar la cadena de parametros del procedimiento.
+            var parametrosCliente = new SqlParameter[]
+            {
+                new("@Cedula", model.Cedula),
+                new("@NombreCompleto", model.NombreCompleto),
+                new("@TipoIdentificacion", model.TipoIdentificacion),
+                new("@IdPais", model.paisResidencia),
+                new("@FechaNacimiento", model.FechaNacimiento.ToDateTime(TimeOnly.MinValue)), // Este da problemas por que al parece en el proceso de envio SQL espera un DateTime.
+                new("@CorreoElectronico", model.CorreoElectronico),
+                new("@IdProvincia", (object?)model.IdProvincia ?? DBNull.Value),
+                new("@IdCanton", (object?)model.IdCanton ?? DBNull.Value),
+                new("@IdDistrito", (object?)model.IdDistrito ?? DBNull.Value),
+                new("@Contrasena", model.Contrasena),
+                resultadoParam
+            };
+
+            // Ejecutar el procedimiento
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarCliente", parametrosCliente);
+
+            // Si se pudo registrar, procedemos a agregar los telefonos de los clientes.
+            if (resultado == 1)
+            {
+                AgregarTelefonosClientesBD(model.Cedula, model.Telefono1);
+                AgregarTelefonosClientesBD(model.Cedula, model.Telefono2);
+                AgregarTelefonosClientesBD(model.Cedula, model.Telefono3);
+            }
+
+            CambiarConexion("Cliente");
+            Console.WriteLine("Finalizando proceso de registro de clientes.");
+
+            return resultado;
+        }
+
+        // Funcion para agregar los telefonos de los cientes
+        private void AgregarTelefonosClientesBD(string cedula, string? numero)
+        {
+            if (!string.IsNullOrWhiteSpace(numero))
+            {
+                // Parametros de salida para ver el estado.
+                SqlParameter nuevoId = new("@NuevoIdTelefono", SqlDbType.SmallInt)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                // Cadena de parametros.
+                var parametrosTelefono = new SqlParameter[]
+                {
+                    new("@IdUsuario", cedula),
+                    new("@NumeroTelefonico", numero),
+                    nuevoId
+                };
+
+                // No se puede reutilizar por que el procedimiento de agregar los telefonos de la empresa es diferente.
+                int res = EjecutarProcedimientoIUD("sp_AgregarTelefono", parametrosTelefono);
+
+                if (res == -99)
+                {
+                    Console.WriteLine($"Error inesperado al insertar telefono '{numero}'");
+                }
+                else if (res == -1)
+                {
+                    Console.WriteLine($"No se insertó el telefono '{numero}' no se encontro el cliente.");
+                }
+            }
+        }
     }
 }

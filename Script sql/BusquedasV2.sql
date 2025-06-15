@@ -743,5 +743,30 @@ BEGIN
 END;
 GO
 
+-- Optener cantones de una provincia
+CREATE PROCEDURE sp_ObtenerCantonesPorProvincia
+    @IdProvincia SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Cantones
+    WHERE IdProvincia = @IdProvincia;
+END;
+GO
+
+-- Optener distritos por canton
+CREATE PROCEDURE sp_ObtenerDistritosPorCanton
+    @IdCanton SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Distritos
+    WHERE IdCanton = @IdCanton;
+END;
+GO
 
 

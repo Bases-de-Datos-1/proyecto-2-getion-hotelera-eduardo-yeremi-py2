@@ -19,7 +19,7 @@ namespace GestionHotelera.Controllers
 
         public IActionResult Index()
         {
-            prueba();
+            //prueba();
             return View();
         }
 
@@ -27,11 +27,19 @@ namespace GestionHotelera.Controllers
         public void prueba() {
 
             // Probar la ejecucion de la base de datos.
-            DataTable tiposCama = _dataBaseServices.EjecutarProcedimientoBasico("sp_OptenerTiposCama");
-            Console.WriteLine("Tipos de cama obtenidos:");
-            foreach (DataRow row in tiposCama.Rows)
+            //DataTable tiposCama = _dataBaseServices.EjecutarProcedimientoBasico("sp_OptenerTiposCama");
+            //Console.WriteLine("Tipos de cama obtenidos:");
+            //foreach (DataRow row in tiposCama.Rows)
+            //{
+            //    Console.WriteLine($"Tipo de cama: {row["NombreCama"]}");
+            //}
+
+            List<ProvinciasModel> provincias = _dataBaseServices.ObtenerProvinciasConCantonesYDistritos();
+            Console.WriteLine("Provincias obtenidas:");
+            foreach (var provincia in provincias)
             {
-                Console.WriteLine($"Tipo de cama: {row["NombreCama"]}");
+                Console.WriteLine($"Provincia: {provincia.NombreProvincia}");
+                Console.WriteLine($"Distritos: {provincia.Cantones.Count}");
             }
         }
 
