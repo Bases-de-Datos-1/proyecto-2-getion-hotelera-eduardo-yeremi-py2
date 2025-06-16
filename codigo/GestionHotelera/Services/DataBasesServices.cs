@@ -810,6 +810,157 @@ namespace GestionHotelera.Services
 
 
 
+
+
+
+
+
+        //[FromForm] ConvertirDatosRegitroAsignacion request, [FromForm] List<IFormFile> DocumentosAsignacionInput
+        // >>> ===== Funciones para el registro de tipos de habitaciones.  ===== <<< 
+        // Funcion para manejar el proceso de registro de todos los datos del tipo de habitacion.
+        public JsonResult RegistrarTipoHabitacionCompleto(string idEmpresa, RegistrarTipoHabitacionModel dataModel, List<IFormFile> fotos)
+        {
+            // Regiistrar el tipo de habitacion en la BD
+            int idTipoHabitacion = RegistrarTipoHabitacionBD(idEmpresa, dataModel);
+
+            if (idTipoHabitacion <= 0)
+            {
+                Console.WriteLine("No se pudo registrar el tipo de habitacion.");
+                return new JsonResult(new { EstadoGeneral = idTipoHabitacion }); 
+            }
+
+            // Asociar la empresa y el tipo de habitacion.
+            int estadoAsociacion = RegistrarAsociacionEmpresaTipoHabitacionBD(idTipoHabitacion, idEmpresa);
+
+            // Para devolver el estado de cada ejecucion.
+            List<int> estadoComodidades = new List<int>();
+            List<int> estadoFotos = new List<int>();
+
+
+            // Registrar las comodidades de la habitacion.
+            foreach (int idComodidad in dataModel.ListaComodidades)
+            {
+                int resultadoComodidad = RegistrarComodidadDeHabitacionBD(idTipoHabitacion, idComodidad);
+
+                if (resultadoComodidad < 0)
+                { 
+                    Console.WriteLine($"Error al asociar comodidad {idComodidad} a habitacion {idTipoHabitacion}");
+                    estadoComodidades.Add(resultadoComodidad);
+                }
+            }
+
+            // Registrar las fotos del tipo de habitacion.
+            foreach (var archivo in fotos)
+            {
+                // Pasar las fotos a formato bynario para poderlas guardar en la base de datos.
+                using var stream = new MemoryStream();
+                archivo.CopyTo(stream);
+                byte[] imagenBytes = stream.ToArray();
+
+                int resultadoFoto = RegistrarFotoHabitacionBD(idTipoHabitacion, imagenBytes);
+
+                if (resultadoFoto < 0)
+                {
+                    Console.WriteLine("Error al guardar una foto de la habitacion.");
+                    estadoFotos.Add(resultadoFoto);
+
+                }
+            }
+
+            return new JsonResult(new { EstadoGeneral = idTipoHabitacion, EstadoAsociacion = estadoAsociacion, EstadoComodidades = estadoComodidades, EstadoFotos = estadoFotos }); 
+        }
+
+        // Funcion para el registro de los tipos de habitaciones en la base de datos.
+        public int RegistrarTipoHabitacionBD(string idEmpresa, RegistrarTipoHabitacionModel model)
+        {
+            // Parametros de salida.
+            SqlParameter idGenerado = new("@NuevoIdTipoHabitacion", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Establecer la lista de parametros
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@Nombre", model.NombreTipoHabitacion),
+                new("@Descripcion", model.Descripcion),
+                new("@IdTipoCama", model.TipoCama),
+                new("@Precio", model.PrecioPorNoche),
+                idGenerado
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarTipoHabitacion", parametros);
+
+            return estado; 
+        }
+
+        // Funcion para el registro de las comodidades que posee esa habitacion.
+        public int RegistrarComodidadDeHabitacionBD(int idHabitacion, int idComodidad)
+        {
+            SqlParameter resultado = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idHabitacion),
+                new("@IdComodidad", idComodidad),
+                resultado
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarListaComodidades", parametros);
+
+            return estado;
+        }
+
+        // Funcion para el registro de las fotos de las habitacion.
+        public int RegistrarFotoHabitacionBD(int idHabitacion, byte[] imagen)
+        {
+            // Parametro de salida.
+            SqlParameter nuevoIdFoto = new("@NuevoIdImagen", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Armar la lista de parametros para ejecutar el escript.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idHabitacion),
+                new("@Imagen", imagen),
+                nuevoIdFoto
+            };
+            
+            // Devolver el resultado.
+            int estado = EjecutarProcedimientoIUD("sp_AgregarFoto", parametros);
+            return estado;
+        }
+
+        // Funcion para registrar la asociacion entre la empresa y el tipo de habitacion en la base de datos.
+        public int RegistrarAsociacionEmpresaTipoHabitacionBD(int idTipoHabitacion, string idEmpresa)
+        {
+            // Parametro de salida.
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Armar la lista de parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idTipoHabitacion),
+                new("@IdEmpresa", idEmpresa),
+                resultadoParam
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarTipoHabitacionEmpresa", parametros);
+
+            return estado;
+        }
+
+
+
         // >>> ===== Funciones para el registro de servicios de recreacion.  ===== <<<
 
         // Funcion para controlar el proceso de registro de los servicios.
