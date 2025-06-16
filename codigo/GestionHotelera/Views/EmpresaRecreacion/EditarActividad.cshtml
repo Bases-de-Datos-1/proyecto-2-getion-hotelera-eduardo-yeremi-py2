@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Editar Actividad - Empresa Recreación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 800px; margin: auto; padding: 40px; background-color: #f9f9f9; border-radius: 10px; font-family: 'Segoe UI', sans-serif; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+    <!-- Botón de regreso -->
+    <a href="/EmpresaRecreacion/Menu" style="text-decoration: none; color: #333; font-weight: bold; display: inline-block; margin-bottom: 20px;">← Atrás</a>
+
+    <h2 style="color: #2c3e50; text-align: center;">Modificar Actividad</h2>
+
+    <form method="post" style="margin-top: 30px;">
+        <div style="margin-bottom: 25px;">
+            <label for="nombre" style="display: block; font-weight: bold; margin-bottom: 8px;">Nombre de la actividad:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Ej: Observación de fauna" />
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <label for="descripcion" style="display: block; font-weight: bold; margin-bottom: 8px;">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="5" class="form-control" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px;" placeholder="Descripción de la actividad..."></textarea>
+        </div>
+
+        <div style="text-align: center; display: flex; justify-content: center; gap: 20px;">
+            <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; font-weight: bold; border: none; border-radius: 5px;">Guardar</button>
+            <a href="/EmpresaRecreacion/Menu" style="background-color: #a94442; color: white; padding: 10px 20px; font-weight: bold; text-decoration: none; border-radius: 5px;">Cancelar</a>
+        </div>
+    </form>
+</div>

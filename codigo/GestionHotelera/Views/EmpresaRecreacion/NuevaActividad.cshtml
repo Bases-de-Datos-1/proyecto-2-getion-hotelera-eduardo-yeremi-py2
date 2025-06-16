@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Registrar Nueva Actividad";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color: #f9f9f9; padding: 30px; font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: auto; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="background-color: #ffcc80; padding: 10px; border-radius: 8px; text-align: center; font-size: 24px;">Registrar Nueva Actividad</h2>
+
+    <div style="background-color: #fffde7; padding: 20px; border-radius: 8px; margin-top: 20px;">
+        <label for="nombre" style="display: block; font-weight: bold; margin-bottom: 5px;">Nombre de la actividad:</label>
+        <input id="nombre" type="text" placeholder="Ej: Clases de surf" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+
+        <label for="descripcion" style="display: block; font-weight: bold; margin-top: 20px; margin-bottom: 5px;">Descripción:</label>
+        <textarea id="descripcion" placeholder="Ej: Aprende a surfear con instructores profesionales..." rows="4" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+    </div>
+
+    <div style="margin-top: 30px; display: flex; gap: 20px;">
+        <button onclick="guardarActividad()" style="padding: 12px 25px; background-color: #388e3c; color: white; font-weight: bold; border: none; border-radius: 6px; transition: background-color 0.2s ease;">Guardar</button>
+        <a href="/EmpresaRecreacion/Menu" style="padding: 12px 25px; background-color: #b71c1c; color: white; font-weight: bold; border-radius: 6px; text-decoration: none;">Cancelar</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function guardarActividad() {
+            alert("✅ Actividad registrada con éxito.");
+            window.location.href = "/EmpresaRecreacion/Menu";
+        }
+    </script>
+}
