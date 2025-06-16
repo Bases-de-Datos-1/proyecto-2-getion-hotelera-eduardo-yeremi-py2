@@ -57,11 +57,13 @@ namespace GestionHotelera.Controllers
             // Aqui se elegiria cual cual vista deberia de realizar la validacion.
             if (dataRequest.TipoUsuario == "Cliente")
             {
-                string resultado = _dataBaseServices.VerificarCuentaCliente(dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                string resultado = _dataBaseServices.VerificarCuentaCliente(dataRequest.CorreoElectronico, dataRequest.Contrasena);
                 Console.WriteLine($"Resultado de la verificacion del cliente: {resultado}");
 
                 if (resultado != "Fallo" && resultado != "FalloI")
                 {
+                    HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
+                    HttpContext.Session.SetString("UsuarioID", resultado);
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -73,12 +75,14 @@ namespace GestionHotelera.Controllers
             }
             else if (dataRequest.TipoUsuario == "EmpresaHospedaje")
             {
-                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.Contrasena);
                 Console.WriteLine($"Resultado de la verificacion del Empresa Hospedaje: {resultado}");
 
 
                 if (resultado != "Fallo" && resultado != "FalloI")
                 {
+                    HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
+                    HttpContext.Session.SetString("UsuarioID", resultado);
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -90,11 +94,13 @@ namespace GestionHotelera.Controllers
             }
             else if (dataRequest.TipoUsuario == "EmpresaRecreacion")
             {
-                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.TipoUsuario);
+                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.Contrasena);
                 Console.WriteLine($"Resultado de la verificacion del Empresa Recreacion: {resultado}");
 
                 if (resultado != "Fallo" && resultado != "FalloI")
                 {
+                    HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
+                    HttpContext.Session.SetString("UsuarioID", resultado);
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -125,11 +131,13 @@ namespace GestionHotelera.Controllers
         }
 
         // Ni idea de para que es.
-        [HttpPost]
-        public IActionResult Register(string email, string password)
-        {
-            return RedirectToAction("Login");
-        }
+        //[HttpPost]
+        //public IActionResult Register(string email, string password)
+        //{
+        //    return RedirectToAction("Login");
+        //}
+
+        // +++ =====  Seccion para el registro de cuentas de Clientes  =====+++
 
         // Lanzar la ventana que registrara a los clientes.
         // Cuenta/RegisterCliente
@@ -163,6 +171,7 @@ namespace GestionHotelera.Controllers
         }
 
 
+        // +++ =====  Seccion para el registro de cuentas de empresas de hospedaje  =====+++
 
         // Este seria para desplegar la ventana del registro de cuentas de empresas de hospedaje.
         // Cuenta/RegisterHospedaje
@@ -215,6 +224,8 @@ namespace GestionHotelera.Controllers
             //return Json(new { estado = false }); ;
         }
 
+
+        // +++ =====  Seccion para el registro de cuentas de empresas de recreacion  =====+++
         // Cuenta/RegisterRecreacion
         [HttpGet]
         public IActionResult RegisterRecreacion()
