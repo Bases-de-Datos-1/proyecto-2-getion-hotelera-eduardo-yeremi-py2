@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Registrar Tipo de Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 800px; margin: auto; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 0 15px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">Registre Nuevo Tipo de Habitación</h2>
+
+    <form>
+        <div style="margin-bottom: 20px;">
+            <label><strong>Nombre del tipo de habitación:</strong></label>
+            <input type="text" placeholder="Ej: Suite Familiar" class="form-control" style="width: 100%; padding: 10px; margin-top: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Descripción:</strong></label>
+            <textarea class="form-control" rows="4" placeholder="Describa brevemente la habitación..." style="width: 100%; padding: 10px; margin-top: 5px;"></textarea>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Precio por noche:</strong></label>
+            <input type="number" placeholder="Ej: 250" class="form-control" style="width: 50%; padding: 10px; margin-top: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Tipo de cama:</strong></label>
+            <input type="text" placeholder="Ej: Cama King" class="form-control" style="width: 50%; padding: 10px; margin-top: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <label><strong>Imágenes:</strong></label><br />
+            <input type="file" multiple class="form-control" style="margin-top: 5px;" />
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <label><strong>Seleccione las comodidades de la habitación:</strong></label>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                @foreach (var comodidad in new[] { "WIFI", "Piscina", "A/C", "Parqueo", "TV", "Escritorio", "Caja fuerte", "Terraza", "TV LED" })
+                {
+                    <label style="background-color: #1abc9c; color: white; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+                        <input type="checkbox" name="comodidades" value="@comodidad" style="margin-right: 5px;" /> @comodidad
+                    </label>
+                }
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <button type="submit" class="btn btn-success" style="padding: 10px 30px;">Guardar</button>
+            <a href="/EmpresaHospedaje/Menu" class="btn btn-danger" style="padding: 10px 30px;">Cancelar</a>
+        </div>
+    </form>
+</div>
