@@ -318,6 +318,10 @@ CREATE TABLE ReservasTemporales (
 
 -- ====== Fin del apartado de reservas y facturaciones =====
 
+
+
+
+
 -- Tabla: EmpresaRecreacion
 CREATE TABLE EmpresaRecreacion (
     CedulaJuridica VARCHAR(15) PRIMARY KEY,

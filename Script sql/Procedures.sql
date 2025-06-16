@@ -2375,11 +2375,16 @@ BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
         -- Revisar si la actividad ya existe para la empresa
-        SELECT @NuevoIdActividad = IdActividad FROM Actividad 
-        WHERE IdEmpresa = @IdEmpresa AND NombreActividad = @NombreActividad;
-
-        IF @NuevoIdActividad IS NULL
+        IF EXISTS (
+            SELECT 1 FROM Actividad 
+            WHERE IdEmpresa = @IdEmpresa AND NombreActividad = @NombreActividad
+        )
         BEGIN
+            SET @NuevoIdActividad = -1;  -- Actividad ya registrada
+        END
+        ELSE
+        BEGIN
+			-- Si no existe entonces se puede registrar.
             INSERT INTO Actividad (IdEmpresa, NombreActividad, DescripcionActividad)
             VALUES (@IdEmpresa, @NombreActividad, @DescripcionActividad);
 
@@ -2387,11 +2392,39 @@ BEGIN
         END
     END TRY
     BEGIN CATCH
-        -- PRINT 'Error en sp_AgregarActividad: ' + ERROR_MESSAGE();
-        SET @NuevoIdActividad = -99;
+	    -- PRINT 'Error en sp_AgregarActividad: ' + ERROR_MESSAGE();
+        SET @NuevoIdActividad = -99; 
     END CATCH
 END;
 GO
+
+-- CREATE PROCEDURE sp_AgregarActividad
+--     @IdEmpresa VARCHAR(15),
+--     @NombreActividad VARCHAR(30),
+--     @DescripcionActividad VARCHAR(100),
+--     @NuevoIdActividad SMALLINT OUTPUT
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+--     BEGIN TRY
+--         -- Revisar si la actividad ya existe para la empresa
+--         SELECT @NuevoIdActividad = IdActividad FROM Actividad 
+--         WHERE IdEmpresa = @IdEmpresa AND NombreActividad = @NombreActividad;
+
+--         IF @NuevoIdActividad IS NULL
+--         BEGIN
+--             INSERT INTO Actividad (IdEmpresa, NombreActividad, DescripcionActividad)
+--             VALUES (@IdEmpresa, @NombreActividad, @DescripcionActividad);
+
+--             SET @NuevoIdActividad = SCOPE_IDENTITY();
+--         END
+--     END TRY
+--     BEGIN CATCH
+--         -- PRINT 'Error en sp_AgregarActividad: ' + ERROR_MESSAGE();
+--         SET @NuevoIdActividad = -99;
+--     END CATCH
+-- END;
+-- GO
 
 
 -- Editar (Deberia de guardar el id de la empresa que lo crea)

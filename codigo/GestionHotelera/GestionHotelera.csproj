@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\EmpresaRecreacionModels\ServiciosModels\" />
     <Folder Include="Models\FiltrosBusquedaModel\" />
     <Folder Include="Models\UbicacionesModel\" />
   </ItemGroup>

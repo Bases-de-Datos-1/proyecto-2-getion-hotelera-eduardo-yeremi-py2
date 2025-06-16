@@ -584,6 +584,34 @@ GO
 
 
 
+-- Optener los datos de una habitacion especifica.
+CREATE PROCEDURE sp_ObtenerHabitacionEspecifica
+    @NumeroHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Habitaciones
+    WHERE NumeroHabitacion = @NumeroHabitacion;
+END;
+GO
+
+-- Optener los datos de un tipo de habitacion especifica.
+CREATE PROCEDURE sp_ObtenerTipoHabitacionesEspecifica
+    @IdTipoHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_TipoHabitacionesEmpresas
+    WHERE IdTipoHabitacion = @IdTipoHabitacion;
+END;
+GO
+
+
+
 
 -- ======================= Algunas busquedas para empresa de recreacion ===================================
 
@@ -613,6 +641,21 @@ BEGIN
     WHERE IdEmpresaRecreacion = @IdEmpresa;
 END;
 GO
+
+
+-- Optener los actividades de la empresa de recreacion:
+CREATE PROCEDURE sp_ObtenerActividadesEmpresaRecreacion
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ActividadesEmpresas
+    WHERE IdEmpresa = @IdEmpresa;
+END;
+GO
+
 
 -- Optener las actividades que conforman un servicio:
 CREATE PROCEDURE sp_ObtenerActividadesPorServicio

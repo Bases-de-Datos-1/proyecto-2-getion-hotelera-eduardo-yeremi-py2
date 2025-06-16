@@ -98,7 +98,7 @@ namespace GestionHotelera.Controllers
             }
             else if (dataRequest.TipoUsuario == "EmpresaRecreacion")
             {
-                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaHospedaje", dataRequest.CorreoElectronico, dataRequest.Contrasena);
+                string resultado = _dataBaseServices.VerificarCuentaEmpresa("sp_VerificarEmpresaRecreacion", dataRequest.CorreoElectronico, dataRequest.Contrasena);
                 Console.WriteLine($"Resultado de la verificacion del Empresa Recreacion: {resultado}");
 
                 if (resultado != "Fallo" && resultado != "FalloI")

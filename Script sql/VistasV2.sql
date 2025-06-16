@@ -301,6 +301,14 @@ FROM ListaActividades LA
 JOIN Actividad A ON LA.IdActividad = A.IdActividad;
 GO
 
+-- Vista para tener los actividades que tenga una empresa.
+CREATE VIEW view_ActividadesEmpresas AS
+SELECT
+    *
+FROM Actividad;
+GO
+
+
 
 --  ++++++++++ = Vistas para lo que seria relacionado con la optenciond e datos de facturacion y reservas = +++++++++++++++++++
 

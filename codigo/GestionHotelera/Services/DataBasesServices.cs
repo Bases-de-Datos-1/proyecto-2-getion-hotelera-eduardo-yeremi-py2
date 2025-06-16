@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
 using System.Diagnostics;
@@ -7,11 +8,14 @@ using GestionHotelera.Models;
 using GestionHotelera.Models.ClientesModels;
 using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
+using GestionHotelera.Models.EmpresaRecreacionModels;
+using GestionHotelera.Models.EmpresaRecreacionModels.ServiciosModels;
 using GestionHotelera.Models.RegistrarModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SqlServer.Types;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace GestionHotelera.Services
 {
     
@@ -1359,7 +1363,7 @@ namespace GestionHotelera.Services
                             Descripcion = row["Descripcion"].ToString(),
                             IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
                             NombreCama = row["NombreCama"].ToString(),
-                            Precio = row["Precio"].ToString(),
+                            Precio = Convert.ToDouble(row["Precio"]),
 
                             Imagenes = ObtenerFotosTipoHabitacionBD(idTipo),
                             Comodidades = ObtenerComodidadesPorTipoHabitacionBD(idTipo)
@@ -1404,7 +1408,7 @@ namespace GestionHotelera.Services
                             Descripcion = row["Descripcion"].ToString(),
                             IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
                             NombreCama = row["NombreCama"].ToString(),
-                            Precio = row["Precio"].ToString()
+                            Precio = Convert.ToDouble(row["Precio"])
                         };
 
                         tiposHabitaciones.Add(tipo);
@@ -1478,12 +1482,175 @@ namespace GestionHotelera.Services
 
 
 
+
+
         // >>> ===== Funciones para optener los datos de una empresa de recreacion especifica. ===== <<<
-        // Optener el registro de la empresa de recreacion por su ID.
+        // funcion para optener los datos generales de una empresa de recreacion.
+        public EmpresaRecreacionModel OptenerDatosGeneralesEmpresaRecreacionBD(string idEmpresa, int modo)
+        {
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerDatosEmpresaRecreacion", parametros);
+            if (datos == null || datos.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = datos.Rows[0];
+
+            EmpresaRecreacionModel datosEmpresa = new EmpresaRecreacionModel
+            {
+                CedulaJuridica = fila["CedulaJuridica"].ToString(),
+
+                NombreEmpresa = fila["NombreEmpresa"].ToString(),
+
+                PersonaAContactar = fila["PersonaAContactar"].ToString(),
+
+                CorreoElectronico = fila["CorreoElectronico"].ToString(),
+
+                Telefono = fila["Telefono"].ToString(),
+
+
+                IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                NombreProvincia = fila["Provincia"].ToString(),
+                IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                NombreCanton = fila["Canton"].ToString(),
+                IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                NombreDistrito = fila["Distrito"].ToString(),
+                SenasExactas = fila["SenasExactas"].ToString(),
+
+                Contrasena = fila["Contrasena"].ToString()
+            };
+
+            return datosEmpresa;
+        }
 
         // Optener los servicios de la empresa de de recreacion.
+        public List<ServiciosEmpresaRecreacionModel> ObtenerServiciosEmpresaRecreacionBD(string idEmpresa)
+        {
+            List<ServiciosEmpresaRecreacionModel> tiposHabitaciones = new();
+
+            try
+            {
+                var parametros = new SqlParameter[]
+                {
+                    new("@IdEmpresa", idEmpresa)
+                };
+
+                DataTable resultado = EjecutarProcedimientoConParametros("sp_ObtenerServiciosEmpresaRecreacion", parametros);
+
+                if (resultado != null && resultado.Rows.Count > 0)
+                {
+                    foreach (DataRow fila in resultado.Rows)
+                    {
+                        var tipo = new ServiciosEmpresaRecreacionModel
+                        {
+                            IdServicio = Convert.ToInt32(fila["IdServicio"]),
+
+                            CedulaJuridica = fila["NombreServicio"].ToString(),
+
+                            Precio = Convert.ToDouble(fila["Precio"]),
+
+                            IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                            NombreProvincia = fila["Provincia"].ToString(),
+                            IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                            NombreCanton = fila["Canton"].ToString(),
+                            IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                            NombreDistrito = fila["Distrito"].ToString(),
+
+                        };
+
+                        tiposHabitaciones.Add(tipo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener los tipos de habitacion para la empresa: {ex.Message}");
+            }
+            return tiposHabitaciones;
+        }
 
         // Optener las actividades especificas de cada servicio. 
+        public List<ActividadesEmpresaRecreacionModel> ObtenerActividadesPorServicioBD(int idServicio)
+        {
+            SqlParameter[] parametros = {
+                new("@IdServicio", idServicio.ToString())
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerActividadesPorServicio", parametros);
+
+            var lista = new List<ActividadesEmpresaRecreacionModel>();
+
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    lista.Add(new ActividadesEmpresaRecreacionModel
+                    {
+                        IdActividad = Convert.ToInt32(row["IdComodidad"]),
+
+                        IdEmpresa = row["IdEmpresa"].ToString(),
+
+                        NombreActividad = row["NombreActividad"].ToString(),
+
+                        DescripcionActividad = row["DescripcionActividad"].ToString()
+
+                    });
+                }
+            }
+
+            return lista;
+        }
+
+
+
+
+        // Funcion para optener los todos los servicios de una empresa de recreacion.
+        public List<ActividadesEmpresaRecreacionModel> ObtenerActividadesPorEmpresaBD(string idEmpresa)
+        {
+            List<ActividadesEmpresaRecreacionModel> lista = new List<ActividadesEmpresaRecreacionModel>();
+            
+            try
+            {
+                var parametros = new SqlParameter[]
+                {
+                    new("@IdEmpresa", idEmpresa)
+                };
+
+                DataTable resultado = EjecutarProcedimientoConParametros("sp_ObtenerActividadesEmpresaRecreacion", parametros);
+
+
+                if (resultado != null)
+                {
+                    foreach (DataRow row in resultado.Rows)
+                    {
+                        lista.Add(new ActividadesEmpresaRecreacionModel
+                        {
+                            IdActividad = Convert.ToInt32(row["IdActividad"]),
+
+                            IdEmpresa = row["IdEmpresa"].ToString(),
+
+                            NombreActividad = row["NombreActividad"].ToString(),
+
+                            DescripcionActividad = row["DescripcionActividad"].ToString()
+
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener los tipos de habitacion para la empresa: {ex.Message}");
+            }
+            return lista;
+        }
+
+
+
 
 
         // >>> ===== Funciones para optener los datos de un cliente especifico. ===== <<<

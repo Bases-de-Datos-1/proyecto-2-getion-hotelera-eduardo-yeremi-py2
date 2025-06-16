@@ -15,7 +15,7 @@
 
         public string NombreCama { get; set; }
 
-        public string Precio { get; set; }
+        public double Precio { get; set; }
 
         public List<FotosTipoHabitacionModel> Imagenes { get; set; } = new List<FotosTipoHabitacionModel>();
 
