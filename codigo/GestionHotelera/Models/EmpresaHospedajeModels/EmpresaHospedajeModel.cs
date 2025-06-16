@@ -11,6 +11,9 @@
         public string NombreTipoHotel { get; set; }
 
         //public geography ReferenciaGPS { get; set; }
+        public double Latitud { get; set; } // Lo de ubicacion por GPS.
+
+        public double Longitud { get; set; }
 
         public int IdProvincia { get; set; }
         public string NombreProvincia { get; set; }
@@ -24,22 +27,18 @@
 
         public string SenasExactas { get; set; }
 
-
         public string CorreoElectronico { get; set; }
 
-        public string SitioWeb { get; set; }
+        public string? SitioWeb { get; set; }
 
         public string Contrasena { get; set; }
 
 
-        public List<RedesSocialesModel> RedesSociales { get; set; } = new List<RedesSocialesModel>();
+        public List<RedesSocialesEmpresaModel> RedesSociales { get; set; } = new List<RedesSocialesEmpresaModel>();
 
         public List<TelefonosEmpresaHospedajeModel> Telefonos { get; set; } = new List<TelefonosEmpresaHospedajeModel>();
 
         public List<ServiciosHotelModel> Servicios { get; set; } = new List<ServiciosHotelModel>();
-
-
-
 
     }
 }

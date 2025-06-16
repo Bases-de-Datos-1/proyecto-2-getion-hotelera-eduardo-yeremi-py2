@@ -108,6 +108,7 @@ async function enviarDatosRegistroCliente() {
             if (resultado.estado) {
                 alert("Cliente registrado exitosamente.");
                 //window.location.href = '@Url.Action("Cuenta", "Login")';
+                location.replace("/Cuenta/Login");
 
                 //window.location.href = '/Cliente/Informacion'; // Redirigir a la pagina de informacion del cliente.
             } else {

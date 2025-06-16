@@ -2,11 +2,9 @@
 {
     public class ServiciosHotelModel
     {
-
         public int IdServicio { get; set; }
 
         public string NombreServicio { get; set; }
-
 
     }
 }

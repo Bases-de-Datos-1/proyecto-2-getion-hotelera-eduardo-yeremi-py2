@@ -110,7 +110,8 @@ async function enviarDatosRegistroEmpresa() {
             //let result = resultado.estadoGeneral;
             if (resultado.estado === 1) {
                 alert("Empresa hospedaje registrado exitosamente.");
-                window.location.href = '@Url.Action("Cuenta", "Login")';
+                //window.location.href = '@Url.Action("Cuenta", "Login")';
+                location.replace("/Cuenta/Login");
 
                 //window.location.href = '/Cuentaedirigir a la pagina de informacion del cliente.
             } else {

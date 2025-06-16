@@ -79,15 +79,16 @@ function inciarListenerFormRegitroEmpresa() {
 function inicarConfiguracionMapa() {
 
     console.log("Iniciando configuracion del mapa.");
-    const map = L.map('map').setView([9.934739, -84.087502], 13); // San José, CR
+    const map = L.map('map').setView([9.934739, -84.087502], 13); // San Jose.
 
-    // Agregar el mapa base (puede cambiarse a otro proveedor si querés)
+    // Mapa base.
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
     let marker;
 
+    // Para la seleccion de la ubicacion.
     map.on('click', function (e) {
         const { lat, lng } = e.latlng;
 
@@ -154,6 +155,7 @@ async function enviarDatosRegistroEmpresa() {
             if (result[0] === 1) {
                 alert("Empresa hospedaje registrado exitosamente.");
                 //window.location.href = '@Url.Action("Cuenta", "Login")';
+                location.replace("/Cuenta/Login");
 
                 //window.location.href = '/Cliente/Informacion'; // Redirigir a la pagina de informacion del cliente.
             } else {

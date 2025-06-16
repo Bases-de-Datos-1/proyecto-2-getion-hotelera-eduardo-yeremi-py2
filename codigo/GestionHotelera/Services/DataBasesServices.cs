@@ -450,6 +450,38 @@ namespace GestionHotelera.Services
         }
 
 
+        // Funcion para optener las comodidades que puede tener una habitacion.
+        public List<ComodidadesHabitacionModel> OptenerComodidadesBD()
+        {
+
+            List<ComodidadesHabitacionModel> comodidades = new List<ComodidadesHabitacionModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable comodidadesRegistradas = EjecutarProcedimientoBasico("sp_ObtenerComodidades");
+                if (comodidadesRegistradas != null && comodidadesRegistradas.Rows.Count > 0)
+                {
+                    foreach (DataRow row in comodidadesRegistradas.Rows)
+                    {
+                        // Crear un nuevo objeto PaisesModel y asignar los valores de la fila.
+                        var tipos = new ComodidadesHabitacionModel
+                        {
+                            IdComodidad = Convert.ToInt32(row["IdComodidad"]),
+                            NombreComodidad = row["Nombre"].ToString(),
+
+                        };
+                        comodidades.Add(tipos);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo las comodidades que podrian tener los tipos de habitaciones: {ex.Message}");
+            }
+            return comodidades;
+        }
+
+
 
 
         // >>> ===== Funciones el registros de los clientes. ===== <<<
@@ -782,34 +814,6 @@ namespace GestionHotelera.Services
 
 
 
-        // >>> ===== Funciones para el registro de actividades de recreacion  ===== <<<
-        public int RegistrarActividadRecreacionBD(string idEmpresa, RegistrarActividadModel model)
-        {
-            //CambiarConexion("Administrador"); // Esto ya estan con una cuenta tipo administrador a la hora de hacer el registro.
-
-            // Parametro de salida
-            SqlParameter nuevoIdActividadParam = new("@NuevoIdActividad", SqlDbType.SmallInt)
-            {
-                Direction = ParameterDirection.Output
-            };
-
-            // Establecer los parametros.
-            var parametros = new SqlParameter[]
-            {
-                new("@IdEmpresa", idEmpresa),
-                new("@NombreActividad", model.NombreActividad),
-                new("@DescripcionActividad", model.DescripcionActividad),
-                nuevoIdActividadParam
-            };
-
-            // Ejecutar el procedimiento
-            int resultado = EjecutarProcedimientoIUD("sp_AgregarActividad", parametros);
-
-            return resultado;
-        }
-
-
-
 
 
 
@@ -818,7 +822,7 @@ namespace GestionHotelera.Services
         //[FromForm] ConvertirDatosRegitroAsignacion request, [FromForm] List<IFormFile> DocumentosAsignacionInput
         // >>> ===== Funciones para el registro de tipos de habitaciones.  ===== <<< 
         // Funcion para manejar el proceso de registro de todos los datos del tipo de habitacion.
-        public JsonResult RegistrarTipoHabitacionCompleto(string idEmpresa, RegistrarTipoHabitacionModel dataModel, List<IFormFile> fotos)
+        public JsonResult ProcesarRegistroTipoHabitacion(string idEmpresa, RegistrarTipoHabitacionModel dataModel, List<IFormFile> fotos)
         {
             // Regiistrar el tipo de habitacion en la BD
             int idTipoHabitacion = RegistrarTipoHabitacionBD(idEmpresa, dataModel);
@@ -964,7 +968,7 @@ namespace GestionHotelera.Services
         // >>> ===== Funciones para el registro de servicios de recreacion.  ===== <<<
 
         // Funcion para controlar el proceso de registro de los servicios.
-        public JsonResult ProcesarRRegistroDeServiciosDeRecreacion(string idEmpresa, RegistrarServicioModel model)
+        public JsonResult ProcesarRegistroDeServiciosDeRecreacion(string idEmpresa, RegistrarServicioModel model)
         {
             // Registrar el servicio.
             int idServicio = RegistrarServicioRecreacionBD(idEmpresa, model.NombreServicio, model.Precio);
@@ -1035,6 +1039,34 @@ namespace GestionHotelera.Services
 
 
 
+        // >>> ===== Funciones para el registro de actividades de recreacion  ===== <<<
+        public int RegistrarActividadRecreacionBD(string idEmpresa, RegistrarActividadModel model)
+        {
+            //CambiarConexion("Administrador"); // Esto ya estan con una cuenta tipo administrador a la hora de hacer el registro.
+
+            // Parametro de salida
+            SqlParameter nuevoIdActividadParam = new("@NuevoIdActividad", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Establecer los parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@NombreActividad", model.NombreActividad),
+                new("@DescripcionActividad", model.DescripcionActividad),
+                nuevoIdActividadParam
+            };
+
+            // Ejecutar el procedimiento
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarActividad", parametros);
+
+            return resultado;
+        }
+
+
+
 
 
 
@@ -1042,13 +1074,187 @@ namespace GestionHotelera.Services
 
 
         // >>> ===== Funciones para optener los datos de una empresa de hospedaje especifica. ===== <<<
+        // Procesar el registro de la optencion de datos de la empresa de hospedaje.
+        public EmpresaHospedajeModel ProcesarOptencionDeDatosEmpresaHospedaje(string idEmpresa, int modo)
+        {
+            // Optener los datos dgenerales de la empresa de hospedaje.
+            var empresa = ObtenerDatosGeneralesEmpresaHospedajeBD(idEmpresa);
+            if (empresa == null)
+            {
+                Console.WriteLine($"No se encontro la empresa con ID {idEmpresa}.");
+                return null;
+            }
+
+            // Optener los servicios del hospedaje.
+            var servicios = OptenerComodidadesHotelBD(idEmpresa);
+            if (servicios != null)
+            { 
+                empresa.Servicios = servicios; 
+            }
+
+            // Optener los telefonos de la empresa.
+            var telefonos = ObtenerTelefonosEmpresaHospedajeBD(idEmpresa);
+            if (telefonos != null)
+            { 
+                empresa.Telefonos = telefonos; 
+            }
+
+            // Optener los datos de la redes sociales.
+            var redes = ObtenerRedesSocialesEmpresaBD(idEmpresa);
+            if (redes != null)
+            {
+                // Convertir modelo intermedio a modelo usado dentro de EmpresaHospedajeModel
+                //empresa.RedesSociales = redes.Select(rs => new RedesSocialesModel
+                //{
+                //    IdRedSocial = rs.IdRedSocial,
+                //    Nombre = rs.NombreRedSocial,
+                //    Enlace = rs.Enlace
+                //}).ToList();
+                empresa.RedesSociales = redes; 
+            }
+
+
+            // Aqui seria para optener los datos de laas hbiatcione.
+
+            // Aqui seria para optener los tipos de habitacion, cuando el que consulta por los datos sea la empresa, modo = 1
+
+            if (modo == 1)
+            {
+                // Optener los datos de los tipos de habitaciones.
+            }
+
+
+            return empresa;
+        }
+
+
         // Optener el registro de la empresa de hoespedaje por su ID.
+        public EmpresaHospedajeModel ObtenerDatosGeneralesEmpresaHospedajeBD(string idEmpresa)
+        {
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerDatosEmpresaHospedaje", parametros);
+            if (datos == null || datos.Rows.Count == 0) { 
+                return null; 
+            }
+
+            var fila = datos.Rows[0];
+
+            EmpresaHospedajeModel datosEmpresa = new EmpresaHospedajeModel
+                {
+                    CedulaJuridica = fila["CedulaJuridica"].ToString(),
+                    NombreHotel = fila["NombreHotel"].ToString(),
+                    IdTipoHotel = Convert.ToInt32(fila["IdTipoInstalacion"]),
+                    NombreTipoHotel = fila["TipoHotel"].ToString(),
+                    IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                    NombreProvincia = fila["Provincia"].ToString(),
+                    IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                    NombreCanton = fila["Canton"].ToString(),
+                    IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                    NombreDistrito = fila["Distrito"].ToString(),
+                    Barrio = fila["Barrio"].ToString(),
+                    SenasExactas = fila["SenasExactas"].ToString(),
+                    CorreoElectronico = fila["CorreoElectronico"].ToString(),
+                    SitioWeb = fila["SitioWeb"]?.ToString(),
+                    Contrasena = fila["Contrasena"].ToString()
+                };
+            var geo = fila["ReferenciaGPS"] as SqlGeography;
+            if (geo != null && !geo.IsNull)
+            {
+                datosEmpresa.Latitud = geo.Lat.Value;
+                datosEmpresa.Longitud = geo.Long.Value;
+            }
+            return datosEmpresa;
+        }
 
         // Optener las comodidades del hotel
+        public List<ServiciosHotelModel> OptenerComodidadesHotelBD(string idEmpresa)
+        {
+            SqlParameter[] parametros = {
+                new SqlParameter("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerDatosServiciosEmpresaHospedaje", parametros);
+
+            var lista = new List<ServiciosHotelModel>();
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    lista.Add(new ServiciosHotelModel
+                    {
+                        IdServicio = Convert.ToInt32(row["IdServicio"]),
+                        NombreServicio = row["NombreServicio"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
 
         // Optener las redes sociales del hotel.
+        public List<RedesSocialesEmpresaModel> ObtenerRedesSocialesEmpresaBD(string idEmpresa)
+        {
+            SqlParameter[] parametros = {
+                new SqlParameter("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerRedesSocialesEmpresa", parametros);
+
+            var lista = new List<RedesSocialesEmpresaModel>();
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    lista.Add(new RedesSocialesEmpresaModel
+                    {
+                        IdEmpresa = row["IdEmpresa"].ToString(),
+                        IdRedSocial = Convert.ToInt32(row["IdRedSocial"]),
+                        NombreRedSocial = row["Nombre"].ToString(),
+                        Enlace = row["Enlace"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
 
         // Optener los telefonos del hotel.
+        public List<TelefonosEmpresaHospedajeModel> ObtenerTelefonosEmpresaHospedajeBD(string idEmpresa)
+        {
+            //var parametros = new[] { 
+            //    new SqlParameter("@IdEmpresa", idEmpresa) 
+            //};
+
+            SqlParameter[] parametros = {
+                new SqlParameter("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerTelefonosEmpresaHospedaje", parametros);
+
+            var lista = new List<TelefonosEmpresaHospedajeModel>();
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    lista.Add(new TelefonosEmpresaHospedajeModel
+                    {
+                        IdTelefono = Convert.ToInt32(row["IdTelefono"]),
+                        IdEmpresa = row["IdEmpresa"].ToString(),
+                        NumeroTelefonico = row["NumeroTelefonico"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
+
+        // Optener las habitaciones que tiene .
+
+        // Optener los tipos de habitacion que tiene (Esto es solo si el que consulta es la empresa en si).
 
 
 

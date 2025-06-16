@@ -209,6 +209,13 @@ SELECT
 FROM Distrito; 
 GO
 
+-- Vista para optener los datos de los distritos
+CREATE VIEW view_Comodidades AS
+SELECT
+    *
+FROM Comodidad; 
+GO
+
 
 --  ++++++++++ = Vistas para lo que seria relacionado con la optencion de datos de la empresa de recreacion = +++++++++++++++++++
 

@@ -19,10 +19,10 @@ namespace GestionHotelera.Controllers
 {
     public class CuentaController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<CuentaController> _logger;
         private readonly DataBasesServices _dataBaseServices;
 
-        public CuentaController(ILogger<HomeController> logger, DataBasesServices dataBasesServices) {
+        public CuentaController(ILogger<CuentaController> logger, DataBasesServices dataBasesServices) {
         
             _logger = logger;
             _dataBaseServices = dataBasesServices;
@@ -87,7 +87,7 @@ namespace GestionHotelera.Controllers
                     HttpContext.Session.SetString("EstadoSesion", "Inciada");
                     _dataBaseServices.CambiarConexion("Administrador");
 
-                    return RedirectToAction("Menu", "Cliente");
+                    return RedirectToAction("Menu", "EmpresaHospedaje");
 
                 }
                 else
@@ -108,7 +108,7 @@ namespace GestionHotelera.Controllers
                     HttpContext.Session.SetString("EstadoSesion", "Inciada");
                     _dataBaseServices.CambiarConexion("Administrador");
 
-                    return RedirectToAction("Menu", "Cliente");
+                    return RedirectToAction("Menu", "EmpresaRecreacion");
 
                 }
                 else

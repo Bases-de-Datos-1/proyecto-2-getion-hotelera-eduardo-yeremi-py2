@@ -1,13 +1,65 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GestionHotelera.Models.EmpresaHospedajeModels;
+using GestionHotelera.Models.RegistrarModels;
+using GestionHotelera.Models.VistasModel;
+using GestionHotelera.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GestionHotelera.Controllers
 {
     public class EmpresaHospedajeController : Controller
     {
+
+
+        private readonly ILogger<EmpresaHospedajeController> _logger;
+        private readonly DataBasesServices _dataBaseServices;
+
+        public EmpresaHospedajeController(ILogger<EmpresaHospedajeController> logger, DataBasesServices dataBasesServices)
+        {
+
+            _logger = logger;
+            _dataBaseServices = dataBasesServices;
+
+        }
+
+
+
+
         // Vista principal del panel
         public IActionResult Menu()
         {
-            return View();
+
+            string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
+
+            string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+
+            if (string.IsNullOrEmpty(estadoSesion) || tipoUsuario == "Cliente")
+            {
+                // En este se supone que estaria guardada la informacion se la empresa que slecciono el usuario para ver.
+                string idEmpresa = HttpContext.Session.GetString("EmpresaSelect");
+
+                // Consultar los datos con el modo 0
+                EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa,0);
+
+                var datosGenerales = new EmpresaHospedaje1ViewModel
+                {
+                    DatosEmpresa = datos
+                };
+
+                return View(datosGenerales); 
+            }
+
+            // Si llega aqui es por que si hay una sesion de cuenta tipo Empresa Hospedaje activa. (Estas cuentas solo puede ver la iformacion de las lo que pertenece a ellas y no puede ir al menu.)
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            EmpresaHospedajeModel datosEmpresa = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresaHospedaje, 1);
+
+            var datosGeneralesEmpresa = new EmpresaHospedaje1ViewModel
+            {
+                DatosEmpresa = datosEmpresa
+            };
+
+            return View(datosGeneralesEmpresa);
         }
 
         // Botón: Añadir Habitación
@@ -16,11 +68,41 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
+        // Este despliega la  ventana para añadir tipos de habitacion.
         // Botón: Añadir Tipo de Habitación
         public IActionResult AñadirTipoHabitacion()
         {
-            return View();
+            var datosGeneralesEmpresa = new RegistrarTipoDeHabitacionViewModel
+            {
+                ListaTiposDeCamas = _dataBaseServices.OptenerTiposCamasBD(),
+                ListaComodidades = _dataBaseServices.OptenerComodidadesBD()
+            };
+
+            return View(datosGeneralesEmpresa);
         }
+
+        // Esta seria la funcion encargada de realizar el registro de un nuevo tipo de habitacion.
+        [HttpPost]
+        public JsonResult RegistrarNuevoTipoDeHabitacion([FromForm] RegistrarTipoHabitacionModel dataRequest, [FromForm] List<IFormFile> ImagenesTipoHabitacion) {
+
+
+
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+
+            var resultado = _dataBaseServices.ProcesarRegistroTipoHabitacion(idEmpresaHospedaje, dataRequest, ImagenesTipoHabitacion);
+
+
+
+            //string url = Url.Action("Editar", "Empresa", new { id = id });
+            //return Json(new { redirigirA = url });
+
+            return resultado;//Json( new { Estado = 1} );
+        }
+
+
+
+
 
         // Botón: Editar Perfil
         public IActionResult EditarPerfil()

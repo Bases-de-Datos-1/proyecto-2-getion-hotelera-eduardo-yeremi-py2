@@ -474,6 +474,20 @@ BEGIN
 END;
 GO
 
+-- Buscar empresa por su id:
+CREATE PROCEDURE sp_ObtenerTelefonosEmpresaHospedaje
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_TelefonosEmpresaHospedaje
+    WHERE IdEmpresa = @IdEmpresa;
+END;
+GO
+
+
 -- Optener las redes sociales de la empresa:
 CREATE PROCEDURE sp_ObtenerRedesSocialesEmpresa
     @IdEmpresa VARCHAR(15)
@@ -486,6 +500,20 @@ BEGIN
     WHERE IdEmpresa = @IdEmpresa;
 END;
 GO
+
+-- Optener los servicios de las instakaciones de la empresa hospedaje.
+CREATE PROCEDURE sp_ObtenerDatosServiciosEmpresaHospedaje
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ServiciosEmpresaHospedaje
+    WHERE IdEmpresa = @IdEmpresa;
+END;
+GO
+
 
 -- Optener los tipos de habitaciones
 CREATE PROCEDURE sp_ObtenerTiposHabitacionEmpresa
@@ -513,18 +541,6 @@ BEGIN
 END;
 GO
 
--- Optener los servicios de las instakaciones de la empresa hospedaje.
-CREATE PROCEDURE sp_ObtenerDatosServiciosEmpresaHospedaje
-    @IdEmpresa VARCHAR(15)
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT *
-    FROM view_ServiciosEmpresaHospedaje
-    WHERE IdEmpresa = @IdEmpresa;
-END;
-GO
 
 
 -- ======================= Algunas busquedas para empresa de recreacion ===================================
@@ -782,4 +798,11 @@ BEGIN
 END;
 GO
 
-
+-- Procedure para optener las comodidades.
+CREATE PROCEDURE sp_ObtenerComodidades
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * FROM view_Comodidades;
+END;
+GO
