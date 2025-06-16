@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Menú Empresa Hospedaje";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; max-width: 1200px; margin: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+    <!-- Botón de retroceso -->
+    <div style="margin-bottom: 20px;">
+        <a href="/" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Volver a inicio</a>
+    </div>
+
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h1 style="color: #2c3e50; font-size: 28px;">Hotel Paraíso Caribeño <span style="color: #27ae60; font-size: 20px;">RESORT</span></h1>
+        <a href="/EmpresaHospedaje/VerFacturaciones" style="background-color: #333; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">Ver facturaciones</a>
+    </header>
+
+    <section style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <a href="/EmpresaHospedaje/AñadirHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Habitación</a>
+        <a href="/EmpresaHospedaje/AñadirTipoHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Tipo De Habitación</a>
+        <a href="/EmpresaHospedaje/EditarPerfil" style="background-color: #f1c40f; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Editar Perfil</a>
+        <a href="/EmpresaHospedaje/EliminarPerfil" style="background-color: #e74c3c; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Eliminar perfil</a>
+    </section>
+
+    <section style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+        <div style="width: 48%;">
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px;"><strong>Email:</strong> info@paraisocaribe.com</div>
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px;"><strong>Web:</strong> www.paraisocaribe.com</div>
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;"><strong>Tel:</strong> +506 2798-0101</div>
+        </div>
+        <div style="width: 48%;">
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px;"><strong>GPS:</strong> 12.2451° N, 98.0821° W</div>
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px; margin-bottom: 10px;"><strong>Provincia:</strong> Limón, Limón, Limón</div>
+            <div style="background-color: #f4f4f4; padding: 10px; border-radius: 5px;"><strong>Barrio:</strong> Playa Hermosa</div>
+        </div>
+    </section>
+
+    <section style="margin-bottom: 30px;">
+        <h3 style="color: #2c3e50;">Comodidades</h3>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <span style="background-color: #1abc9c; color: white; padding: 5px 10px; border-radius: 5px;">WIFI</span>
+            <span style="background-color: #1abc9c; color: white; padding: 5px 10px; border-radius: 5px;">Piscina</span>
+            <span style="background-color: #1abc9c; color: white; padding: 5px 10px; border-radius: 5px;">A/C</span>
+            <span style="background-color: #1abc9c; color: white; padding: 5px 10px; border-radius: 5px;">Parqueo</span>
+        </div>
+    </section>
+
+    <section style="margin-bottom: 30px;">
+        <h3 style="color: #2c3e50;">Habitaciones</h3>
+        <div style="display: flex; gap: 15px;">
+            <div>
+                <img src="https://source.unsplash.com/200x140/?resort" style="border-radius: 5px;">
+                <p style="text-align: center;">Villa caribeña exclusiva</p>
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/200x140/?hotelroom" style="border-radius: 5px;">
+                <p style="text-align: center;">Habitación Deluxe</p>
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/200x140/?bedroom" style="border-radius: 5px;">
+                <p style="text-align: center;">Habitación Estándar</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h3 style="color: #2c3e50;">Tipos de habitaciones</h3>
+        <div style="display: flex; gap: 15px;">
+            <div>
+                <img src="https://source.unsplash.com/200x140/?suite" style="border-radius: 5px;">
+                <p style="text-align: center;">Suite Familiar</p>
+            </div>
+            <div>
+                <img src="https://source.unsplash.com/200x140/?room" style="border-radius: 5px;">
+                <p style="text-align: center;">Habitación Doble</p>
+            </div>
+        </div>
+    </section>
+</div>

@@ -1,0 +1,157 @@
+﻿@{
+    ViewData["Title"] = "Ver Facturaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .contenedor {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #e3e3e3;
+        padding: 30px;
+        border-radius: 10px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+    }
+
+    .modo-filtros {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+        .modo-filtros button {
+            background-color: #317d68;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .modo-filtros button:hover {
+                background-color: #256252;
+            }
+
+    .filtro-id {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+        .filtro-id input {
+            width: 60%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+    .filtros-fecha {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+        .filtros-fecha input[type="date"] {
+            padding: 8px 12px;
+            border: 1px solid #aaa;
+            border-radius: 6px;
+            margin: 5px;
+        }
+
+    .buscar-btn {
+        display: block;
+        margin: 30px auto 10px auto;
+        padding: 12px 25px;
+        background-color: #1e6336;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .resultados {
+        margin-top: 25px;
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 18px;
+        color: #666;
+    }
+
+    .volver-btn {
+        margin-bottom: 20px;
+        display: inline-block;
+        background-color: #444;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+</style>
+
+<div class="contenedor">
+    <a href="/EmpresaHospedaje/Menu" class="volver-btn">← Atrás</a>
+
+    <h2>Ver Facturas</h2>
+
+    <div class="modo-filtros">
+        <button onclick="seleccionarModo('reserva')">Por reservación</button>
+        <button onclick="seleccionarModo('tipo')">Por tipo de habitación</button>
+        <button onclick="seleccionarModo('numero')">Por número de habitación</button>
+    </div>
+
+    <div class="filtro-id">
+        <label id="labelFiltro">Introduzca el ID de su reservación</label><br />
+        <input type="text" id="inputFiltro" placeholder="Ej: 12345" />
+    </div>
+
+    <!-- ✅ Filtro de fechas simplificado -->
+    <div class="filtros-fecha">
+        <label><strong>Rango de fechas</strong></label><br />
+        <input type="date" id="fechaInicio" style="margin-right: 10px;" />
+        <input type="date" id="fechaFin" />
+    </div>
+
+    <button class="buscar-btn" onclick="buscarFacturas()">Buscar Facturas</button>
+
+    <div class="resultados">
+        Resultados...
+    </div>
+</div>
+
+<script>
+    function seleccionarModo(modo) {
+        const label = document.getElementById("labelFiltro");
+        const input = document.getElementById("inputFiltro");
+
+        if (modo === "reserva") {
+            label.innerText = "Introduzca el ID de su reservación";
+            input.placeholder = "Ej: 12345";
+        } else if (modo === "tipo") {
+            label.innerText = "Introduzca el ID del tipo de habitación";
+            input.placeholder = "Ej: 1";
+        } else if (modo === "numero") {
+            label.innerText = "Introduzca el número de su Habitación";
+            input.placeholder = "Ej: 203";
+        }
+    }
+
+    function buscarFacturas() {
+        const id = document.getElementById("inputFiltro").value;
+        const inicio = document.getElementById("fechaInicio").value;
+        const fin = document.getElementById("fechaFin").value;
+        const resultado = document.querySelector(".resultados");
+
+        resultado.innerText = `Mostrando resultados para ID: ${id}, entre ${inicio} y ${fin}`;
+    }
+</script>

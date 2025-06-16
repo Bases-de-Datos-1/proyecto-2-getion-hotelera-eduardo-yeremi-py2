@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "Editar Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 900px; margin: auto; background: #f9f9f9; padding: 30px; border-radius: 12px; font-family: 'Segoe UI', sans-serif;">
+    <h2 style="text-align: center; margin-bottom: 20px;">Modificar registro para una empresa de hospedaje</h2>
+
+    <!-- Datos básicos -->
+    <div style="display: flex; gap: 20px; margin-bottom: 20px;">
+        <div style="flex: 1;">
+            <label>Cédula Jurídica:</label>
+            <input type="text" class="form-control" placeholder="Ej: 3-101-XXXXXX" />
+        </div>
+        <div style="flex: 1;">
+            <label>Nombre del hotel:</label>
+            <input type="text" class="form-control" placeholder="Ej: Hotel Paraíso Caribeño" />
+        </div>
+    </div>
+
+    <!-- Tipo de alojamiento -->
+    <label>Tipo de alojamiento:</label>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <label><input type="radio" name="tipo" /> Hotel</label>
+        <label><input type="radio" name="tipo" /> Hostal</label>
+        <label><input type="radio" name="tipo" /> Cabaña</label>
+        <label><input type="radio" name="tipo" /> Departamento</label>
+        <label><input type="radio" name="tipo" /> Cuarto compartido</label>
+    </div>
+
+    <!-- Dirección -->
+    <fieldset style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+        <legend><strong>Dirección</strong></legend>
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <select class="form-select"><option>Provincia</option></select>
+            <select class="form-select"><option>Cantón</option></select>
+            <select class="form-select"><option>Distrito</option></select>
+            <input class="form-control" placeholder="Barrio" />
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <textarea class="form-control" placeholder="Señas exactas" rows="3"></textarea>
+            <div style="flex: 1;">
+                <label>Ubicación GPS:</label>
+                <input type="text" class="form-control" placeholder="Latitud" />
+                <input type="text" class="form-control" placeholder="Longitud" />
+            </div>
+        </div>
+    </fieldset>
+
+    <!-- Contacto -->
+    <fieldset style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+        <legend><strong>Contacto</strong></legend>
+        <div style="display: flex; gap: 20px; margin-bottom: 10px;">
+            <input type="email" class="form-control" placeholder="Correo electrónico" />
+            <input type="text" class="form-control" placeholder="Número telefónico" />
+        </div>
+        <input type="text" class="form-control" placeholder="Sitio web (opcional)" />
+    </fieldset>
+
+    <!-- Redes Sociales -->
+    <fieldset style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+        <legend><strong>Redes Sociales</strong></legend>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+            <input class="form-control" placeholder="Facebook" />
+            <input class="form-control" placeholder="Instagram" />
+            <input class="form-control" placeholder="X (antes Twitter)" />
+            <input class="form-control" placeholder="YouTube" />
+            <input class="form-control" placeholder="Airbnb" />
+            <input class="form-control" placeholder="TikTok" />
+        </div>
+    </fieldset>
+
+    <!-- Servicios -->
+    <fieldset style="margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px;">
+        <legend><strong>Servicios disponibles</strong></legend>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+            <label><input type="checkbox" /> Piscina</label>
+            <label><input type="checkbox" /> Restaurante</label>
+            <label><input type="checkbox" /> WIFI</label>
+            <label><input type="checkbox" /> Bar</label>
+            <label><input type="checkbox" /> Parqueo</label>
+            <label><input type="checkbox" /> Ranchos</label>
+        </div>
+    </fieldset>
+
+    <!-- Botones -->
+    <div style="text-align: center; margin-top: 20px;">
+        <button class="btn btn-success">Guardar cambios</button>
+        <a href="/EmpresaHospedaje/Menu" class="btn btn-danger">Cancelar</a>
+    </div>
+</div>

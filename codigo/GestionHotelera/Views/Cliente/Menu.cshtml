@@ -1,30 +1,65 @@
 ﻿@{
-    ViewData["Title"] = "Explorar - Menú Cliente";
+    ViewData["Title"] = "Menú Cliente";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section Styles {
     <style>
-        .menu-layout {
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px;
+        }
+
+            .top-bar a {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 15px;
+                border-radius: 6px;
+                text-decoration: none;
+                margin-left: 10px;
+            }
+
+        .search-bar {
+            margin: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+            .search-bar input {
+                flex: 1;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 6px;
+            }
+
+            .search-bar button {
+                padding: 10px;
+                background-color: #343a40;
+                color: white;
+                border: none;
+                border-radius: 6px;
+            }
+
+        .layout {
             display: flex;
             gap: 30px;
-            margin: 40px 20px;
+            margin: 20px;
         }
 
         .sidebar {
-            width: 300px;
-            background-color: #f2f2f2;
+            width: 280px;
+            background-color: #f1f1f1;
             padding: 20px;
             border-radius: 10px;
         }
 
         .btn-type {
-            display: block;
             width: 100%;
-            margin: 5px 0;
             padding: 10px;
+            margin-bottom: 10px;
             border: 1px solid #333;
-            border-radius: 8px;
+            border-radius: 6px;
             background-color: #fff;
             cursor: pointer;
         }
@@ -34,33 +69,41 @@
                 color: white;
             }
 
+        .filter-section {
+            display: none;
+            margin-top: 20px;
+        }
+
+            .filter-section.active {
+                display: block;
+            }
+
         .form-group {
             margin-bottom: 15px;
         }
 
-            .form-group label {
-                font-weight: bold;
-                display: block;
-                margin-bottom: 5px;
-            }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
 
-            .form-group input,
-            .form-group select {
-                width: 100%;
-                padding: 8px;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-            }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
 
         .tag-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .tag {
-            padding: 6px 12px;
             background-color: #e0e0e0;
+            padding: 6px 12px;
             border-radius: 20px;
             cursor: pointer;
         }
@@ -70,56 +113,21 @@
                 color: white;
             }
 
-        .top-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px;
+        .results {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #ccc;
         }
-
-            .top-buttons a {
-                padding: 10px 15px;
-                background-color: #007bff;
-                color: white;
-                border-radius: 6px;
-                text-decoration: none;
-            }
-
-        .search-bar {
-            display: flex;
-            gap: 10px;
-            margin: 0 20px 30px 20px;
-        }
-
-            .search-bar input {
-                flex: 1;
-                padding: 10px;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-            }
-
-            .search-bar button {
-                padding: 10px 15px;
-                border: none;
-                background-color: #343a40;
-                color: white;
-                border-radius: 6px;
-            }
-
-        .filter-section {
-            display: none;
-        }
-
-            .filter-section.active {
-                display: block;
-            }
     </style>
 }
 
-<div class="top-buttons">
+<div class="top-bar">
     <a href="/Home/Index">← Volver</a>
     <div>
-        <a href="/Cliente/Perfil">Modificar perfil</a>
-        <a href="/Cliente/Reservas">Ver reservaciones</a>
+        <a href="/Cliente/ModificarPerfil">Modificar perfil</a>
+        <a href="/Cliente/VerReservaciones">Ver reservaciones</a>
     </div>
 </div>
 
@@ -128,7 +136,7 @@
     <button>🔍</button>
 </div>
 
-<div class="menu-layout">
+<div class="layout">
     <div class="sidebar">
         <h4>Tipo:</h4>
         <button class="btn-type" data-target="hospedaje">Hospedaje</button>
@@ -136,23 +144,22 @@
         <button class="btn-type" data-target="empresaRecreacion">Empr. Recreación</button>
         <button class="btn-type" data-target="servicios">Servicios</button>
 
-        <hr />
-
-        <!-- Filtros: Hospedaje -->
         <div id="filtros-hospedaje" class="filter-section">
             <div class="form-group">
                 <label>Fecha de entrada:</label>
-                <input type="date" name="FechaEntrada" />
+                <input type="date" />
             </div>
             <div class="form-group">
                 <label>Fecha de salida:</label>
-                <input type="date" name="FechaSalida" />
+                <input type="date" />
             </div>
             <div class="form-group">
                 <label>Tipo de cama:</label>
-                <button class="btn btn-outline-secondary w-100 mb-1">Cama Individual</button>
-                <button class="btn btn-outline-secondary w-100 mb-1">Cama Grande</button>
-                <button class="btn btn-outline-secondary w-100">Cama King zise</button>
+                <select>
+                    <option>Cama Individual</option>
+                    <option>Cama Grande</option>
+                    <option>Cama King Size</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Rango de precio:</label>
@@ -178,7 +185,6 @@
             </div>
         </div>
 
-        <!-- Filtros: Empresa Hospedaje -->
         <div id="filtros-empresaHospedaje" class="filter-section">
             <div class="form-group">
                 <label>Ubicación:</label>
@@ -213,7 +219,6 @@
             </div>
         </div>
 
-        <!-- Filtros: Empresa Recreación -->
         <div id="filtros-empresaRecreacion" class="filter-section">
             <div class="form-group">
                 <label>Ubicación:</label>
@@ -234,7 +239,6 @@
             </div>
         </div>
 
-        <!-- Filtros: Servicios -->
         <div id="filtros-servicios" class="filter-section">
             <div class="form-group">
                 <label>Rango de precio:</label>
@@ -249,7 +253,7 @@
                 <select><option>Barrio</option></select>
             </div>
             <div class="form-group">
-                <label>Actividades disponibles (placeholder):</label>
+                <label>Actividades (ejemplo):</label>
                 <div class="tag-list">
                     <span class="tag">Senderismo</span>
                     <span class="tag">Turismo</span>

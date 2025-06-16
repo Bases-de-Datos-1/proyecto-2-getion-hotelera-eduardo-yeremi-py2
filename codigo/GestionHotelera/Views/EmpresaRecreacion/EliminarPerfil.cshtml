@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Eliminar Perfil - Empresa Recreación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="max-width: 700px; margin: auto; padding: 40px; background-color: #fff6f6; border-radius: 12px; font-family: 'Segoe UI', sans-serif; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+    <!-- Botón de regreso -->
+    <a href="/EmpresaRecreacion/Menu" style="text-decoration: none; color: #333; font-weight: bold; display: inline-block; margin-bottom: 20px;">← Atrás</a>
+
+    <h2 style="color: #b00020; text-align: center;">¿Estás seguro que deseas eliminar tu perfil?</h2>
+
+    <p style="text-align: center; font-size: 16px; color: #555; margin-top: 10px;">
+        Esta acción no se puede deshacer. Toda la información de tu empresa, incluyendo actividades y servicios, se eliminará permanentemente.
+    </p>
+
+    <!-- Confirmación visual -->
+    <div style="text-align: center; margin: 40px 0;">
+        <img src="https://cdn-icons-png.flaticon.com/512/1828/1828843.png" alt="Advertencia" width="80" style="opacity: 0.8;" />
+    </div>
+
+    <!-- Botones -->
+    <div style="display: flex; justify-content: center; gap: 20px;">
+        <button onclick="confirmarEliminacion()" style="background-color: #c62828; color: white; padding: 12px 20px; border: none; border-radius: 6px; font-weight: bold;">Sí, eliminar perfil</button>
+        <a href="/EmpresaRecreacion/Menu" style="background-color: #6c757d; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Cancelar</a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function confirmarEliminacion() {
+            if (confirm("¿Confirmas que deseas eliminar tu perfil permanentemente?")) {
+                alert("Perfil eliminado correctamente.");
+                window.location.href = "/"; // Aquí puedes cambiar a una página de despedida si deseas
+            }
+        }
+    </script>
+}

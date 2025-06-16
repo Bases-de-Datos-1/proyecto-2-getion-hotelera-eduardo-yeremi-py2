@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Menú Empresa Recreación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding: 30px; font-family: 'Segoe UI', sans-serif; background-color: #f9f9f9; border-radius: 10px; max-width: 1200px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <!-- ENCABEZADO -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="font-size: 28px; color: #2c3e50;">Aventuras Marinas Caribe <span style="color: #27ae60; font-size: 18px;">SERVICIOS</span></h1>
+        <a href="/" style="background-color: #444; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none;">← Atrás</a>
+    </div>
+
+    <!-- BOTONES DE ACCIONES -->
+    <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="/EmpresaRecreacion/NuevoServicio" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">• Nuevo Servicio</a>
+        <a href="/EmpresaRecreacion/NuevaActividad" style="background-color: #17a2b8; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">• Nueva Actividad</a>
+        <a href="/EmpresaRecreacion/EditarPerfil" style="background-color: #f1c40f; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none;">• Editar Perfil</a>
+        <a href="/EmpresaRecreacion/EliminarPerfil" style="background-color: #e74c3c; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">• Eliminar perfil</a>
+        <a href="/EmpresaRecreacion/EditarActividad" style="background-color: #d4ac0d; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none;">• Editar actividad</a>
+    </div>
+
+    <!-- INFORMACIÓN DE CONTACTO -->
+    <div style="margin-top: 30px; display: flex; gap: 20px;">
+        <div style="flex: 1;">
+            <div style="background-color: #eeeeee; padding: 12px; border-radius: 5px; margin-bottom: 10px;">
+                <strong>Email:</strong> info@paraisocaribe.com
+            </div>
+            <div style="background-color: #eeeeee; padding: 12px; border-radius: 5px; margin-bottom: 10px;">
+                <strong>Ubicación:</strong> Limón, Talamanca, Cahuita
+            </div>
+        </div>
+        <div style="flex: 1;">
+            <div style="background-color: #eeeeee; padding: 12px; border-radius: 5px; margin-bottom: 10px;">
+                <strong>Teléfono:</strong> +506 2798-0202
+            </div>
+            <div style="background-color: #eeeeee; padding: 12px; border-radius: 5px;">
+                <strong>Contacto:</strong> Juan Mora
+            </div>
+        </div>
+    </div>
+
+    <!-- SERVICIOS -->
+    <div style="margin-top: 40px;">
+        <h2 style="color: #2c3e50;">Servicios</h2>
+        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+            <div style="background-color: #2ecc71; color: white; padding: 10px 20px; border-radius: 5px; text-align: center;">
+                <div>Tour de snorkel</div>
+                <div style="font-weight: bold; margin-top: 5px;">$45 USD</div>
+            </div>
+            <div style="background-color: #1abc9c; color: white; padding: 10px 20px; border-radius: 5px; text-align: center;">
+                <div>Paseo en Kayak</div>
+                <div style="font-weight: bold; margin-top: 5px;">$35 USD</div>
+            </div>
+            <div style="background-color: #3498db; color: white; padding: 10px 20px; border-radius: 5px; text-align: center;">
+                <div>Tour nocturno de tortugas</div>
+                <div style="font-weight: bold; margin-top: 5px;">$50 USD</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVIDADES -->
+    <div style="margin-top: 40px;">
+        <h2 style="color: #2c3e50;">Actividades</h2>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="background-color: #333; color: white; padding: 15px; border-radius: 5px; width: 300px;">
+                <strong style="font-size: 18px;">Observación de fauna</strong>
+                <p style="margin-top: 5px;">Recorrido guiado por el parque nacional para observar monos, perezosos y aves</p>
+            </div>
+            <div style="background-color: #333; color: white; padding: 15px; border-radius: 5px; width: 300px;">
+                <strong style="font-size: 18px;">Clase de surf</strong>
+                <p style="margin-top: 5px;">Aprende a surfear con instructores profesionales en las mejores playas de la zona</p>
+            </div>
+        </div>
+    </div>
+</div>
