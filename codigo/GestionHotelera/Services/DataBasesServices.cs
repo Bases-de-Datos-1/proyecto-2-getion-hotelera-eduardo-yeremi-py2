@@ -964,6 +964,83 @@ namespace GestionHotelera.Services
         }
 
 
+        // >>> ===== Funciones para el registro de habitaciones.  ===== <<< 
+
+        // Funcion para manerjar el procesro de registro:
+        public List<int> ProcesarRegistroHabitacion(string idEmpresa, RegistrarHabitacionModel model)
+        {
+            List<int> estadoResultados = new List<int>();
+
+            // Registrar la habitacion.
+            int idHabitacion = RegistrarDatosHabitacion(model.NumeroHabitacion, model.TipoHabitacion);
+
+            estadoResultados.Add(idHabitacion);
+
+            if (idHabitacion <= 0)
+            {
+                Console.WriteLine("No se pudo registrar la habitacion. Repetida o error interno.");
+                return estadoResultados; 
+            }
+
+            // Registar la asociacion entre las empresa y la habitacion.
+            int resultadoAsociacion = AsociarHabitacionAEmpresa(idEmpresa, idHabitacion);
+            estadoResultados.Add(resultadoAsociacion);
+
+            if (resultadoAsociacion <= 0)
+            {
+
+                Console.WriteLine($"Habitacion creada, pero no se pudo asociar con la empresa. ");
+                return estadoResultados; 
+            }
+
+            return estadoResultados;
+        }
+
+        // Funcion para el registro de las habitaciones.
+        public int RegistrarDatosHabitacion(int numeroHabitacion, int idTipoHabitacion)
+        {
+            SqlParameter nuevoIdParam = new("@NuevoIdDatosHabitacion", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@Numero", numeroHabitacion),
+                new("@IdTipoHabitacion", idTipoHabitacion),
+                nuevoIdParam
+            };
+
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarDatosHabitacion", parametros);
+
+            return resultado;
+        }
+
+        // Funcion para registrar la asociacion de la habitacion con la empresa.
+        public int AsociarHabitacionAEmpresa(string idEmpresa, int idHabitacion)
+        {
+            SqlParameter resultado = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@IdHabitacion", idHabitacion),
+                resultado
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarHabitacionesEmpresa", parametros);
+
+            return estado;
+        }
+
+
+
+
+
+
 
         // >>> ===== Funciones para el registro de servicios de recreacion.  ===== <<<
 
@@ -1035,8 +1112,6 @@ namespace GestionHotelera.Services
 
             return EjecutarProcedimientoIUD("sp_AgregarListaActividades", parametros);
         }
-
-
 
 
         // >>> ===== Funciones para el registro de actividades de recreacion  ===== <<<
@@ -1254,15 +1329,159 @@ namespace GestionHotelera.Services
 
         // Optener las habitaciones que tiene .
 
-        // Optener los tipos de habitacion que tiene (Esto es solo si el que consulta es la empresa en si).
 
+        // >>> ===== Funciones para optener los datos de una de los tipos de habitaciones de una empresa. ===== <<<
+        // Funcion para optener los datos completos que conforman a los tipos de habitaciones de una empresa.
+        public List<TiposHabitacionesModel> ObtenerTiposHabitacionesConDetallesPorEmpresaBD(string idEmpresa)
+        {
+            List<TiposHabitacionesModel> tiposHabitaciones = new();
+
+            try
+            {
+                var parametros = new SqlParameter[]
+                {
+                    new("@IdEmpresa", idEmpresa)
+                };
+
+                DataTable resultado = EjecutarProcedimientoConParametros("sp_ObtenerTipoHabitacionesEmpresa", parametros);
+
+                if (resultado != null && resultado.Rows.Count > 0)
+                {
+                    foreach (DataRow row in resultado.Rows)
+                    {
+                        int idTipo = Convert.ToInt32(row["IdTipoHabitacion"]);
+
+                        var tipo = new TiposHabitacionesModel
+                        {
+                            IdTipoHabitacion = idTipo,
+                            IdEmpresa = row["IdEmpresa"].ToString(),
+                            NombreTipoHabitacion = row["Nombre"].ToString(),
+                            Descripcion = row["Descripcion"].ToString(),
+                            IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
+                            NombreCama = row["NombreCama"].ToString(),
+                            Precio = row["Precio"].ToString(),
+
+                            Imagenes = ObtenerFotosTipoHabitacionBD(idTipo),
+                            Comodidades = ObtenerComodidadesPorTipoHabitacionBD(idTipo)
+                        };
+
+                        tiposHabitaciones.Add(tipo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener tipos de habitación con detalles: {ex.Message}");
+            }
+
+            return tiposHabitaciones;
+        }
+
+
+        // Optener los tipos de habitacion que tiene (Esto es solo si el que consulta es la empresa en si).
+        public List<TiposHabitacionesModel> ObtenerTiposHabitacionesPorEmpresaBD(string idEmpresa)
+        {
+            List<TiposHabitacionesModel> tiposHabitaciones = new();
+
+            try
+            {
+                var parametros = new SqlParameter[]
+                {
+                    new("@IdEmpresa", idEmpresa)
+                };
+
+                DataTable resultado = EjecutarProcedimientoConParametros("sp_ObtenerTipoHabitacionesEmpresa", parametros);
+
+                if (resultado != null && resultado.Rows.Count > 0)
+                {
+                    foreach (DataRow row in resultado.Rows)
+                    {
+                        var tipo = new TiposHabitacionesModel
+                        {
+                            IdTipoHabitacion = Convert.ToInt32(row["IdTipoHabitacion"]),
+                            IdEmpresa = row["IdEmpresa"].ToString(),
+                            NombreTipoHabitacion = row["Nombre"].ToString(),
+                            Descripcion = row["Descripcion"].ToString(),
+                            IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
+                            NombreCama = row["NombreCama"].ToString(),
+                            Precio = row["Precio"].ToString()
+                        };
+
+                        tiposHabitaciones.Add(tipo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener los tipos de habitacion para la empresa: {ex.Message}");
+            }
+            return tiposHabitaciones;
+        }
+
+        // Optener las fotos para un tipo de habitacion.
+        public List<FotosTipoHabitacionModel> ObtenerFotosTipoHabitacionBD(int idTipoHabitacion)
+        {
+            SqlParameter[] parametros = {
+                new("@IdTipoHabitacion", idTipoHabitacion.ToString())
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerFotosTipoHabitaciones", parametros);
+
+            var lista = new List<FotosTipoHabitacionModel>();
+
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    byte[] imagenBinaria = (byte[])row["Imagen"];
+
+                    lista.Add(new FotosTipoHabitacionModel
+                    {
+                        IdImagen = Convert.ToInt32(row["IdImagen"]),
+                        IdTipoHabitacion = Convert.ToInt32(row["IdTipoHabitacion"]),
+                        Imagen = imagenBinaria
+                    });
+                }
+            }
+            //string base64 = Convert.ToBase64String(imagenBinaria);
+            //string imagenHTML = $"data:image/jpeg;base64,{base64}";
+            //<img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(Model.Imagen)}")" />
+
+            return lista;
+        }
+
+        // Optener las comodidaes de un tipo de habitacion.
+        public List<ComodidadesHabitacionModel> ObtenerComodidadesPorTipoHabitacionBD(int idTipoHabitacion)
+        {
+            SqlParameter[] parametros = {
+                new("@IdTipoHabitacion", idTipoHabitacion.ToString())
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerComodidadesPorTipoHabitaciones", parametros);
+
+            var lista = new List<ComodidadesHabitacionModel>();
+
+            if (datos != null)
+            {
+                foreach (DataRow row in datos.Rows)
+                {
+                    lista.Add(new ComodidadesHabitacionModel
+                    {
+                        IdComodidad = Convert.ToInt32(row["IdComodidad"]),
+                        NombreComodidad = row["Nombre"].ToString()
+                    });
+                }
+            }
+
+            return lista;
+        }
 
 
 
         // >>> ===== Funciones para optener los datos de una empresa de recreacion especifica. ===== <<<
         // Optener el registro de la empresa de recreacion por su ID.
 
-        // Optener los servicios de la empresa de hospedaje.
+        // Optener los servicios de la empresa de de recreacion.
 
         // Optener las actividades especificas de cada servicio. 
 

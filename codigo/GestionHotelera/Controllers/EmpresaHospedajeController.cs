@@ -65,8 +65,33 @@ namespace GestionHotelera.Controllers
         // Botón: Añadir Habitación
         public IActionResult AñadirHabitacion()
         {
-            return View();
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            var datosGeneralesEmpresa = new RegistroHabitacionesViewModel
+            {
+                TiposHabitaciones = _dataBaseServices.ObtenerTiposHabitacionesPorEmpresaBD(idEmpresaHospedaje)
+            };
+
+            return View(datosGeneralesEmpresa);
         }
+
+
+        [HttpPost]
+        public JsonResult RegistrarNuevaHabitacion([FromForm] RegistrarHabitacionModel dataRequest)
+        {
+
+
+
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+
+            var resultado = _dataBaseServices.ProcesarRegistroHabitacion(idEmpresaHospedaje, dataRequest);
+
+            return Json( new { Estado = resultado } );
+        }
+
+
+
 
         // Este despliega la  ventana para añadir tipos de habitacion.
         // Botón: Añadir Tipo de Habitación

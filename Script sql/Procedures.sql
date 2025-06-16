@@ -707,7 +707,7 @@ BEGIN
         END
     END TRY
     BEGIN CATCH
-        PRINT 'Error en sp_EliminarListaRedesSociales: ' + ERROR_MESSAGE();
+        --PRINT 'Error en sp_EliminarListaRedesSociales: ' + ERROR_MESSAGE();
         SET @Resultado = -99;
     END CATCH
 END;

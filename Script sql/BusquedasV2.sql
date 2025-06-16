@@ -541,6 +541,48 @@ BEGIN
 END;
 GO
 
+-- Optener los tipos de habitacion por empresa.
+CREATE PROCEDURE sp_ObtenerTipoHabitacionesEmpresa
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_TipoHabitacionesEmpresas
+    WHERE IdEmpresa = @IdEmpresa;
+END;
+GO
+
+-- Optener los tipos las fotos por tipo de habitacion
+CREATE PROCEDURE sp_ObtenerFotosTipoHabitaciones
+    @IdTipoHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_FotoTipoHabitacionesEmpresa
+    WHERE IdTipoHabitacion = @IdTipoHabitacion;
+END;
+GO
+
+
+-- Optener los datos de las comodidades de un tipo de habitacion especifica.
+CREATE PROCEDURE sp_ObtenerComodidadesPorTipoHabitaciones
+    @IdTipoHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ComodadesPorHabitacion
+    WHERE IdTipoHabitacion = @IdTipoHabitacion;
+END;
+GO
+
+
+
 
 
 -- ======================= Algunas busquedas para empresa de recreacion ===================================

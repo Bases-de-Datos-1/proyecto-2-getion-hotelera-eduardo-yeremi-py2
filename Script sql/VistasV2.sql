@@ -216,6 +216,21 @@ SELECT
 FROM Comodidad; 
 GO
 
+-- Vista para optener datos generales de los tipos de habitaciones de una empresa.
+CREATE VIEW view_TipoHabitacionesEmpresas AS
+SELECT
+    THE.IdTipoHabitacion,
+    THE.IdEmpresa,
+    TH.Nombre,
+    TH.Descripcion,
+    TC.NombreCama,
+    TH.IdTipoCama,
+    TH.Precio
+FROM TipoHabitacionEmpresa THE
+JOIN TipoHabitacion TH ON THE.IdTipoHabitacion = TH.IdTipoHabitacion
+JOIN TipoCama TC ON TH.IdTipoCama = TC.IdTipoCama; 
+GO
+
 
 --  ++++++++++ = Vistas para lo que seria relacionado con la optencion de datos de la empresa de recreacion = +++++++++++++++++++
 

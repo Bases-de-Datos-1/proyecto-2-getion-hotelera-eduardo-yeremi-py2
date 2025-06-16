@@ -4,7 +4,7 @@
     {
         public int NumeroHabitacion { get; set; }
 
-        public int IdTipoHabitacion { get; set; }
+        public int TipoHabitacion { get; set; }
 
 
     }
