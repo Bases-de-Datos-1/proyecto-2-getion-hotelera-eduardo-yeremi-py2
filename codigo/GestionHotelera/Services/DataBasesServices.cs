@@ -782,6 +782,113 @@ namespace GestionHotelera.Services
 
 
 
+        // >>> ===== Funciones para el registro de actividades de recreacion  ===== <<<
+        public int RegistrarActividadRecreacionBD(string idEmpresa, RegistrarActividadModel model)
+        {
+            //CambiarConexion("Administrador"); // Esto ya estan con una cuenta tipo administrador a la hora de hacer el registro.
+
+            // Parametro de salida
+            SqlParameter nuevoIdActividadParam = new("@NuevoIdActividad", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Establecer los parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@NombreActividad", model.NombreActividad),
+                new("@DescripcionActividad", model.DescripcionActividad),
+                nuevoIdActividadParam
+            };
+
+            // Ejecutar el procedimiento
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarActividad", parametros);
+
+            return resultado;
+        }
+
+
+
+        // >>> ===== Funciones para el registro de servicios de recreacion.  ===== <<<
+
+        // Funcion para controlar el proceso de registro de los servicios.
+        public JsonResult ProcesarRRegistroDeServiciosDeRecreacion(string idEmpresa, RegistrarServicioModel model)
+        {
+            // Registrar el servicio.
+            int idServicio = RegistrarServicioRecreacionBD(idEmpresa, model.NombreServicio, model.Precio);
+
+            if (idServicio <= 0)
+            {
+                Console.WriteLine("No se pudo registrar el servicio.");
+                return new JsonResult(new { EstadoGeneral = idServicio }); ;
+            }
+
+            List<int> estadoActividades = new List<int>();
+            // Agregar las actividades al servicio.
+            foreach (int idActividad in model.ListasActividades)
+            {
+                int resultadoActividad = AgregarActividadAServicioBD(idServicio, idActividad);
+
+                if (resultadoActividad < 0)
+                { 
+                    Console.WriteLine($"Error ial agregar actividad {idActividad} al servicio {idServicio}."); 
+                }
+                estadoActividades.Add(resultadoActividad);
+            }
+
+            return new JsonResult(new { EstadoGeneral = idServicio, EstadoActividades = estadoActividades });
+
+        }
+
+        // funcion para registrar los datos generales de los servicios en la BD.
+        public int RegistrarServicioRecreacionBD(string idEmpresa, string nombreServicio, double precio)
+        {
+
+            SqlParameter nuevoIdServicio = new("@NuevoIdServicio", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@NombreServicio", nombreServicio),
+                new("@Precio", precio),
+                nuevoIdServicio
+            };
+
+            int idGenerado = EjecutarProcedimientoIUD("sp_AgregarServiciosRecreacion", parametros);
+
+            return idGenerado;
+        }
+
+        // Funcion registrar las actividades asociadas al servicio.
+        public int AgregarActividadAServicioBD(int idServicio, int idActividad)
+        {
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdServicio", idServicio),
+                new("@IdActividad", idActividad),
+                resultadoParam
+            };
+
+            return EjecutarProcedimientoIUD("sp_AgregarListaActividades", parametros);
+        }
+
+
+
+
+
+
+
+
+
 
         // >>> ===== Funciones para optener los datos de una empresa de hospedaje especifica. ===== <<<
         // Optener el registro de la empresa de hoespedaje por su ID.
@@ -866,8 +973,6 @@ namespace GestionHotelera.Services
                 NombreDistrito = row["Distrito"]?.ToString()
             };
         }
-
-
 
         // Optener los telefonos del cliente.
         public List<TelefonoClienteModel> ObtenerTelefonosClienteDB(string cedula)

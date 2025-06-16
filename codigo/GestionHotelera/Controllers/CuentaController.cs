@@ -64,6 +64,7 @@ namespace GestionHotelera.Controllers
                 {
                     HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
                     HttpContext.Session.SetString("UsuarioID", resultado);
+                    HttpContext.Session.SetString("EstadoSesion", "Inciada");
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -83,6 +84,9 @@ namespace GestionHotelera.Controllers
                 {
                     HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
                     HttpContext.Session.SetString("UsuarioID", resultado);
+                    HttpContext.Session.SetString("EstadoSesion", "Inciada");
+                    _dataBaseServices.CambiarConexion("Administrador");
+
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -101,6 +105,9 @@ namespace GestionHotelera.Controllers
                 {
                     HttpContext.Session.SetString("TipoUsuario", dataRequest.TipoUsuario);
                     HttpContext.Session.SetString("UsuarioID", resultado);
+                    HttpContext.Session.SetString("EstadoSesion", "Inciada");
+                    _dataBaseServices.CambiarConexion("Administrador");
+
                     return RedirectToAction("Menu", "Cliente");
 
                 }
@@ -136,6 +143,8 @@ namespace GestionHotelera.Controllers
         //{
         //    return RedirectToAction("Login");
         //}
+
+
 
         // +++ =====  Seccion para el registro de cuentas de Clientes  =====+++
 
