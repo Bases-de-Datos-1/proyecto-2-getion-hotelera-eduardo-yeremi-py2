@@ -1,4 +1,5 @@
-﻿using GestionHotelera.Models.VistasModel;
+﻿using GestionHotelera.Models.FiltrosBusquedaModel.FiltrosBusqueda;
+using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,10 +32,11 @@ namespace GestionHotelera.Controllers
                 ListaTiposInstalaciones = _dataBaseServices.OptenerTipoInstalacionesBD(),
                 ListaServiciosHotel = _dataBaseServices.OptenerServiciosHotelesBD(),
                 ListaTiposDeCamas = _dataBaseServices.OptenerTiposCamasBD(),
-                ListaComodidades = _dataBaseServices.OptenerComodidadesBD()
+                ListaComodidades = _dataBaseServices.OptenerComodidadesBD(),
 
                 // Falta la de optener servicios y obtener actividades.
-
+                ListaActividades = _dataBaseServices.ObtenerTodasLasActividadesEmpresaRecreacionRegistradosBD(),
+                ServiciosEmpresaRecreacion = _dataBaseServices.ObtenerTodosLosServiciosDeRecreacionRegistradosBD()
 
             };
 
@@ -72,10 +74,66 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
-        // ✅ GET: /Cliente/VerHabitacion
+        // GET: /Cliente/VerHabitacion
         public IActionResult VerHabitacion()
         {
             return View();
         }
+
+
+
+        // >>> ===== Seccion para el procesado de los filtros de busqueda. ===== <<<
+
+        // Funcion para recibir y enviar los datos de las habitaciones que se buscan.
+        [HttpPost]
+        public JsonResult BuscarHabitaciones([FromBody] FiltrosBusquedaHabitacionModel dataRequest) 
+        {
+            BusquedasCatalogoServices _busquedas = new BusquedasCatalogoServices(_dataBaseServices);
+
+            JsonResult resultado = _busquedas.BuscarHabitacionesBD(dataRequest);
+
+            return resultado;//Json(new { Estado = 1 });
+
+        }
+
+        // Funcion para recibir y enviar los datos de la empresas de hopedaje que se buscan.
+        [HttpPost]
+        public JsonResult BuscarEmpresasHospedaje([FromBody] FiltroBusquedaEmpresaHospedajeModel dataRequest)
+        {
+            BusquedasCatalogoServices _busquedas = new BusquedasCatalogoServices(_dataBaseServices);
+
+            JsonResult resultado = _busquedas.BuscarEmpresasHospedajeBD(dataRequest);
+
+            return resultado;//Json(new { Estado = 1 });
+
+        }
+
+
+        // Funcion para recibir y enviar los datos de la empresas de recreacion que se buscan.
+        [HttpPost]
+        public JsonResult BuscarEmpresasRecreacion([FromBody] FiltrosBusquedaEmpresaRecreacionModel dataRequest)
+        {
+            BusquedasCatalogoServices _busquedas = new BusquedasCatalogoServices(_dataBaseServices);
+
+            JsonResult resultado = _busquedas.BuscarEmpresaRecreacionBD(dataRequest);
+
+            return resultado;//Json(new { Estado = 1 });
+
+        }
+
+
+        // Funcion para recibir y enviar los datos de los servicios de recreacion que se buscan.
+        [HttpPost]
+        public JsonResult BuscarServiciosRecreacion([FromBody] FiltrosBusquedaServiciosRecreacionModel dataRequest)
+        {
+            BusquedasCatalogoServices _busquedas = new BusquedasCatalogoServices(_dataBaseServices);
+
+            JsonResult resultado = _busquedas.BuscarServiciosRecreacionBD(dataRequest);
+
+            return resultado;//Json(new { Estado = 1 });
+
+        }
+
+
     }
 }

@@ -5,6 +5,8 @@
 
 @model GestionHotelera.Models.VistasModel.CatalogoViewModel;
 
+<link href="~/css/CatalogoStyles.css" rel="stylesheet" />
+
 @section Styles {
     <style>
         .top-bar {
@@ -408,7 +410,7 @@
 
 
     @* En esta parte se renderizarian los elementos que se hayan encontrado. *@
-    <div class="results">
+    <div class="results" id="contenedorResultados">
 
         <p>← Seleccioná un tipo y aplicá filtros para ver resultados aquí.</p>
 

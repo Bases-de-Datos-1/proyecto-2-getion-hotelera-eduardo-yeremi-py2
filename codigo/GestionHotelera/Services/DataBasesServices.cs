@@ -1796,6 +1796,86 @@ namespace GestionHotelera.Services
         }
 
 
+        // Optener todos los servicios de recreacion registrados en el sistema:
+        public List<ServiciosEmpresaRecreacionModel> ObtenerTodosLosServiciosDeRecreacionRegistradosBD()
+        {
+
+            List<ServiciosEmpresaRecreacionModel> serviciosResultados = new List<ServiciosEmpresaRecreacionModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable serviciosRegistradas = EjecutarProcedimientoBasico("sp_ObtenerServiciosRecreacion");
+                if (serviciosRegistradas != null && serviciosRegistradas.Rows.Count > 0)
+                {
+                    foreach (DataRow fila in serviciosRegistradas.Rows)
+                    {
+                        var tipo = new ServiciosEmpresaRecreacionModel
+                        {
+                            IdServicio = Convert.ToInt32(fila["IdServicio"]),
+
+                            NombreServicio = fila["NombreServicio"].ToString(),
+
+                            CedulaJuridica = fila["IdEmpresaRecreacion"].ToString(),
+
+                            Precio = Convert.ToDouble(fila["Precio"]),
+
+                            IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                            NombreProvincia = fila["Provincia"].ToString(),
+                            IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                            NombreCanton = fila["Canton"].ToString(),
+                            IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                            NombreDistrito = fila["Distrito"].ToString(),
+
+                        };
+
+                        serviciosResultados.Add(tipo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo los servicios registrados.: {ex.Message}");
+            }
+            return serviciosResultados;
+
+
+        }
+
+
+        // Obtener todas las actividades regitradas en la base de datos.
+        public List<ActividadesEmpresaRecreacionModel> ObtenerTodasLasActividadesEmpresaRecreacionRegistradosBD()
+        {
+            List<ActividadesEmpresaRecreacionModel> lista = new List<ActividadesEmpresaRecreacionModel>();
+            try
+            {
+                // Ejecutar el procedimiento almacenado para obtener los tipos de cama.
+                DataTable actividadesRegistradas = EjecutarProcedimientoBasico("sp_ObtenerActividadesRecreacion");
+                if (actividadesRegistradas != null && actividadesRegistradas.Rows.Count > 0)
+                {
+                    foreach (DataRow row in actividadesRegistradas.Rows)
+                    {
+                        lista.Add(new ActividadesEmpresaRecreacionModel
+                        {
+                            IdActividad = Convert.ToInt32(row["IdActividad"]),
+
+                            IdEmpresa = row["IdEmpresa"].ToString(),
+
+                            NombreActividad = row["NombreActividad"].ToString(),
+
+                            DescripcionActividad = row["DescripcionActividad"].ToString()
+
+                        });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error obteniendo las actividades registradas: {ex.Message}");
+            }
+            return lista;
+
+        }
+
 
 
 

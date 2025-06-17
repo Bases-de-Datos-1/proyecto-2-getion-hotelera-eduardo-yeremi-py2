@@ -213,7 +213,7 @@ function IniciarBusqueda() {
 
     } else if (filtroActivo === "empresaRecreacion") {
 
-        ProcesarBusquedaEmpresaRereacion();
+        ProcesarBusquedaEmpresaRecreacion();
 
     } else {
 
@@ -231,26 +231,26 @@ function IniciarBusqueda() {
 // >>> ===== Seccion para el procesamiento de las busqueda. ===== <<<
 
 // >> Esta seria la funcion para procesar la busqueda del hospedaje, aqui se optendrian los datos de los filtros.
-function ProcesarBusquedaHospedaje() {
+async function ProcesarBusquedaHospedaje() {
 
-    let barraBusqueda = document.getElementById("barraBusquedaInput").value;
+    let barraBusqueda = document.getElementById("barraBusquedaInput").value.trim() || null;
 
-    let fechaEntrada = document.getElementById("fechaEntradaInput").value;
+    let fechaEntrada = document.getElementById("fechaEntradaInput").value || null;
 
-    let fechaSalida = document.getElementById("fechaSalidaInput").value;
+    let fechaSalida = document.getElementById("fechaSalidaInput").value || null;
 
-    let tipoCama = document.getElementById("tipoCamaSelect").value;
+    let idTipoCama = parseInt(document.getElementById("tipoCamaSelect")?.value) || null;
 
-    let precioMinimo = document.getElementById("precioMinimoHabitacionInput").value;
+    let precioMinimo = parseFloat(document.getElementById("precioMinimoHabitacionInput").value) || null;
 
-    let precioMaximo = document.getElementById("precioMaximoHabitacionInput").value;
+    let precioMaximo = parseFloat(document.getElementById("precioMaximoHabitacionInput").value) || null;
 
     // Ubicacion.
-    let provincia = document.getElementById("provinciaHabitacion").value;
+    let idProvincia = parseInt(document.getElementById("provinciaHotel").value) || null;
 
-    let canton = document.getElementById("cantonHabitacion").value;
+    let idCanton = parseInt(document.getElementById("cantonHotel").value) || null;
 
-    let distrito = document.getElementById("distritoHabitacion").value;
+    let idDistrito = parseInt(document.getElementById("distritoHotel").value) || null;
 
     // Parsar los seleciconados de los selects a int: parseInt(seleccion)
 
@@ -258,28 +258,45 @@ function ProcesarBusquedaHospedaje() {
     let  comodiadesSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaComodidades"]:checked'))
         .map(checkbox => parseInt(checkbox.value));
 
-    
-
-
     console.log("Comodidades seleccionadas:", comodiadesSeleccionadas);
 
 
+    const filtros = {
+        barraBusqueda,
+        fechaEntrada,
+        fechaSalida,
+        idTipoCama,
+        listaComodidades: comodiadesSeleccionadas.length > 0 ? comodiadesSeleccionadas : null,
+        precioMinimo,
+        precioMaximo,
+        idProvincia,
+        idCanton,
+        idDistrito
+    };
+
+
+    // Enviar la consulta con los datos que se obtuvieron.
+    const datosEnviar = JSON.stringify(filtros);
+
+    let datosRespuesta = await EnviaDatosHospedaje(datosEnviar);
+
+    RenderizarDatosHabitaciones(datosRespuesta);
 
     return;
 }
 
 
 // >> Esta seria la funcion para procesar la busqueda de las empresas de hospedaje, aqui se optendrian los datos de los filtros.
-function ProcesarBusquedaEmpresaHospedaje() {
+async function ProcesarBusquedaEmpresaHospedaje() {
 
-    let barraBusqueda = document.getElementById("barraBusquedaInput").value;
+    let barraBusqueda = document.getElementById("barraBusquedaInput").value.trim() || null;
 
     // Ubicacion.
-    let provincia = document.getElementById("provinciaHotel").value;
+    let idProvincia = parseInt(document.getElementById("provinciaHotel").value) || null;
 
-    let canton = document.getElementById("cantonHotel").value;
+    let idCanton = parseInt(document.getElementById("cantonHotel").value) || null;
 
-    let distrito = document.getElementById("distritoHotel").value;
+    let idDistrito = parseInt(document.getElementById("distritoHotel").value) || null;
 
     // Lista de comodidades seleccionadas.
     let comodiadesSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaServiciosHoteles"]:checked'))
@@ -287,8 +304,25 @@ function ProcesarBusquedaEmpresaHospedaje() {
 
     console.log("Servicios de hotel seleccionados:", comodiadesSeleccionadas);
 
-    let tipoAlojamiento = document.getElementById("alojamiento").value;
+    let idTipoHotel = parseInt(document.getElementById("alojamiento").value) || null;
 
+    // Aqui se guardarina los datos que se obtuvieron.
+
+    const filtros = {
+        barraBusqueda,
+        idTipoHotel,
+        listaServicios: comodiadesSeleccionadas.length > 0 ? comodiadesSeleccionadas : null,
+        idProvincia,
+        idCanton,
+        idDistrito
+    };
+
+
+    const datosEnviar = JSON.stringify(filtros);
+
+    let datosRespuesta = await EnviaDatosEmpresaHospedaje(datosEnviar);
+
+    RenderizarDatosEmpresaHospedaje(datosRespuesta);
 
     return;
 
@@ -296,16 +330,16 @@ function ProcesarBusquedaEmpresaHospedaje() {
 
 
 // >> Esta seria la funcion para procesar la busqueda de las empresas de recreacion, aqui se optendrian los datos de los filtros.
-function ProcesarBusquedaEmpresaRereacion() {
+async function ProcesarBusquedaEmpresaRecreacion() {
 
-    let barraBusqueda = document.getElementById("barraBusquedaInput").value;
+    let barraBusqueda = document.getElementById("barraBusquedaInput").value.trim() || null;
 
     // Ubicacion.
-    let provincia = document.getElementById("provinciaRecreacion").value;
+    let idProvincia = parseInt(document.getElementById("provinciaRecreacion").value) || null;
 
-    let canton = document.getElementById("cantonRecreacion").value;
+    let idCanton = parseInt(document.getElementById("cantonRecreacion").value) || null;
 
-    let distrito = document.getElementById("distritoRecreacion").value;
+    let idDistrito = parseInt(document.getElementById("distritoRecreacion").value) || null;
 
     // Servicios seleccionados.
     let serviciosSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaServiciosEmpresaRecreacion"]:checked'))
@@ -314,26 +348,41 @@ function ProcesarBusquedaEmpresaRereacion() {
     console.log("Servicios de recreacion seleccionados:", serviciosSeleccionadas);
 
 
+    const filtros = {
+        barraBusqueda,
+        listaServicios: serviciosSeleccionadas.length > 0 ? serviciosSeleccionadas : null,
+        idProvincia,
+        idCanton,
+        idDistrito
+    };
+
+
+    const datosEnviar = JSON.stringify(filtros);
+
+    let datosRespuesta = await EnviaDatosEmpresaRecreacion(datosEnviar);
+
+    RenderizarDatosEmpresaRecreacion(datosRespuesta);
+
     return;
 
 }
 
 
 // >> Esta seria la funcion para procesar la busqueda de los servicios, aqui se optendrian los datos de los filtros.
-function ProcesarBusquedaServicios() {
+async function ProcesarBusquedaServicios() {
 
-    let barraBusqueda = document.getElementById("barraBusquedaInput").value;
+    let barraBusqueda = document.getElementById("barraBusquedaInput").value.trim() || null;
 
-    let precioMinimo = document.getElementById("precioMinimoServicioInput").value;
+    let precioMinimo = parseFloat(document.getElementById("precioMinimoServicioInput").value) || null;
 
-    let precioMaximo = document.getElementById("precioMaximoServicioInput").value;
+    let precioMaximo = parseFloat(document.getElementById("precioMaximoServicioInput").value) || null;
 
     // Ubicacion.
-    let provincia = document.getElementById("provinciaServicio").value;
+    let idProvincia = parseInt(document.getElementById("provinciaServicio").value) || null;
 
-    let canton = document.getElementById("cantonServicio").value;
+    let idCanton = parseInt(document.getElementById("cantonServicio").value) || null;
 
-    let distrito = document.getElementById("distritoServicio").value;
+    let idDistrito = parseInt(document.getElementById("distritoServicio").value) || null;
 
     // Actividades seleccionados.
     let actividadesSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaActividadesServicio"]:checked'))
@@ -341,6 +390,23 @@ function ProcesarBusquedaServicios() {
 
     console.log("Actividades de recreacion seleccionados:", actividadesSeleccionadas);
 
+
+    const filtros = {
+        barraBusqueda,
+        precioMinimo,
+        precioMaximo,
+        listaActividades: actividadesSeleccionadas.length ? actividadesSeleccionadas : null,
+        idProvincia,
+        idCanton,
+        idDistrito
+    };
+
+
+    const datosEnviar = JSON.stringify(filtros);
+
+    let datosRespuesta = await EnviaDatosServiciosRecreacion(datosEnviar);
+
+    RenderizarDatosServicios(datosRespuesta);
 
     return;
 
@@ -350,66 +416,175 @@ function ProcesarBusquedaServicios() {
 
 // >>> ===== Seccion para la consulta de datos al controlador. ===== <<<
 
-// Funcion para la parte del registro de cliente.
-async function registrarEmpresa() {
-    // Validar los datos del formulario.
-    if (!validarDatosRegistroEmpresa()) {
-        return;
-    }
-
-    console.log("Iniciando envio de datos.");
-    await enviarDatosRegistroEmpresa();
-
-}
-// funcion para la validacion de los datos del formulario. Esto seria solo para las validaciones basicas, las demas se hacen en la base de datos.
-function validarDatosRegistroEmpresa() {
-
-    // Validar que la contraseña sea igual a la de la confirmacion.
-
-    // Validar el formato de la cedula.
-
-    // Validar que la fecha de nacimiento sea menor a la fecha actual.
-
-
-    return true;
-}
-
-// Funcion para el envio de los datos del formulario al controlador.
-async function enviarDatosRegistroEmpresa() {
-
-    // Obtener los datos del formulario.
-
-    const formData = new FormData(document.getElementById("formRegistrarEmpresaRecreacion"));
-    // Enviar los datos al controlador.
+// Funcion fetch para el envio y optencion de datos al controlador. Se Recibe el Json ya creado.
+async function EnviaDatosHospedaje(datos) {
 
     try {
-        const response = await fetch('/Cuenta/RegistrarEmpresaDeRecreacion', {
+        const response = await fetch('/Cliente/BuscarHabitaciones', {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: datos
         });
-        if (response.ok) {
-            const resultado = await response.json();
-            console.log("Datos del regitro de la empresa: ", resultado);
-            //let result = resultado.estadoGeneral;
-            if (resultado.estado === 1) {
-                alert("Empresa hospedaje registrado exitosamente.");
-                //window.location.href = '@Url.Action("Cuenta", "Login")';
-                location.replace("/Cuenta/Login");
 
-                //window.location.href = '/Cuentaedirigir a la pagina de informacion del cliente.
-            } else {
-                alert("Error al registrar el cliente: " + result.message);
-            }
+        if (response.ok) {
+
+            const resultado = await response.json();
+            console.log("Datos del de la consulta de habitaciones: ", resultado);
+            return resultado;
+            //if (resultado.estado === 1) {
+
+            //    return resultado.datosHabitaciones;
+            //    //alert("Actividad registrada exitodamente.");
+            //    //location.replace("/EmpresaRecreacion/Menu");
+
+            //    //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
+            //    //window.location.href = `/Producto/Detalles?id=${id}`;
+            //    //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
+            //} else {
+            //    alert("Error en la respuesta de habitaciones: " + result.message);
+            //}
         } else {
-            alert("Error al registrar la empresa de hospedaje. Por favor, intente nuevamente.");
+            alert("Error al buscar habitaciones. Por favor, intente nuevamente.");
         }
     } catch (error) {
         console.error("Error al enviar los datos:", error);
-        alert("Ocurrió un error al registrar la empresa de hospedaje. Por favor, intente nuevamente.");
+        alert("Ocurrió un error al buscar habitaciones. Por favor, intente nuevamente.");
     }
+
+    return null;
+
 }
 
 
+// Funcion fetch para el envio y optencion de datos al controlador. Se Recibe el Json ya creado.
+async function EnviaDatosEmpresaHospedaje(datos) {
+
+    try {
+        const response = await fetch('/Cliente/BuscarEmpresasHospedaje', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: datos
+        });
+
+        if (response.ok) {
+
+            const resultado = await response.json();
+            console.log("Datos del de la consulta de hoteles: ", resultado);
+            return resultado;
+
+            //if (resultado.estado === 1) {
+
+            //    return resultado.datosHabitaciones;
+            //    //alert("Actividad registrada exitodamente.");
+            //    //location.replace("/EmpresaRecreacion/Menu");
+
+            //    //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
+            //    //window.location.href = `/Producto/Detalles?id=${id}`;
+            //    //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
+            //} else {
+            //    alert("Error en la respuesta de hoteles: " + result.message);
+            //}
+        } else {
+            alert("Error al buscar hoteles. Por favor, intente nuevamente.");
+        }
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alert("Ocurrió un error al buscar hoteles. Por favor, intente nuevamente.");
+    }
+
+    return null;
+
+}
+
+
+// Funcion fetch para el envio y optencion de datos al controlador. Se Recibe el Json ya creado.
+async function EnviaDatosEmpresaRecreacion(datos) {
+
+    try {
+        const response = await fetch('/Cliente/BuscarEmpresasRecreacion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: datos
+        });
+
+        if (response.ok) {
+
+            const resultado = await response.json();
+            console.log("Datos del de la consulta de empresa de recreacion: ", resultado);
+            return resultado;
+
+            //if (resultado.estado === 1) {
+
+            //    return resultado.datosHabitaciones;
+            //    //alert("Actividad registrada exitodamente.");
+            //    //location.replace("/EmpresaRecreacion/Menu");
+
+            //    //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
+            //    //window.location.href = `/Producto/Detalles?id=${id}`;
+            //    //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
+            //} else {
+            //    alert("Error en la respuesta de habitaciones: " + result.message);
+            //}
+        } else {
+            alert("Error al buscar las empresas de recreacion. Por favor, intente nuevamente.");
+        }
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alert("Ocurrió un error al buscar las empresas de recreacion. Por favor, intente nuevamente.");
+    }
+
+    return null;
+
+}
+
+
+// Funcion fetch para el envio y optencion de datos al controlador. Se Recibe el Json ya creado.
+async function EnviaDatosServiciosRecreacion(datos) {
+
+    try {
+        const response = await fetch('/Cliente/BuscarServiciosRecreacion', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: datos
+        });
+
+        if (response.ok) {
+
+            const resultado = await response.json();
+            console.log("Datos del de la consulta de servicios de recreacion: ", resultado);
+            return resultado;
+
+            //if (resultado.estado === 1) {
+
+            //    return resultado.datosHabitaciones;
+            //    //alert("Actividad registrada exitodamente.");
+            //    //location.replace("/EmpresaRecreacion/Menu");
+
+            //    //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
+            //    //window.location.href = `/Producto/Detalles?id=${id}`;
+            //    //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
+            //} else {
+            //    alert("Error en la respuesta de habitaciones: " + result.message);
+            //}
+        } else {
+            alert("Error al buscar servicios de recreacion. Por favor, intente nuevamente.");
+        }
+    } catch (error) {
+        console.error("Error al enviar los datos:", error);
+        alert("Ocurrió un error al buscar servicios de recreacion. Por favor, intente nuevamente.");
+    }
+
+    return null;
+
+}
 
 
 
@@ -420,11 +595,61 @@ async function enviarDatosRegistroEmpresa() {
 // Funcion para renderizar en la ventana los resultados de las habitaciones que llegen en la cosnulta.
 function RenderizarDatosHabitaciones(datos) {
 
+    const contenedor = document.getElementById("contenedorResultados");
+    contenedor.innerHTML = ""; // Limpiar resultados anteriores
+
+    if (!datos || !datos.resultado || datos.resultado.length === 0) {
+        contenedor.innerHTML = "<p> No se encontraron resultados con los filtros seleccionados.</p>";
+        return;
+    }
+
+    datos.resultado.forEach(h => {
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "resultado-tarjeta";
+        tarjeta.innerHTML = `
+            <h4>Habitación #${h.numeroHabitacion}</h4>
+            <p><strong>Tipo:</strong> ${h.tipoHabitacion}</p>
+            <p><strong>Ubicación:</strong> ${h.provincia}, ${h.canton}, ${h.distrito}</p>
+            <p><strong>Empresa:</strong> ${h.idEmpresaHospedaje}</p>
+        `;
+        tarjeta.addEventListener("click", () => {
+            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            console.log(`/Habitaciones/DetalleHabitacion?id=${h.idDatosHabitacion}`)
+        });
+        contenedor.appendChild(tarjeta);
+    });
+
+
     return;
 }
 
 // Funcion para renderizar en la ventana los resultados de las empresas de hospedaje que llegen en la cosnulta.
 function RenderizarDatosEmpresaHospedaje(datos) {
+
+
+    const contenedor = document.getElementById("contenedorResultados");
+    contenedor.innerHTML = ""; // Limpiar resultados anteriores
+
+    if (!datos || !datos.resultado || datos.resultado.length === 0) {
+        contenedor.innerHTML = "<p> No se encontraron resultados con los filtros seleccionados.</p>";
+        return;
+    }
+
+    datos.resultado.forEach(e => {
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "resultado-tarjeta";
+        tarjeta.innerHTML = `
+            <h4>${e.nombreHotel}</h4>
+            <p><strong>Tipo:</strong> ${e.tipoHotel}</p>
+            <p><strong>Ubicación:</strong> ${e.provincia}, ${e.canton}, ${e.distrito}</p>                        
+        `;
+        // ${e.SitioWeb ? `<p><a href="${e.SitioWeb}" target="_blank">Sitio Web</a></p>` <p><strong>Dirección:</strong> ${e.SenasExactas}</p>
+        tarjeta.addEventListener("click", () => {
+            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            console.log(`/EmpresaRecreacion/Menu?id=${e.cedulaJuridica}`)
+        });
+        contenedor.appendChild(tarjeta);
+    });
 
     return;
 }
@@ -432,11 +657,60 @@ function RenderizarDatosEmpresaHospedaje(datos) {
 // Funcion para renderizar en la ventana los resultados de las empresa de recreacion que llegen en la cosnulta.
 function RenderizarDatosEmpresaRecreacion(datos) {
 
+    const contenedor = document.getElementById("contenedorResultados");
+    contenedor.innerHTML = ""; // Limpiar resultados anteriores
+
+    if (!datos || !datos.resultado || datos.resultado.length === 0) {
+        contenedor.innerHTML = "<p> No se encontraron resultados con los filtros seleccionados.</p>";
+        return;
+    }
+
+    datos.resultado.forEach(e => {
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "resultado-tarjeta";
+        tarjeta.innerHTML = `
+            <h4>${e.nombreEmpresa}</h4>
+            <p><strong>Contacto:</strong> ${e.personaAContactar}</p>
+            <p><strong>Ubicación:</strong> ${e.provincia}, ${e.canton}, ${e.distrito}</p>
+        `;
+        tarjeta.addEventListener("click", () => {
+            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            console.log(`/Habitaciones/DetalleHabitacion?id=${e.cedulaJuridica}`)
+        });
+        contenedor.appendChild(tarjeta);
+    });
+
     return;
 }
 
 // Funcion para renderizar en la ventana los resultados de los servicios que llegen en la cosnulta.
 function RenderizarDatosServicios(datos) {
+
+    const contenedor = document.getElementById("contenedorResultados");
+    contenedor.innerHTML = ""; // Limpiar resultados anteriores
+
+    if (!datos || !datos.resultado || datos.resultado.length === 0) {
+        contenedor.innerHTML = "<p> No se encontraron resultados con los filtros seleccionados.</p>";
+        return;
+    }
+
+    datos.resultado.forEach(s => {
+        const tarjeta = document.createElement("div");
+        tarjeta.className = "resultado-tarjeta";
+        tarjeta.innerHTML = `
+            <h4>${s.nombreServicio}</h4>
+            <p><strong>Precio:</strong> ₡${s.precio.toLocaleString("es-CR", { minimumFractionDigits: 2 })}</p>
+            
+            <p><strong>Ubicación:</strong> ${s.provincia}, ${s.canton}, ${s.distrito}</p>
+        `;
+ 
+        tarjeta.addEventListener("click", () => {
+            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            console.log(`/Sercivios/SeviciosView?id=${s.idServicio}`)
+        });
+        contenedor.appendChild(tarjeta);
+    });
+
 
     return;
 }
@@ -447,7 +721,7 @@ function RenderizarDatosServicios(datos) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    //InciarUbicacionesDinamicas();
+    InciarUbicacionesDinamicas();
     InicarInteractividadFiltros();
 
 

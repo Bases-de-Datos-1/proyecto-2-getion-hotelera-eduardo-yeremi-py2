@@ -46,7 +46,6 @@ GO
 -- Recreacion:
 CREATE PROCEDURE sp_BuscarEmpresasRecreacion
     @NombreEmpresa VARCHAR(50) = NULL,
-    @NombreServicio VARCHAR(30) = NULL,
     @ListaActividades VARCHAR(100) = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
@@ -59,28 +58,26 @@ BEGIN
 		E.CedulaJuridica, 
 		E.NombreEmpresa, 
 		E.PersonaAContactar, 
-		E.Telefono, E.Provincia, 
+		E.Telefono, 
+        E.Provincia, 
 		E.Canton, 
 		E.Distrito
 
     FROM view_EmpresasRecreacion E
     WHERE (@NombreEmpresa IS NULL OR E.NombreEmpresa LIKE '%' + @NombreEmpresa + '%')
-    AND (@NombreServicio IS NULL OR EXISTS (
-        SELECT 1 FROM view_ServiciosRecreacion S 
-        WHERE S.NombreServicio LIKE '%' + @NombreServicio + '%' AND E.CedulaJuridica = S.IdEmpresaRecreacion -- Tambien se debe de revisar que ese servicios perteneaca a la empresa.
-    ))
     AND (@ListaActividades IS NULL OR EXISTS (
-        SELECT 1 FROM STRING_SPLIT(@ListaActividades, ',') AS LA 
-        JOIN view_ActividadesServicio ASV ON LA.value = ASV.NombreActividad 
-        JOIN view_ServiciosRecreacion SR ON ASV.IdServicio = SR.IdServicio 
+        SELECT 1
+        FROM view_ServiciosRecreacion SR
         WHERE SR.IdEmpresaRecreacion = E.CedulaJuridica
+        AND SR.IdServicio IN (SELECT value FROM STRING_SPLIT(@ListaActividades, ','))
     ))
+
     AND (@IdProvincia IS NULL OR E.IdProvincia = @IdProvincia)
     AND (@IdCanton IS NULL OR E.IdCanton = @IdCanton)
     AND (@IdDistrito IS NULL OR E.IdDistrito = @IdDistrito);
 END;
 GO
-
+-- Podrias agregar esto por si la el filtro por la lista sigue dando problemas: TRY_CAST(value AS INT)
 
 -- >>> Buscar habitaciones:
 CREATE PROCEDURE sp_BuscarHabitaciones
@@ -101,6 +98,7 @@ BEGIN
     SELECT DISTINCT 
         H.IdDatosHabitacion, 
         H.NumeroHabitacion, 
+		H.TipoHabitacion,
         H.TipoHabitacion, 
         H.IdEmpresaHospedaje,
         H.Provincia,
