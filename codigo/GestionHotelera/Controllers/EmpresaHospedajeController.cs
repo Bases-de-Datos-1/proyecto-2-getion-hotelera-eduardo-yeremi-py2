@@ -1,4 +1,5 @@
 ﻿using GestionHotelera.Models.EmpresaHospedajeModels;
+using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.RegistrarModels;
 using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
@@ -41,9 +42,16 @@ namespace GestionHotelera.Controllers
                 // Consultar los datos con el modo 0
                 EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa,0);
 
+
+                List<DatosHabitacionesModel> habitacionesCliente = _dataBaseServices.ObtenerHabitacionesPorEmpresaBD(idEmpresa);
+
+
+
                 var datosGenerales = new EmpresaHospedaje1ViewModel
                 {
-                    DatosEmpresa = datos
+                    DatosEmpresa = datos,
+
+                    ListaHabitaciones = habitacionesCliente
                 };
 
                 return View(datosGenerales); 
@@ -54,9 +62,18 @@ namespace GestionHotelera.Controllers
 
             EmpresaHospedajeModel datosEmpresa = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresaHospedaje, 1);
 
+            List<TiposHabitacionesModel> tiposHabitaciones = _dataBaseServices.ObtenerTiposHabitacionesPorEmpresaBD(idEmpresaHospedaje);
+
+            List<DatosHabitacionesModel> habitaciones = _dataBaseServices.ObtenerHabitacionesPorEmpresaBD(idEmpresaHospedaje);
+
             var datosGeneralesEmpresa = new EmpresaHospedaje1ViewModel
             {
-                DatosEmpresa = datosEmpresa
+                DatosEmpresa = datosEmpresa,
+
+                ListaTipoHabitaciones = tiposHabitaciones,
+
+                ListaHabitaciones = habitaciones
+
             };
 
             return View(datosGeneralesEmpresa);
@@ -75,7 +92,7 @@ namespace GestionHotelera.Controllers
             return View(datosGeneralesEmpresa);
         }
 
-
+        // Funcion para el registro de una nueva habitacion.
         [HttpPost]
         public JsonResult RegistrarNuevaHabitacion([FromForm] RegistrarHabitacionModel dataRequest)
         {

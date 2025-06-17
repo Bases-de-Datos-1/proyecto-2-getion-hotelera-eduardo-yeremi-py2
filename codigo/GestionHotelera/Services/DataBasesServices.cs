@@ -976,7 +976,7 @@ namespace GestionHotelera.Services
             List<int> estadoResultados = new List<int>();
 
             // Registrar la habitacion.
-            int idHabitacion = RegistrarDatosHabitacion(model.NumeroHabitacion, model.TipoHabitacion);
+            int idHabitacion = RegistrarDatosHabitacionBD(model.NumeroHabitacion, model.TipoHabitacion);
 
             estadoResultados.Add(idHabitacion);
 
@@ -987,7 +987,7 @@ namespace GestionHotelera.Services
             }
 
             // Registar la asociacion entre las empresa y la habitacion.
-            int resultadoAsociacion = AsociarHabitacionAEmpresa(idEmpresa, idHabitacion);
+            int resultadoAsociacion = AsociarHabitacionAEmpresaBD(idEmpresa, idHabitacion);
             estadoResultados.Add(resultadoAsociacion);
 
             if (resultadoAsociacion <= 0)
@@ -1001,7 +1001,7 @@ namespace GestionHotelera.Services
         }
 
         // Funcion para el registro de las habitaciones.
-        public int RegistrarDatosHabitacion(int numeroHabitacion, int idTipoHabitacion)
+        public int RegistrarDatosHabitacionBD(int numeroHabitacion, int idTipoHabitacion)
         {
             SqlParameter nuevoIdParam = new("@NuevoIdDatosHabitacion", SqlDbType.SmallInt)
             {
@@ -1021,7 +1021,7 @@ namespace GestionHotelera.Services
         }
 
         // Funcion para registrar la asociacion de la habitacion con la empresa.
-        public int AsociarHabitacionAEmpresa(string idEmpresa, int idHabitacion)
+        public int AsociarHabitacionAEmpresaBD(string idEmpresa, int idHabitacion)
         {
             SqlParameter resultado = new("@Resultado", SqlDbType.SmallInt)
             {
@@ -1331,7 +1331,118 @@ namespace GestionHotelera.Services
             return lista;
         }
 
-        // Optener las habitaciones que tiene .
+
+        // >>> ===== Funciones para optener los datos de las hbitaciones de una empresa. ===== <<<
+        // Optener todas las habitaciones que tiene una empresa de hospedaje.
+        public List<DatosHabitacionesModel> ObtenerHabitacionesPorEmpresaBD(string idEmpresa)
+        {
+            List<DatosHabitacionesModel> tiposHabitaciones = new List<DatosHabitacionesModel>();
+
+            try
+            {
+                var parametros = new SqlParameter[]
+                {
+                    new("@IdEmpresa", idEmpresa)
+                };
+
+                DataTable resultado = EjecutarProcedimientoConParametros("sp_ObtenerHabitacionesEmpresa", parametros);
+
+                if (resultado != null && resultado.Rows.Count > 0)
+                {
+                    foreach (DataRow fila in resultado.Rows)
+                    {
+                        var tipo = new DatosHabitacionesModel
+                        {
+                            IdDatosHabitacion = Convert.ToInt32(fila["IdDatosHabitacion"]),
+
+                            IdTipoHabitacion = Convert.ToInt32(fila["IdTipoHabitacion"]),
+
+                            NumeroHabitacion = Convert.ToInt32(fila["NumeroHabitacion"]),
+
+                            TipoHabitacionNombre = fila["TipoHabitacion"].ToString(),
+
+
+                            IdTipoCama = Convert.ToInt32(fila["IdTipoCama"]),
+
+                            NombreCama = fila["TipoCama"].ToString(),
+
+                            Precio = Convert.ToDouble(fila["Precio"]),
+
+                            CedulaJuridica = fila["IdEmpresaHospedaje"].ToString(),
+
+                            NombreHotel = fila["EmpresaHospedaje"].ToString(),
+
+
+                            IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                            Provincia = fila["Provincia"].ToString(),
+                            IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                            Canton = fila["Canton"].ToString(),
+                            IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                            Distrito = fila["Distrito"].ToString(),
+                            Barrio = fila["Barrio"].ToString(),
+                        };
+
+                        tiposHabitaciones.Add(tipo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener las habitaciones para la empresa: {ex.Message}");
+            }
+            return tiposHabitaciones;
+        }
+
+        // Opetener una habitacion especifica por su ID.
+        public DatosHabitacionesModel ObtenerHabitacionEspecificaBD(int idHabitacion)
+        {
+            SqlParameter[] parametros = {
+                new("@IdDatosHabitacion", idHabitacion.ToString())
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerHabitacionPorID", parametros);
+            if (datos == null || datos.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = datos.Rows[0];
+
+            DatosHabitacionesModel datosHabitacion = new DatosHabitacionesModel
+                {
+                    IdDatosHabitacion = Convert.ToInt32(fila["IdDatosHabitacion"]),
+
+                    IdTipoHabitacion = Convert.ToInt32(fila["IdTipoHabitacion"]),
+
+                    NumeroHabitacion = Convert.ToInt32(fila["NumeroHabitacion"]),
+
+                    TipoHabitacionNombre = fila["TipoHabitacionNombre"].ToString(),
+
+
+                    IdTipoCama = Convert.ToInt32(fila["IdTipoCama"]),
+
+                    NombreCama = fila["NombreCama"].ToString(),
+
+                    Precio = Convert.ToDouble(fila["Precio"]),
+
+                    CedulaJuridica = fila["CedulaJuridica"].ToString(),
+
+                    NombreHotel = fila["NombreHotel"].ToString(),
+
+
+                    IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                    Provincia = fila["Provincia"].ToString(),
+                    IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                    Canton = fila["Canton"].ToString(),
+                    IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                    Distrito = fila["Distrito"].ToString(),
+                    Barrio = fila["Barrio"].ToString(),
+                };
+
+            return datosHabitacion;
+        }
+
+
 
 
         // >>> ===== Funciones para optener los datos de una de los tipos de habitaciones de una empresa. ===== <<<
@@ -1421,6 +1532,39 @@ namespace GestionHotelera.Services
             }
             return tiposHabitaciones;
         }
+
+
+        // Obtener tipo de habitacion pro ID.
+        public TiposHabitacionesModel ObtenerTipoHabitacionEspecificaBD(int IdTipoHabitacion)
+        {
+            SqlParameter[] parametros = {
+                new("@IdTipoHabitacion", IdTipoHabitacion.ToString())
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerTipoHabitacionPorID", parametros);
+            if (datos == null || datos.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var row = datos.Rows[0];
+
+            TiposHabitacionesModel datosHabitacion = new TiposHabitacionesModel
+            {
+                IdTipoHabitacion = Convert.ToInt32(row["IdTipoHabitacion"]),
+                IdEmpresa = row["IdEmpresa"].ToString(),
+                NombreTipoHabitacion = row["Nombre"].ToString(),
+                Descripcion = row["Descripcion"].ToString(),
+                IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
+                NombreCama = row["NombreCama"].ToString(),
+                Precio = Convert.ToDouble(row["Precio"])
+            };
+
+            return datosHabitacion;
+        }
+
+
+
 
         // Optener las fotos para un tipo de habitacion.
         public List<FotosTipoHabitacionModel> ObtenerFotosTipoHabitacionBD(int idTipoHabitacion)

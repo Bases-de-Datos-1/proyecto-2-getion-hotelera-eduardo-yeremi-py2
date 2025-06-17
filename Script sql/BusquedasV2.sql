@@ -541,6 +541,37 @@ BEGIN
 END;
 GO
 
+
+-- Optener una habitacion especifica por su id.
+CREATE PROCEDURE sp_ObtenerHabitacionPorID
+    @IdDatosHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Habitaciones
+    WHERE IdDatosHabitacion = @IdDatosHabitacion;
+END;
+GO
+
+
+-- Optener un tipo de habitacion especifico por su id.
+CREATE PROCEDURE sp_ObtenerTipoHabitacionPorID
+    @IdTipoHabitacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_TipoHabitacionesEmpresas
+    WHERE IdTipoHabitacion = @IdTipoHabitacion;
+END;
+GO
+
+
+
+
 -- Optener los tipos de habitacion por empresa.
 CREATE PROCEDURE sp_ObtenerTipoHabitacionesEmpresa
     @IdEmpresa VARCHAR(15)
