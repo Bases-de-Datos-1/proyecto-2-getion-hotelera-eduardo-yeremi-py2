@@ -1,13 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GestionHotelera.Models.VistasModel;
+using GestionHotelera.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GestionHotelera.Controllers
 {
     public class ClienteController : Controller
     {
+
+        private readonly ILogger<ClienteController> _logger;
+        private readonly DataBasesServices _dataBaseServices;
+
+        public ClienteController(ILogger<ClienteController> logger, DataBasesServices dataBasesServices)
+        {
+
+            _logger = logger;
+            _dataBaseServices = dataBasesServices;
+
+        }
+
+
         // GET: /Cliente/Menu
+        // Este esta es la funcion que lanza la ventana de catalogo.
         public IActionResult Menu()
         {
-            return View();
+
+            // Obtener los datos que se ocupana para iniciar la ventana.
+            CatalogoViewModel datosCatalogo = new CatalogoViewModel { 
+                
+                Provincias = _dataBaseServices.ObtenerProvincias(),
+                ListaTiposInstalaciones = _dataBaseServices.OptenerTipoInstalacionesBD(),
+                ListaServiciosHotel = _dataBaseServices.OptenerServiciosHotelesBD(),
+                ListaTiposDeCamas = _dataBaseServices.OptenerTiposCamasBD(),
+                ListaComodidades = _dataBaseServices.OptenerComodidadesBD()
+
+                // Falta la de optener servicios y obtener actividades.
+
+
+            };
+
+
+            return View(datosCatalogo);
         }
 
         // GET: /Cliente/ModificarPerfil

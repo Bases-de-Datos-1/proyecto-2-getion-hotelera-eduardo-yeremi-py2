@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model GestionHotelera.Models.VistasModel.CatalogoViewModel;
+
 @section Styles {
     <style>
         .top-bar {
@@ -131,145 +133,290 @@
     </div>
 </div>
 
+
+
+@* Este seria para la barra de busqueda. *@
 <div class="search-bar">
-    <input type="text" placeholder="Buscar..." />
-    <button>🔍</button>
+    <input type="text" id="barraBusquedaInput" placeholder="Buscar..." />
+    <button onclick="IniciarBusqueda()">🔍</button>
 </div>
 
 <div class="layout">
     <div class="sidebar">
+
+        @* Botones para cambiar los filtros de acuerdo a al tipo  *@
         <h4>Tipo:</h4>
         <button class="btn-type" data-target="hospedaje">Hospedaje</button>
         <button class="btn-type" data-target="empresaHospedaje">Empr. Hospedaje</button>
         <button class="btn-type" data-target="empresaRecreacion">Empr. Recreación</button>
         <button class="btn-type" data-target="servicios">Servicios</button>
 
+
+        @*Filtros para buscar habitaciones. *@
+
         <div id="filtros-hospedaje" class="filter-section">
             <div class="form-group">
                 <label>Fecha de entrada:</label>
-                <input type="date" />
+                <input type="date" id="fechaEntradaInput"/>
             </div>
             <div class="form-group">
                 <label>Fecha de salida:</label>
-                <input type="date" />
+                <input type="date" id="fechaSalidaInput" />
             </div>
+
             <div class="form-group">
                 <label>Tipo de cama:</label>
-                <select>
-                    <option>Cama Individual</option>
-                    <option>Cama Grande</option>
-                    <option>Cama King Size</option>
+                <select id="tipoCamaSelect">
+                    <option value="0" disabled selected>Seleccione un tipo de cama</option>
+                    @foreach (var tipo in Model.ListaTiposDeCamas)
+                    {
+                        <option value="@tipo.IdTipoCama">@tipo.NombreCama</option>
+                    }
                 </select>
             </div>
+
             <div class="form-group">
                 <label>Rango de precio:</label>
-                <input type="number" placeholder="Min ₡" />
-                <input type="number" placeholder="Max ₡" />
+                <input type="number" id="precioMinimoHabitacionInput" placeholder="Min ₡" />
+                <input type="number" id="precioMaximoHabitacionInput" placeholder="Max ₡" />
             </div>
             <div class="form-group">
-                <label>Ubicación:</label>
-                <select><option>Provincia</option></select>
+                <label>Ubicacion:</label>
+
+                <select id="provinciaHabitacion" >
+                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    @foreach (var provincia in Model.Provincias)
+                    {
+                        <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                    }
+                </select>
+
+                <select id="cantonHabitacion">
+                    <option value="0" disabled selected>Seleccione un canton</option>
+                </select>
+   
+                <select id="distritoHabitacion" >
+                    <option value="0" disabled selected>Seleccione un distrito</option>
+                </select>
+         
+
+                @* <select><option>Provincia</option></select>
                 <select><option>Cantón</option></select>
                 <select><option>Distrito</option></select>
-                <select><option>Barrio</option></select>
+                <select><option>Barrio</option></select> *@
             </div>
             <div class="form-group">
                 <label>Comodidades:</label>
                 <div class="tag-list">
-                    <span class="tag">WiFi</span>
+                    @* <span class="tag">WiFi</span>
                     <span class="tag">Piscina</span>
                     <span class="tag">A/C</span>
                     <span class="tag">Parqueo</span>
-                    <span class="tag">Comida</span>
+                    <span class="tag">Comida</span> *@
+
+
+                    @* Renderizar los tipos de camas. *@
+                    @foreach (var comodidad in Model.ListaComodidades) 
+                    {
+                        @* <label style="background-color: #1abc9c; color: white; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" name="ListaComodidades" value="@comodidad.IdComodidad" style="margin-right: 5px;" /> @comodidad.NombreComodidad
+                        </label> *@
+
+                        <span class="tag">
+
+                            <input type="checkbox" id="listaComodidadesHabitacion" name="ListaComodidades" value="@comodidad.IdComodidad" style="margin-right: 5px;" /> @comodidad.NombreComodidad
+
+                        </span>
+
+                    }
+
+
                 </div>
             </div>
         </div>
 
+        @*Filtros para buscar empresas de hospedaje. *@
         <div id="filtros-empresaHospedaje" class="filter-section">
             <div class="form-group">
-                <label>Ubicación:</label>
-                <select><option>Provincia</option></select>
-                <select><option>Cantón</option></select>
-                <select><option>Distrito</option></select>
-                <select><option>Barrio</option></select>
+                <label>Ubicacion:</label>
+
+                <select id="provinciaHotel">
+                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    @foreach (var provincia in Model.Provincias)
+                    {
+                        <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                    }
+                </select>
+
+                <select id="cantonHotel"  >
+                    <option value="0" disabled selected>Seleccione un canton</option>
+                </select>
+
+                <select id="distritoHotel"  >
+                    <option value="0" disabled selected>Seleccione un distrito</option>
+                </select>
+
             </div>
+
             <div class="form-group">
                 <label>Comodidades:</label>
                 <div class="tag-list">
-                    <span class="tag">WiFi</span>
+                    @* <span class="tag">WiFi</span>
                     <span class="tag">Piscina</span>
                     <span class="tag">Parqueo</span>
-                    <span class="tag">Comida</span>
+                    <span class="tag">Comida</span> *@
+
+                    @foreach (var tipo in Model.ListaServiciosHotel)
+                    {
+
+                        <span class="tag">
+
+                            <input type="checkbox" id="listaServicioHotel" name="ListaServiciosHoteles" value="@tipo.IdServicio" style="margin-right: 5px;" /> @tipo.NombreServicio
+
+                        </span>
+
+                    }
+
                 </div>
             </div>
+
             <div class="form-group">
-                <label>Referencia GPS:</label>
-                <input type="text" placeholder="Coordenadas o ubicación" />
-            </div>
-            <div class="form-group">
-                <label>Tipo de alojamiento:</label>
-                <div class="tag-list">
-                    <span class="tag">Hotel</span>
-                    <span class="tag">Departamento</span>
-                    <span class="tag">Hostal</span>
-                    <span class="tag">Cuarto compartido</span>
-                    <span class="tag">Casa</span>
-                    <span class="tag">Cabaña</span>
-                </div>
+
+                <label for="alojamiento">Tipo de alojamiento: </label>
+                <select id="alojamiento">
+                    <option value="0" disabled selected>Seleccione Un tipo de instalacion:</option>
+                    @foreach (var tipo in Model.ListaTiposInstalaciones)
+                    {
+                        <option value="@tipo.IdTipoInstalacion">@tipo.NombreInstalacion</option>
+                    }
+                </select>
+
             </div>
         </div>
 
+
+        @* Filtros para buscar empresas de recreacion. *@
         <div id="filtros-empresaRecreacion" class="filter-section">
             <div class="form-group">
                 <label>Ubicación:</label>
-                <select><option>Provincia</option></select>
-                <select><option>Cantón</option></select>
-                <select><option>Distrito</option></select>
-                <select><option>Barrio</option></select>
+
+                <select id="provinciaRecreacion">
+                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    @foreach (var provincia in Model.Provincias)
+                    {
+                        <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                    }
+                </select>
+
+                <select id="cantonRecreacion">
+                    <option value="" disabled selected>Seleccione un canton</option>
+                </select>
+
+                <select id="distritoRecreacion">
+                    <option value="" disabled selected>Seleccione un distrito</option>
+                </select>
+
             </div>
             <div class="form-group">
                 <label>Actividades disponibles:</label>
                 <div class="tag-list">
-                    <span class="tag">Tour en bote</span>
+                    @* <span class="tag">Tour en bote</span>
                     <span class="tag">Tour en lancha</span>
                     <span class="tag">Tour en catamarán</span>
                     <span class="tag">Kayak</span>
-                    <span class="tag">Transporte</span>
+                    <span class="tag">Transporte</span> *@
+
+
+                    @foreach (var servicios in Model.ServiciosEmpresaRecreacion)
+                    {
+                        @* <div style="background-color: #2ecc71; color: white; padding: 10px 20px; border-radius: 5px; text-align: center;">
+                            <div>@servicios.NombreServicio</div>
+                            <div style="font-weight: bold; margin-top: 5px;">$@servicios.Precio USD</div>
+                        </div> *@
+
+                        <span class="tag">
+
+                            <input type="checkbox" id="listaComodidadesHabitacion" name="ListaServiciosEmpresaRecreacion" value="@servicios.IdServicio" style="margin-right: 5px;" /> @servicios.NombreServicio
+
+                        </span>
+
+
+                    }
+
+
                 </div>
+
+
+
+
+
+
             </div>
         </div>
 
+
+        @* Filtros para buscar servicios de recreacion. *@
         <div id="filtros-servicios" class="filter-section">
             <div class="form-group">
                 <label>Rango de precio:</label>
-                <input type="number" placeholder="Min ₡" />
-                <input type="number" placeholder="Max ₡" />
+                <input type="number" id="precioMinimoServicioInput" placeholder="Min ₡" />
+                <input type="number" id="precioMaximoServicioInput" placeholder="Max ₡" />
             </div>
             <div class="form-group">
-                <label>Ubicación:</label>
-                <select><option>Provincia</option></select>
-                <select><option>Cantón</option></select>
-                <select><option>Distrito</option></select>
-                <select><option>Barrio</option></select>
+                <label>Ubicacion:</label>
+
+                <select id="provinciaServicio">
+                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    @foreach (var provincia in Model.Provincias)
+                    {
+                        <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                    }
+                </select>
+
+                <select id="cantonServicio">
+                    <option value="" disabled selected>Seleccione un canton</option>
+                </select>
+
+                <select id="distritoServicio">
+                    <option value="" disabled selected>Seleccione un distrito</option>
+                </select>
+
             </div>
             <div class="form-group">
                 <label>Actividades (ejemplo):</label>
                 <div class="tag-list">
-                    <span class="tag">Senderismo</span>
+                    @* <span class="tag">Senderismo</span>
                     <span class="tag">Turismo</span>
                     <span class="tag">Natación</span>
-                    <span class="tag">Kayak</span>
+                    <span class="tag">Kayak</span> *@
+
+
+                    @foreach (var actividad in Model.ListaActividades)
+                    {
+                        <span class="tag">
+
+                            <input type="checkbox" id="listaActividadesServico" name="ListaActividadesServicio" value="@actividad.IdActividad" style="margin-right: 5px;" /> @actividad.NombreActividad
+
+                        </span>
+                    }
+
                 </div>
             </div>
         </div>
+    
     </div>
 
+
+    @* En esta parte se renderizarian los elementos que se hayan encontrado. *@
     <div class="results">
+
         <p>← Seleccioná un tipo y aplicá filtros para ver resultados aquí.</p>
+
     </div>
+
 </div>
 
-@section Scripts {
+@* @section Scripts {
     <script>
         document.querySelectorAll(".btn-type").forEach(btn => {
             btn.addEventListener("click", () => {
@@ -289,4 +436,14 @@
             });
         });
     </script>
-}
+} *@
+
+<script>
+    // Guardar los datos en las ventanas para usarlo en un archivo aparte.
+    window.listaCantones = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones)));
+    window.listaDistritos = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones).SelectMany(c => c.Distritos)));
+</script>
+
+
+<script src="~/js/CatalogoScript.js"></script>
+

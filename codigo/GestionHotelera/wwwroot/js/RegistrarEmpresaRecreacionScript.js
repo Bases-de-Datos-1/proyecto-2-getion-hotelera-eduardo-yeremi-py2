@@ -23,17 +23,17 @@ function iniciarUbicacionesDinamicas() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0">Seleccione un cantón</option>';
+        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un cantón</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0">Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0">Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });

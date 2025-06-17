@@ -14,8 +14,7 @@ CREATE PROCEDURE sp_BuscarEmpresasHospedaje
     @ListaServicios VARCHAR(100) = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
-    @IdDistrito SMALLINT = NULL,
-    @Barrio VARCHAR(40) = NULL
+    @IdDistrito SMALLINT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -31,7 +30,6 @@ BEGIN
     AND (@IdProvincia IS NULL OR EH.IdProvincia = @IdProvincia)
     AND (@IdCanton IS NULL OR EH.IdCanton = @IdCanton)
     AND (@IdDistrito IS NULL OR EH.IdDistrito = @IdDistrito)
-    AND (@Barrio IS NULL OR EH.Barrio = @Barrio)
     AND (
         @ListaServicios IS NULL  
         OR EH.CedulaJuridica IN (
@@ -49,7 +47,7 @@ GO
 CREATE PROCEDURE sp_BuscarEmpresasRecreacion
     @NombreEmpresa VARCHAR(50) = NULL,
     @NombreServicio VARCHAR(30) = NULL,
-    @ListaActividades VARCHAR(MAX) = NULL,
+    @ListaActividades VARCHAR(100) = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
     @IdDistrito SMALLINT = NULL
@@ -57,7 +55,14 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT DISTINCT E.*
+    SELECT DISTINCT 
+		E.CedulaJuridica, 
+		E.NombreEmpresa, 
+		E.PersonaAContactar, 
+		E.Telefono, E.Provincia, 
+		E.Canton, 
+		E.Distrito
+
     FROM view_EmpresasRecreacion E
     WHERE (@NombreEmpresa IS NULL OR E.NombreEmpresa LIKE '%' + @NombreEmpresa + '%')
     AND (@NombreServicio IS NULL OR EXISTS (
@@ -65,10 +70,10 @@ BEGIN
         WHERE S.NombreServicio LIKE '%' + @NombreServicio + '%' AND E.CedulaJuridica = S.IdEmpresaRecreacion -- Tambien se debe de revisar que ese servicios perteneaca a la empresa.
     ))
     AND (@ListaActividades IS NULL OR EXISTS (
-        SELECT 1 FROM STRING_SPLIT(@ListaActividades, ',') AS af 
-        JOIN view_ActividadesServicio asv ON af.value = asv.NombreActividad 
-        JOIN view_ServiciosRecreacion srv ON asv.IdServicio = srv.IdServicio 
-        WHERE srv.IdEmpresaRecreacion = E.CedulaJuridica
+        SELECT 1 FROM STRING_SPLIT(@ListaActividades, ',') AS LA 
+        JOIN view_ActividadesServicio ASV ON LA.value = ASV.NombreActividad 
+        JOIN view_ServiciosRecreacion SR ON ASV.IdServicio = SR.IdServicio 
+        WHERE SR.IdEmpresaRecreacion = E.CedulaJuridica
     ))
     AND (@IdProvincia IS NULL OR E.IdProvincia = @IdProvincia)
     AND (@IdCanton IS NULL OR E.IdCanton = @IdCanton)
@@ -83,18 +88,25 @@ CREATE PROCEDURE sp_BuscarHabitaciones
     @FechaEntrada DATETIME = NULL,
     @FechaSalida DATETIME = NULL,
     @IdTipoCama SMALLINT = NULL,
-    @ListaComodidades VARCHAR(MAX) = NULL,
+    @ListaComodidades VARCHAR(100) = NULL,
     @PrecioMin FLOAT = NULL,
     @PrecioMax FLOAT = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
-    @IdDistrito SMALLINT = NULL,
-    @Barrio VARCHAR(40) = NULL
+    @IdDistrito SMALLINT = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT DISTINCT H.*
+    SELECT DISTINCT 
+        H.IdDatosHabitacion, 
+        H.NumeroHabitacion, 
+        H.TipoHabitacion, 
+        H.IdEmpresaHospedaje,
+        H.Provincia,
+        H.Canton,
+        H.Distrito
+
     FROM view_Habitaciones H
     WHERE (@NombreTipoHabitacion IS NULL OR H.TipoHabitacion LIKE '%' + @NombreTipoHabitacion + '%')
     AND (@IdTipoCama IS NULL OR H.IdTipoCama = @IdTipoCama)
@@ -102,14 +114,14 @@ BEGIN
     -- Revisar las comodidades asociadas a la habitacion.
     AND (@ListaComodidades IS NULL OR EXISTS (
         SELECT 1 FROM view_ComodadesPorHabitacion LC
-        WHERE LC.IdTipoHabitacion = H.IdTipoHabitacion AND LC.IdComodidad IN (SELECT value FROM STRING_SPLIT(@ListaComodidades, ','))
+        WHERE LC.IdTipoHabitacion = H.IdTipoHabitacion AND 
+			LC.IdComodidad IN (SELECT value FROM STRING_SPLIT(@ListaComodidades, ','))
     ))
     AND (@PrecioMin IS NULL OR H.Precio >= @PrecioMin)
     AND (@PrecioMax IS NULL OR H.Precio <= @PrecioMax)
     AND (@IdProvincia IS NULL OR H.IdProvincia = @IdProvincia)
     AND (@IdCanton IS NULL OR H.IdCanton = @IdCanton)
     AND (@IdDistrito IS NULL OR H.IdDistrito = @IdDistrito)
-    AND (@Barrio IS NULL OR H.Barrio = @Barrio)
 
     -- Revisar disponibilidad de habitaciones en el rango de fechas seleccionado
     AND (@FechaEntrada IS NULL OR NOT EXISTS (
@@ -131,7 +143,7 @@ CREATE PROCEDURE sp_BuscarServiciosRecreacion
     @NombreServicio VARCHAR(30) = NULL,
     @PrecioMin FLOAT = NULL,
     @PrecioMax FLOAT = NULL,
-    @ListaActividades VARCHAR(MAX) = NULL,
+    @ListaActividades VARCHAR(100) = NULL,
     @IdProvincia SMALLINT = NULL,
     @IdCanton SMALLINT = NULL,
     @IdDistrito SMALLINT = NULL
@@ -701,6 +713,27 @@ BEGIN
 END;
 GO
 
+
+-- Obtener todas los servicios registrados.
+CREATE PROCEDURE sp_ObtenerServiciosRecreacion
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * 
+	FROM view_ServiciosRecreacion;
+END;
+GO
+
+
+-- Obtener todas las actividades registrados.
+CREATE PROCEDURE sp_ObtenerActividadesRecreacion
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT * 
+	FROM view_ActividadesServicio;
+END;
+GO
 
 
 
