@@ -1550,7 +1550,9 @@ namespace GestionHotelera.Services
                         {
                             IdServicio = Convert.ToInt32(fila["IdServicio"]),
 
-                            CedulaJuridica = fila["NombreServicio"].ToString(),
+                            NombreServicio = fila["NombreServicio"].ToString(),
+
+                            CedulaJuridica = fila["IdEmpresaRecreacion"].ToString(),
 
                             Precio = Convert.ToDouble(fila["Precio"]),
 

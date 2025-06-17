@@ -73,11 +73,36 @@ namespace GestionHotelera.Controllers
             return View(datosGenerales2);
         }
 
+
+        // Funcion para desplegar la ventana para el registro de un nuevo servicio.
         public IActionResult NuevoServicio()
         {
-            return View();
+            string idEmpresa = HttpContext.Session.GetString("UsuarioID");
+
+            List<ActividadesEmpresaRecreacionModel> actividades = _dataBaseServices.ObtenerActividadesPorEmpresaBD(idEmpresa);
+            
+
+            RegistrarServicioViewModel datos = new RegistrarServicioViewModel
+            {
+                ListaActividades = actividades
+            };
+
+
+            return View(datos);
         }
 
+
+        // Funcion para el registro de un nuevo servicio.
+        [HttpPost]
+        public JsonResult RegistrarNuevoServicio([FromForm] RegistrarServicioModel dataRequest)
+        {
+
+            string idEmpresa = HttpContext.Session.GetString("UsuarioID");
+
+            JsonResult resultado = _dataBaseServices.ProcesarRegistroDeServiciosDeRecreacion(idEmpresa, dataRequest);
+
+            return resultado;
+        }
 
 
         // Esta funcion seria para desplegar la ventana de agregar una nueva actividad.

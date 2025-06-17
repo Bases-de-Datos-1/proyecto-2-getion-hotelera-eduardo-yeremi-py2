@@ -3,37 +3,63 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model GestionHotelera.Models.VistasModel.RegistrarServicioViewModel;
+
 <div style="background-color: aliceblue; padding: 30px; font-family: 'Segoe UI', sans-serif; max-width: 1000px; margin: auto; border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
     <h2 style="background-color: aquamarine; padding: 10px; border-radius: 8px; text-align: center; font-size: 24px;">Registre Nuevos Servicios</h2>
+    
 
-    <div style="background-color: lightyellow; padding: 20px; border-radius: 8px; margin-top: 20px;">
-        <label for="nombre" style="display: block; font-weight: bold; margin-bottom: 5px;">Nombre del servicio:</label>
-        <input id="nombre" type="text" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+    <form id="registrarNuevoServicioId">
 
-        <label for="precio" style="display: block; font-weight: bold; margin-top: 20px; margin-bottom: 5px;">Precio (USD):</label>
-        <input id="precio" type="text" style="width: 200px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
-    </div>
 
-    <div style="background-color: lightyellow; padding: 20px; border-radius: 8px; margin-top: 30px;">
-        <h3 style="margin-bottom: 15px;">Seleccione actividades relacionadas:</h3>
+        <div style="background-color: lightyellow; padding: 20px; border-radius: 8px; margin-top: 20px;">
+            <label for="nombre" style="display: block; font-weight: bold; margin-bottom: 5px;">Nombre del servicio:</label>
+            <input id="nombre" name="NombreServicio" required type="text" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
 
-        <div class="actividad" onclick="toggleCheck('act1')">
-            <input type="checkbox" id="act1" style="margin-right: 10px;">
-            <label for="act1"><strong>Observación de fauna</strong></label>
-            <p>Recorrido guiado por el parque nacional para observar diferentes animales.</p>
+            <label for="precio" style="display: block; font-weight: bold; margin-top: 20px; margin-bottom: 5px;">Precio (USD):</label>
+            <input id="precio" name="Precio" required type="number" style="width: 200px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
         </div>
 
-        <div class="actividad" onclick="toggleCheck('act2')">
-            <input type="checkbox" id="act2" style="margin-right: 10px;">
-            <label for="act2"><strong>Clases de surf</strong></label>
-            <p>Aprende a surfear con instructores profesionales en las mejores playas de la zona.</p>
-        </div>
-    </div>
+        <div style="background-color: lightyellow; padding: 20px; border-radius: 8px; margin-top: 30px;">
+            <h3 style="margin-bottom: 15px;">Seleccione actividades relacionadas:</h3>
 
-    <div style="margin-top: 30px; display: flex; gap: 20px;">
-        <button onclick="guardarServicio()" style="padding: 12px 25px; background-color: #388e3c; color: white; font-weight: bold; border: none; border-radius: 6px;">Guardar</button>
-        <a href="/EmpresaRecreacion/Menu" style="padding: 12px 25px; background-color: #c62828; color: white; font-weight: bold; border: none; border-radius: 6px; text-decoration: none;">Cancelar</a>
-    </div>
+            @* <div class="actividad" onclick="toggleCheck('act1')">
+                <input type="checkbox" id="act1" style="margin-right: 10px;">
+                <label for="act1"><strong>Observación de fauna</strong></label>
+                <p>Recorrido guiado por el parque nacional para observar diferentes animales.</p>
+            </div>
+
+            <div class="actividad" onclick="toggleCheck('act2')">
+                <input type="checkbox" id="act2" style="margin-right: 10px;">
+                <label for="act2"><strong>Clases de surf</strong></label>
+                <p>Aprende a surfear con instructores profesionales en las mejores playas de la zona.</p>
+            </div> *@
+            @foreach(var actividad in Model.ListaActividades)
+            {
+                <div class="actividad" >
+                    <input type="checkbox" name="ListasActividades" value="@actividad.IdActividad" style="margin-right: 10px;">
+                    <label for="act2"><strong>@actividad.NombreActividad</strong></label>
+                    <p>@actividad.DescripcionActividad</p>
+                </div>
+
+              @*   <label style="background-color: #1abc9c; color: white; padding: 8px 14px; border-radius: 6px; cursor: pointer;">
+                    <input type="checkbox" name="ListaComodidades" value="@actividad.IdActividad" style="margin-right: 5px;" /> @actividad.NombreActividad
+                </label> *@
+
+            }
+
+
+        </div>
+
+        <div style="margin-top: 30px; display: flex; gap: 20px;">
+            <button type="submit" style="padding: 12px 25px; background-color: #388e3c; color: white; font-weight: bold; border: none; border-radius: 6px;">Guardar</button>
+            <a href="/EmpresaRecreacion/Menu" style="padding: 12px 25px; background-color: #c62828; color: white; font-weight: bold; border: none; border-radius: 6px; text-decoration: none;">Cancelar</a>
+        </div>
+    
+    
+    </form>
+
+
 </div>
 
 <style>
@@ -61,7 +87,7 @@
         }
 </style>
 
-@section Scripts {
+@* @section Scripts {
     <script>
         function toggleCheck(id) {
             const checkbox = document.getElementById(id);
@@ -74,4 +100,5 @@
             window.location.href = "/EmpresaRecreacion/Menu";
         }
     </script>
-}
+} *@
+<script src="~/js/RegistrarServicioEmpresaRecreacionScript.js"></script>

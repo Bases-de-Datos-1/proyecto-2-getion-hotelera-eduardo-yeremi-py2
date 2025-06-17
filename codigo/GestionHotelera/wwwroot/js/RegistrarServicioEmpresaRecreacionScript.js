@@ -2,7 +2,7 @@
 function inciarListenerFormRegitroActividad() {
 
     // document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("registrarActividadForm");
+    const form = document.getElementById("registrarNuevoServicioId");
     console.log("Evento argregado");
 
     // Validar que se encuentre el formulario.
@@ -54,10 +54,10 @@ async function enviarDatosRegistroActividad() {
 
     // Obtener los datos del formulario.
 
-    const formData = new FormData(document.getElementById("registrarActividadForm"));
+    const formData = new FormData(document.getElementById("registrarNuevoServicioId"));
     // Enviar los datos al controlador.
     try {
-        const response = await fetch('/EmpresaRecreacion/RegistrarNuevaActividad', {
+        const response = await fetch('/EmpresaRecreacion/RegistrarNuevoServicio', {
             method: 'POST',
             body: formData
         });
@@ -66,22 +66,22 @@ async function enviarDatosRegistroActividad() {
             const resultado = await response.json();
             console.log("Datos del regitro de la actividad: ", resultado);
 
-            if (resultado.estado === 1) {
-                alert("Actividad registrada exitodamente.");
+            if (resultado.estadoGeneral === 1) {
+                alert("Servicio registrado exitodamente.");
                 location.replace("/EmpresaRecreacion/Menu");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;
                 //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar la actividad: " + result.message);
+                alert("Error al registrar el servicio: " + result.message);
             }
         } else {
-            alert("Error al registrar la actividad. Por favor, intente nuevamente.");
+            alert("Error al registrar el servicio. Por favor, intente nuevamente.");
         }
     } catch (error) {
         console.error("Error al enviar los datos:", error);
-        alert("Ocurrió un error al registrar la actividad. Por favor, intente nuevamente.");
+        alert("Ocurrió un error al registrar el servicio. Por favor, intente nuevamente.");
     }
 }
 
