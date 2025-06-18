@@ -79,7 +79,6 @@ namespace GestionHotelera.Controllers
             return View(datosGeneralesEmpresa);
         }
 
-        // Botón: Añadir Habitación
         public IActionResult AñadirHabitacion()
         {
             string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
@@ -152,13 +151,11 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
-        // Botón: Eliminar Perfil
         public IActionResult EliminarPerfil()
         {
             return View();
         }
 
-        // Botón: Ver Facturaciones
         public IActionResult VerFacturaciones()
         {
 
@@ -172,6 +169,31 @@ namespace GestionHotelera.Controllers
 
 
             return View(reportes);
+        }
+
+        public IActionResult VerReservasPendientes()
+        {
+            return View();
+        }
+
+        public IActionResult VerReservasActivas()
+        {
+            return View();
+        }
+
+        // 🔽 NUEVAS ACCIONES
+        public IActionResult VerHabitacion()
+        {
+            return View();
+        }
+
+        public IActionResult VerTipoHabitacion()
+        {
+            return View();
+        }
+        public IActionResult EditarHabitacion()
+        {
+            return View();
         }
     }
 }

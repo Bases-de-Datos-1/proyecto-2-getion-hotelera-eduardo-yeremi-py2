@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Reservas Pendientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding: 30px;">
+    <a href="/EmpresaHospedaje/Menu" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Atrás</a>
+
+    <h2 style="margin-top: 20px;">Reservas Pendientes</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead style="background-color: #f4f4f4;">
+            <tr>
+                <th style="padding: 10px;">Cliente</th>
+                <th style="padding: 10px;">Habitación</th>
+                <th style="padding: 10px;">Fecha</th>
+                <th style="padding: 10px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-pendientes">
+            <tr>
+                <td>Juan Pérez</td>
+                <td>Suite Familiar</td>
+                <td>20/06/2025</td>
+                <td>
+                    <button onclick="resolverReserva(this, 'aceptada')" style="background-color: #28a745; color: white; border: none; padding: 8px; border-radius: 4px;">Aceptar</button>
+                    <button onclick="resolverReserva(this, 'rechazada')" style="background-color: #dc3545; color: white; border: none; padding: 8px; border-radius: 4px;">Rechazar</button>
+                </td>
+            </tr>
+            <tr>
+                <td>Laura Gómez</td>
+                <td>Habitación Deluxe</td>
+                <td>22/06/2025</td>
+                <td>
+                    <button onclick="resolverReserva(this, 'aceptada')" style="background-color: #28a745; color: white; border: none; padding: 8px; border-radius: 4px;">Aceptar</button>
+                    <button onclick="resolverReserva(this, 'rechazada')" style="background-color: #dc3545; color: white; border: none; padding: 8px; border-radius: 4px;">Rechazar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function resolverReserva(button, estado) {
+        const fila = button.closest("tr");
+        const mensaje = document.createElement("tr");
+        const celda = document.createElement("td");
+        celda.setAttribute("colspan", 4);
+        celda.style.color = estado === 'aceptada' ? 'green' : 'red';
+        celda.style.padding = '10px';
+        celda.innerText = `Reserva ${estado}.`;
+
+        mensaje.appendChild(celda);
+        fila.parentNode.insertBefore(mensaje, fila.nextSibling);
+        fila.remove();
+    }
+</script>

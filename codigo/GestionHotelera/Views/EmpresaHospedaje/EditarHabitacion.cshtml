@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Editar Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="background-color: white; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto; box-shadow: 0 0 12px rgba(0,0,0,0.1); font-family: 'Segoe UI', sans-serif;">
+    <div style="margin-bottom: 20px;">
+        <a href="/EmpresaHospedaje/Menu" style="text-decoration: none; color: #2c3e50;">← Atrás</a>
+    </div>
+
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">Editar Habitación</h2>
+
+    <form method="post">
+        <div style="margin-bottom: 20px;">
+            <label for="numero" style="display: block; font-weight: bold;">Número de la habitación:</label>
+            <input type="text" id="numero" name="numero" placeholder="Ej: 101" value="101" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <label for="tipo" style="display: block; font-weight: bold;">Tipo de Habitación:</label>
+            <select id="tipo" name="tipo" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                <option>Suite Familiar</option>
+                <option selected>Habitación Doble</option>
+                <option>Habitación Deluxe</option>
+            </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+            <button type="submit" style="background-color: #28a745; color: white; padding: 10px 25px; border: none; border-radius: 5px; font-weight: bold;">Guardar</button>
+            <a href="/EmpresaHospedaje/Menu" style="background-color: #c0392b; color: white; padding: 10px 25px; border-radius: 5px; text-decoration: none; font-weight: bold;">Cancelar</a>
+        </div>
+    </form>
+</div>

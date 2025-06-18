@@ -139,5 +139,9 @@ namespace GestionHotelera.Controllers
         {
             return View();
         }
+        public IActionResult Detalles()
+        {
+            return View("~/Views/EmpresaRecreacion/Servicios/Detalles.cshtml");
+        }
     }
 }
