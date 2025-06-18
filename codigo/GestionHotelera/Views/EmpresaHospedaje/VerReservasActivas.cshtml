@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Reservas Activas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div style="padding: 30px;">
+    <a href="/EmpresaHospedaje/Menu" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Atrás</a>
+
+    <h2 style="margin-top: 20px;">Reservas Activas</h2>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead style="background-color: #f4f4f4;">
+            <tr>
+                <th style="padding: 10px;">Cliente</th>
+                <th style="padding: 10px;">Habitación</th>
+                <th style="padding: 10px;">Desde</th>
+                <th style="padding: 10px;">Acción</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-activas">
+            <tr>
+                <td>Carlos Rivera</td>
+                <td>Villa Caribeña</td>
+                <td>15/06/2025</td>
+                <td>
+                    <button onclick="terminarReserva(this)" style="background-color: #f39c12; color: white; border: none; padding: 8px; border-radius: 4px;">Terminar Reserva</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function terminarReserva(button) {
+        const fila = button.closest("tr");
+        fila.remove();
+    }
+</script>
