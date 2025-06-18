@@ -161,7 +161,17 @@ namespace GestionHotelera.Controllers
         // Botón: Ver Facturaciones
         public IActionResult VerFacturaciones()
         {
-            return View();
+
+            ReportesViewModel reportes = new ReportesViewModel()
+            {
+
+                //ListaTiposHabitaciones = _dataBaseServices.Obtene
+                Provincias = _dataBaseServices.ObtenerProvincias()
+
+            };
+
+
+            return View(reportes);
         }
     }
 }

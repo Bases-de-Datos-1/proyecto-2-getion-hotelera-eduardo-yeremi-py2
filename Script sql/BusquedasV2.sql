@@ -844,6 +844,20 @@ END;
 GO
 
 
+-- Optener los datos de las reservaciones que tenga una empresa en la tabla ReservasTemporales.
+CREATE PROCEDURE sp_ObtenerReservasTemporalesEmpresa
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ReservasTemporales
+    WHERE IdEmpresaHospedaje = @IdEmpresa;
+END;
+GO
+
+
 -- ======================= Algunas busquedas para la optencion de datos generales ===================================
 -- Procedimiento para optener los datos de los tipos de camas presentes en el sistema.
 CREATE PROCEDURE sp_OptenerTiposCama

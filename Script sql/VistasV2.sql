@@ -324,22 +324,27 @@ SELECT
     R.FechaHoraSalida,
     R.CantidadPersonas,
     DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) * TH.Precio AS PrecioTotal,
+	DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) AS EstadiaTotal,
+
     -- Datos de la habitacion
 	DH.IdDatosHabitacion,
     DH.Numero AS NumeroHabitacion,
     TH.Nombre AS TipoHabitacion,
     TH.Precio,
 	TH.IdTipoHabitacion,
+
     -- Datos del cliente.
     C.Cedula AS CedulaCliente,
     C.NombreCompleto AS Cliente,
     DATEDIFF(YEAR, C.FechaNacimiento, GETDATE()) as Edad,
+
     -- Datos de la empresa.
     EH.CedulaJuridica AS IdEmpresaHospedaje,
     EH.NombreHotel AS EmpresaHospedaje,
     P.NombreProvincia AS ProvinciaEmpresa,
     CA.NombreCanton AS CantonEmpresa,
     DI.NombreDistrito AS DistritoEmpresa
+
 FROM Facturacion F
 JOIN Reservacion R ON F.IdReservacion = R.IdReservacion
 JOIN DatosHabitacion DH ON R.IdHabitacion = DH.IdDatosHabitacion
@@ -362,6 +367,7 @@ SELECT
     R.CantidadPersonas,
     R.Vehiculo,
     DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) * TH.Precio AS PrecioTotal, -- Calculo del precio total.
+	DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) AS EstadiaTotal,
 	R.Estado,
     -- Datos del Cliente
     C.Cedula AS IdCliente,
@@ -372,21 +378,21 @@ SELECT
 
     -- Datos de la Habitacion
     DH.IdDatosHabitacion AS IdHabitacion,
+	DH.Numero AS NumeroHabitacion,
     TH.Nombre AS TipoHabitacion,
     TH.Precio AS PrecioPorNoche,
 	TH.IdTipoHabitacion,
 
     -- Datos de la empresa.
     EH.CedulaJuridica AS IdEmpresaHospedaje,
-    EH.NombreHotel AS NombreEmpresa,
-    EH.ReferenciaGPS
+    EH.NombreHotel AS NombreEmpresa
     
 FROM Reservacion R
 JOIN Cliente C ON R.IdCliente = C.Cedula
 JOIN Paises PA ON C.IdPais = PA.IdPais
 JOIN DatosHabitacion DH ON R.IdHabitacion = DH.IdDatosHabitacion
 JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion
-JOIN HabitacionesEmpresa HE ON DH.IdDatosHabitacion = HE.IdHabitacion -- Corrección aquí
+JOIN HabitacionesEmpresa HE ON DH.IdDatosHabitacion = HE.IdHabitacion -- Correccion aqui
 JOIN EmpresaHospedaje EH ON HE.IdEmpresa = EH.CedulaJuridica; -- Ahora se relaciona correctamente
 GO
 
@@ -420,6 +426,45 @@ GO
 -- JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion
 -- JOIN EmpresaHospedaje EH ON DH.IdDatosHabitacion = EH.CedulaJuridica;
 -- GO
+
+
+
+-- +++++++ Para lo que seria trabajar con la parte de reservaciones, la optencion de los datos de las tablas
+CREATE VIEW view_ReservasTemporales AS
+SELECT 
+    RT.IdReservacionTemporal,
+    RT.FechaHoraIngreso,
+    RT.FechaHoraSalida,
+    RT.CantidadPersonas,
+    RT.Vehiculo,
+	DATEDIFF(DAY, RT.FechaHoraIngreso, RT.FechaHoraSalida) AS EstadiaTotal,
+
+    -- Datos del Cliente
+    C.Cedula AS IdCliente,
+    C.NombreCompleto AS NombreCliente,
+    
+    -- Datos de la Empresa de Hospedaje
+    EH.CedulaJuridica AS IdEmpresaHospedaje,
+    EH.NombreHotel AS NombreEmpresa,
+
+    -- Datos de la Habitacion
+    DH.IdDatosHabitacion AS IdHabitacion,
+	DH.Numero AS NumeroHabitacion,
+    TH.Nombre AS TipoHabitacion,
+    TH.Precio AS PrecioPorNoche
+    
+FROM ReservasTemporales RT
+JOIN Cliente C ON RT.IdCliente = C.Cedula
+JOIN EmpresaHospedaje EH ON RT.IdEmpresa = EH.CedulaJuridica
+JOIN DatosHabitacion DH ON RT.IdHabitacion = DH.IdDatosHabitacion
+JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion;
+GO
+
+
+
+
+
+
 
 
 --  ++++++++++ = Vistas para lo que seria relacionado con la optencion de datos de los clientes = +++++++++++++++++++
@@ -465,35 +510,6 @@ GO
 
 
 
-
--- +++++++ Para lo que seria trabajar con la parte de reservaciones, la optencion de los datos de las tablas
-CREATE VIEW view_ReservasTemporales AS
-SELECT 
-    RT.IdReservacionTemporal,
-    RT.FechaHoraIngreso,
-    RT.FechaHoraSalida,
-    RT.CantidadPersonas,
-    RT.Vehiculo,
-
-    -- Datos del Cliente
-    C.Cedula AS IdCliente,
-    C.NombreCompleto AS NombreCliente,
-    
-    -- Datos de la Empresa de Hospedaje
-    EH.CedulaJuridica AS IdEmpresaHospedaje,
-    EH.NombreHotel AS NombreEmpresa,
-
-    -- Datos de la Habitacion
-    DH.IdDatosHabitacion AS IdHabitacion,
-    TH.Nombre AS TipoHabitacion,
-    TH.Precio AS PrecioPorNoche
-    
-FROM ReservasTemporales RT
-JOIN Cliente C ON RT.IdCliente = C.Cedula
-JOIN EmpresaHospedaje EH ON RT.IdEmpresa = EH.CedulaJuridica
-JOIN DatosHabitacion DH ON RT.IdHabitacion = DH.IdDatosHabitacion
-JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion;
-GO
 
 
 

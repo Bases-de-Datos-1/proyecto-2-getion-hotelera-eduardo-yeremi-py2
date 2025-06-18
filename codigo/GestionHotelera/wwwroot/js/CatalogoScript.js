@@ -724,5 +724,4 @@ document.addEventListener("DOMContentLoaded", function () {
     InciarUbicacionesDinamicas();
     InicarInteractividadFiltros();
 
-
 });

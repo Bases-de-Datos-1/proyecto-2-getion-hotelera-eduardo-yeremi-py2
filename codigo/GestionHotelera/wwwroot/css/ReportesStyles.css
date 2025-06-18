@@ -1,0 +1,100 @@
+﻿.contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #e3e3e3;
+    padding: 30px;
+    border-radius: 10px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.modo-filtros {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+    .modo-filtros button {
+        background-color: #317d68;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .modo-filtros button:hover {
+            background-color: #256252;
+        }
+
+.filtro-id {
+    margin-top: 10px;
+    text-align: center;
+}
+
+    .filtro-id input {
+        width: 60%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #aaa;
+        margin-top: 10px;
+        font-size: 16px;
+    }
+
+.filtros-fecha {
+    margin-top: 20px;
+    text-align: center;
+}
+
+    .filtros-fecha input[type="date"] {
+        padding: 8px 12px;
+        border: 1px solid #aaa;
+        border-radius: 6px;
+        margin: 5px;
+    }
+
+.buscar-btn {
+    display: block;
+    margin: 30px auto 10px auto;
+    padding: 12px 25px;
+    background-color: #1e6336;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.resultados {
+    margin-top: 25px;
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+
+.volver-btn {
+    margin-bottom: 20px;
+    display: inline-block;
+    background-color: #444;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+}
+
+
+
+/*Para ocultar elementos.*/
+.hidden {
+    display: none;
+}
