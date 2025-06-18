@@ -14,32 +14,28 @@
     <h2>Ver Facturas y Reservas</h2>
 
     <div class="modo-filtros">
-        <button onclick="controlSecciones('reserva')">Ver reservacion</button>
+        <button type="button" onclick="controlSecciones('reserva')">Ver reservacion</button>
 
-        <button onclick="controlSecciones('tipo')">ver facturas por tipo de habitacion</button>
+        <button type="button" onclick="controlSecciones('tipo')">ver facturas por tipo de habitacion</button>
 
-        <button onclick="controlSecciones('numero')">Por numero de habitacion</button>
+        <button type="button" onclick="controlSecciones('numero')">Por numero de habitacion</button>
 
-        <button onclick="controlSecciones('dia')">Por dia</button>
+        <button type="button" onclick="controlSecciones('dia')">Por dia</button>
 
-        <button onclick="controlSecciones('mes')">Por mes</button>
+        <button type="button" onclick="controlSecciones('mes')">Por mes</button>
 
-        <button onclick="controlSecciones('fechas')">Por rango de fechas</button>
+        <button type="button" onclick="controlSecciones('fechas')">Por rango de fechas</button>
 
-        <button onclick="controlSecciones('tipoHabitacion')">Ver reservas por tipos de habitacion</button>
+        <button type="button" onclick="controlSecciones('tipoHabitacion')">Ver reservas por tipos de habitacion</button>
 
-        <button onclick="controlSecciones('edad')">Conocer edad personas</button>
+        <button type="button" onclick="controlSecciones('edad')">Conocer edad personas</button>
 
-        <button onclick="controlSecciones('demanda')">Conocer demanda de hoteles</button>
-
-
-
-
+        <button type="button" onclick="controlSecciones('demanda')">Conocer demanda de hoteles</button>
 
 
     </div>
 
-    <div class="filtro-id">
+    @* <div class="filtro-id">
         <label id="labelFiltro">Introduzca el ID de su reservación</label><br />
         <input type="text" id="inputFiltro" placeholder="Ej: 12345" />
     </div>
@@ -49,12 +45,12 @@
         <label><strong>Rango de fechas</strong></label><br />
         <input type="date" id="fechaInicio" style="margin-right: 10px;" />
         <input type="date" id="fechaFin" />
-    </div>
+    </div> *@
 
 
     @* ========= Para cada seccion se va a tener un div diferentes. ===================  *@
     @* Div para la consulta por reservacion especifica *@
-    <div class="reserva-especifca-div" id="ReservaEspecificaDiv">
+    <div class="reserva-especifca-div hidden" id="ReservaEspecificaDiv">
         <form >
 
             <div class="filtro-id">
@@ -70,7 +66,7 @@
 
 
     @* Div para la consulta de facturas para un tipo de habitacion especifica *@
-    <div class="reserva-especifca-div" id="TipoHabitacionEspecificaDiv">
+    <div class="reserva-especifca-div hidden" id="TipoHabitacionEspecificaDiv">
         <form>
 
             <div class="filtro-id">
@@ -94,7 +90,7 @@
 
 
     @* Div para la consulta de facturas por el numero de una habitacion *@
-    <div class="reserva-especifca-div" id="HabitacionEspecificaDiv">
+    <div class="reserva-especifca-div hidden" id="HabitacionEspecificaDiv">
         <form>
 
             <div class="filtro-id">
@@ -110,7 +106,7 @@
 
 
     @* Div para la consulta de facturas por dia*@
-    <div class="reserva-especifca-div" id="DiaEspecificoDiv">
+    <div class="reserva-especifca-div hidden" id="DiaEspecificoDiv">
         <form>
 
             <div class="filtro-id">
@@ -126,7 +122,7 @@
 
 
     @* Div para la consulta de facturas por mes especifico *@
-    <div class="reserva-especifca-div" id="mesEspecificoDiv">
+    <div class="reserva-especifca-div hidden" id="mesEspecificoDiv">
         <form>
 
             <div class="filtro-id">
@@ -156,7 +152,7 @@
 
 
     @* Div para la consulta de facturas por año especifico *@
-    <div class="reserva-especifca-div" id="AnioEspecifivoDiv">
+    <div class="reserva-especifca-div hidden" id="AnioEspecifivoDiv">
         <form>
 
             <div class="filtro-id">
@@ -172,7 +168,7 @@
 
 
     @* Div para la consulta de facturas por rango de fechas especifico *@
-    <div class="reserva-especifca-div" id="fechaEspecificaDiv">
+    <div class="reserva-especifca-div hidden" id="fechaEspecificaDiv">
         <form>
 
             <div class="filtro-fechas">
@@ -188,7 +184,7 @@
 
 
     @* Div para la consulta de reservas por tipos de habitaciones.*@
-    <div class="reserva-especifca-div" id="TiposHabitacionesDiv">
+    <div class="reserva-especifca-div hidden" id="TiposHabitacionesDiv">
         <form>
 
             <div class="filtro-id">
@@ -204,7 +200,7 @@
 
 
     @* Div para la consulta de la edad de las personas que han realizado reservas. *@
-    <div class="reserva-especifca-div" id="EdadEspecificaDiv">
+    <div class="reserva-especifca-div hidden" id="EdadEspecificaDiv">
         <form>
 
             @* <div class="filtro-id">
@@ -220,7 +216,7 @@
 
 
     @* Div para la consulta de hoteles con mayor demanda por fecha y ubicacion.*@
-    <div class="reserva-especifca-div" id="DiaEspecificoDiv">
+    <div class="reserva-especifca-div hidden" id="demandaDiv">
         <form>
 
             <div class="filtro-id">
