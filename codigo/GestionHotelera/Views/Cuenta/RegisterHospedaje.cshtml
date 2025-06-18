@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model GestionHotelera.Models.VistasModel.RegistroEmpresaHospedajeViewModel;
+
 @section Styles {
     <link rel="stylesheet" href="/css/auth.css" />
     <style>
@@ -70,10 +72,16 @@
     </style>
 }
 
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <div class="form-container">
     <h2>Registro - Empresa de Hospedaje</h2>
 
-    <form method="post" action="/Cuenta/RegisterHospedaje">
+    @* <form method="post" action="/Cuenta/RegisterHospedaje"> *@
+    <form id="formRegistroEmpresaHospedaje"> 
+
         <div class="form-group">
             <label for="cedulaJuridica">Cédula Jurídica</label>
             <input type="text" id="cedulaJuridica" name="CedulaJuridica" required />
@@ -84,7 +92,63 @@
             <input type="text" id="nombre" name="NombreEmpresa" required />
         </div>
 
+
+        @* Para la parte del tipo de alojamiento. *@
         <div class="form-group">
+            <label for="alojamiento">Tipo de alojamiento: </label>
+            <select id="alojamiento" name="Instalacion">
+                <option value="0">Seleccione una provincia</option>
+                @foreach (var tipo in Model.ListaTiposInstalaciones)
+                {
+                    <option value="@tipo.IdTipoInstalacion">@tipo.NombreInstalacion</option>
+                }
+            </select>
+        </div>
+
+
+        @* Para la parte de ubicaciones. *@
+        <div class="form-group">
+            <label for="provincia">Provincia</label>
+            <select id="provincia" name="Provincia">
+                 <option value="0">Seleccione una provincia</option> 
+                @foreach (var provincia in Model.Provincias)
+                {
+                    <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="canton">Cantón</label>
+            <select id="canton" name="Canton">
+                 <option value="0">Seleccione un cantón</option> 
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="distrito">Distrito</label>
+            <select id="distrito" name="Distrito">
+                <option value="0">Seleccione un distrito</option> 
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="barrio">Barrio:</label>
+            <input type="text" id="barrio" name="Barrio" required />
+        </div>
+
+        <div class="form-group">
+            <label for="senasExactas">Señas exactas: </label>
+            <input type="text" id="senasExactas" name="SenasExactas" required />
+        </div>
+
+        <div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
+
+        
+        @* Para almacenar los datos de la ubicacion en el mapa *@
+        <input type="hidden" id="latitud" name="Latitud" required />
+        <input type="hidden" id="longitud" name="Longitud" required />
+        @* <div class="form-group">
             <label for="provincia">Provincia</label>
             <input type="text" id="provincia" name="Provincia" required />
         </div>
@@ -99,11 +163,92 @@
             <input type="text" id="distrito" name="Distrito" required />
         </div>
 
+ *@
+
+
+
+        @* La lista de servicios que puede tener el hotel. *@
+        @for (int i = 0; i < Model.ListaServiciosHotel.Count; i++)
+        {
+            <div class="form-check">
+                <input type="checkbox"
+                       class="form-check-input"
+                       name="ServiciosInstalacion"
+                       value="@Model.ListaServiciosHotel[i].IdServicio"
+                       id="servicio_@Model.ListaServiciosHotel[i].IdServicio" />
+                <label class="form-check-label" for="servicio_@Model.ListaServiciosHotel[i].IdServicio">
+                    @Model.ListaServiciosHotel[i].NombreServicio
+                </label>
+            </div>
+        }
+
+        @* Para la pagina web de la empresa. *@
+        <div class="form-group">
+            <label for="paginaWeb">Sitio web:</label>
+            <input type="text" id="paginaWeb" name="SitioWeb"  />
+        </div>
+
+
+
+
         <div class="form-group">
             <label for="correo">Correo Electrónico</label>
             <input type="email" id="correo" name="CorreoElectronico" required />
         </div>
 
+        @* Para los numeros de telefono *@
+
+        @*Telefono 1 del cliente*@
+        <div class="form-group">
+            <label for="telefono1ID">Numero telefonico (Obligatorio)</label>
+            <input type="number" id="telefono1ID" name="Telefono1" required />
+        </div>
+
+        @*Telefono 2 del cliente*@
+        <div class="form-group">
+            <label for="telefono2ID">Numero telefonico (Opcional)</label>
+            <input type="number" id="telefono2ID" name="Telefono2" />
+
+        </div>
+
+        @*Telefono 3 del cliente*@
+        <div class="form-group">
+            <label for="telefono3ID">Numero telefonico (Opcional)</label>
+            <input type="number" id="telefono3ID" name="Telefono3" />
+
+        </div>
+
+        @* Para las redes sociales. *@
+        <div class="form-group">
+            <label for="Facebook">Facebook:</label>
+            <input type="text" id="facebook" name="Facebook" />
+        </div>
+        <div class="form-group">
+            <label for="instagram">Instagram</label>
+            <input type="text" id="instagram" name="Instagram"  />
+        </div>
+
+        <div class="form-group">
+            <label for="twitter">Twitter:</label>
+            <input type="text" id="twitter" name="Twitter"  />
+        </div>
+        <div class="form-group">
+            <label for="tikTok">TikTok</label>
+            <input type="text" id="tikTok" name="TikTok"  />
+        </div>
+        <div class="form-group">
+            <label for="youTube">YouTube</label>
+            <input type="text" id="youTube" name="YouTube"  />
+        </div>
+
+        <div class="form-group">
+            <label for="whatsApp">WhatsApp</label>
+            <input type="text" id="whatsApp" name="WhatsApp"  />
+        </div>
+
+
+
+        @* Para la parte de cotraseñas.  *@
         <div class="form-group">
             <label for="contrasena">Contraseña</label>
             <input type="password" id="contrasena" name="Contrasena" required />
@@ -114,6 +259,7 @@
             <input type="password" id="confirmar" name="ConfirmarContrasena" required />
         </div>
 
+        @* Boton para el envio del formulario *@
         <button type="submit">Registrarse</button>
     </form>
 
@@ -121,3 +267,12 @@
         <p><a href="/Cuenta/Register">← Volver al selector</a></p>
     </div>
 </div>
+
+<script>
+    // Guardar los datos en las ventanas para usarlo en un archivo aparte.
+    window.listaCantones = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones)));
+    window.listaDistritos = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones).SelectMany(c => c.Distritos)));
+</script>
+
+
+<script src="~/js/RegistrarEmpresaHospedajeScript.js"></script>

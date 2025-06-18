@@ -8,9 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.SqlServer.Types" Version="160.1000.6" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\EmpresaRecreacionModels\ServiciosModels\" />
+    <Folder Include="Models\FiltrosBusquedaModel\" />
     <Folder Include="Models\UbicacionesModel\" />
   </ItemGroup>
 

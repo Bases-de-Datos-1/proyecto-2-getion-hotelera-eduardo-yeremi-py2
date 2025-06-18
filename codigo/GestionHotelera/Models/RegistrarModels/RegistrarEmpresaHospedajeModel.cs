@@ -25,7 +25,7 @@
         // Datos de la instalcion:
         public int Instalacion { get; set; }
 
-        public string Comodidades { get; set; } // Esto deberia de ser una lista de comodidades, cambiarlo despues.
+        public List<int> ServiciosInstalacion { get; set; } // Esto deberia de ser una lista de comodidades, cambiarlo despues.
 
         // Datos de contacto.
         public string CorreoElectronico { get; set; }
@@ -61,5 +61,19 @@
         public string ConfirmarContrasena { get; set; }
 
 
-    }
+//        @for(int i = 0; i<Model.ListaServiciosHotel.Count; i++)
+//{
+//    <div class="form-check">
+//        <input type = "checkbox"
+//               class="form-check-input"
+//               name="ServiciosInstalacion"
+//               value="@Model.ListaServiciosHotel[i].IdServicio"
+//               id="servicio_@Model.ListaServiciosHotel[i].IdServicio" />
+//        <label class="form-check-label" for="servicio_@Model.ListaServiciosHotel[i].IdServicio">
+//            @Model.ListaServiciosHotel[i].NombreServicio
+//        </label>
+//    </div>
+//}
+
+}
 }

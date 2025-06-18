@@ -400,12 +400,18 @@ SELECT
     C.Cedula,
     C.NombreCompleto,
     C.TipoIdentificacion,
+    C.IdPais,
     PA.NombrePais AS PaisResidencia,
     C.FechaNacimiento,
     DATEDIFF(YEAR, C.FechaNacimiento, GETDATE()) as Edad,
     C.CorreoElectronico,
+
+    -- Datos de la ubicacion en caso de ser de costa rica.
+    C.IdProvincia,
     PR.NombreProvincia AS Provincia,
+    C.IdCanton,
     CA.NombreCanton AS Canton,
+    C.IdDistrito,
     DI.NombreDistrito AS Distrito
 FROM Cliente C
 LEFT JOIN Paises PA ON C.IdPais = PA.IdPais -- Se usa left join por que algunos clientes no tenian algo asociado en esto.

@@ -125,6 +125,38 @@ BEGIN
 END;
 GO
 
+-- Buscar servicios para el catalogo:
+
+CREATE PROCEDURE sp_BuscarServiciosRecreacion
+    @NombreServicio VARCHAR(30) = NULL,
+    @PrecioMin FLOAT = NULL,
+    @PrecioMax FLOAT = NULL,
+    @ListaActividades VARCHAR(MAX) = NULL,
+    @IdProvincia SMALLINT = NULL,
+    @IdCanton SMALLINT = NULL,
+    @IdDistrito SMALLINT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT DISTINCT *
+    FROM view_ServiciosRecreacion
+    WHERE (@NombreServicio IS NULL OR NombreServicio LIKE '%' + @NombreServicio + '%')
+    AND (@PrecioMin IS NULL OR Precio >= @PrecioMin)
+    AND (@PrecioMax IS NULL OR Precio <= @PrecioMax)
+    
+    -- Filtrar por los elementos de la lista de actividades.
+    AND (@ListaActividades IS NULL OR EXISTS (
+        SELECT 1 FROM STRING_SPLIT(@ListaActividades, ',') AS spl 
+        JOIN view_ActividadesServicio A ON spl.value = A.NombreActividad
+        WHERE A.IdServicio = view_ServiciosRecreacion.IdServicio
+    ))
+    AND (@IdProvincia IS NULL OR IdProvincia = @IdProvincia)
+    AND (@IdCanton IS NULL OR IdCanton = @IdCanton)
+    AND (@IdDistrito IS NULL OR IdDistrito = @IdDistrito);
+END;
+GO
+
 -- CREATE PROCEDURE sp_BuscarHabitaciones_V2
 --     @NombreTipoHabitacion VARCHAR(40) = NULL,
 --     @FechaEntrada DATETIME = NULL,
@@ -481,7 +513,18 @@ BEGIN
 END;
 GO
 
+-- Optener los servicios de las instakaciones de la empresa hospedaje.
+CREATE PROCEDURE sp_ObtenerDatosServiciosEmpresaHospedaje
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
+    SELECT *
+    FROM view_ServiciosEmpresaHospedaje
+    WHERE IdEmpresa = @IdEmpresa;
+END;
+GO
 
 
 -- ======================= Algunas busquedas para empresa de recreacion ===================================
@@ -526,37 +569,7 @@ BEGIN
 END;
 GO
 
--- Buscar servicios para el catalogo:
 
-CREATE PROCEDURE sp_BuscarServiciosRecreacion
-    @NombreServicio VARCHAR(30) = NULL,
-    @PrecioMin FLOAT = NULL,
-    @PrecioMax FLOAT = NULL,
-    @ListaActividades VARCHAR(MAX) = NULL,
-    @IdProvincia SMALLINT = NULL,
-    @IdCanton SMALLINT = NULL,
-    @IdDistrito SMALLINT = NULL
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT DISTINCT *
-    FROM view_ServiciosRecreacion
-    WHERE (@NombreServicio IS NULL OR NombreServicio LIKE '%' + @NombreServicio + '%')
-    AND (@PrecioMin IS NULL OR Precio >= @PrecioMin)
-    AND (@PrecioMax IS NULL OR Precio <= @PrecioMax)
-    
-    -- Filtrar por los elementos de la lista de actividades.
-    AND (@ListaActividades IS NULL OR EXISTS (
-        SELECT 1 FROM STRING_SPLIT(@ListaActividades, ',') AS spl 
-        JOIN view_ActividadesServicio A ON spl.value = A.NombreActividad
-        WHERE A.IdServicio = view_ServiciosRecreacion.IdServicio
-    ))
-    AND (@IdProvincia IS NULL OR IdProvincia = @IdProvincia)
-    AND (@IdCanton IS NULL OR IdCanton = @IdCanton)
-    AND (@IdDistrito IS NULL OR IdDistrito = @IdDistrito);
-END;
-GO
 
 
 -- ======================= Algunas busquedas para los clientes ===================================

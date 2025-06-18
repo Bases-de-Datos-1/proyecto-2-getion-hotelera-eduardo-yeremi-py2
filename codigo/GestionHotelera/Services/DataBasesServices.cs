@@ -1,10 +1,17 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlTypes;
+using System.Diagnostics;
+using System.Globalization;
 using GestionHotelera.Models;
+using GestionHotelera.Models.ClientesModels;
 using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.RegistrarModels;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.SqlServer.Types;
 namespace GestionHotelera.Services
 {
     
@@ -146,6 +153,31 @@ namespace GestionHotelera.Services
             }
         }
 
+        // Funcion para ejecutar una funcion para que tenga parametros y el de salida sea un tipo string:
+        public string EjecutarProcedimientoConParametroSalidaTexto(string nombreProcedimiento, SqlParameter[] parametros)
+        {
+            using (var conn = IniciarConexion())
+            {
+                using (var cmd = new SqlCommand(nombreProcedimiento, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddRange(parametros);
+
+                    SqlParameter parametroSalida = parametros.FirstOrDefault(p => p.Direction == ParameterDirection.Output);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        return parametroSalida?.Value?.ToString() ?? "FalloI";
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error ejecutando procedimiento (texto): {ex.Message}");
+                        return "FalloI";
+                    }
+                }
+            }
+        }
 
 
 
@@ -504,37 +536,506 @@ namespace GestionHotelera.Services
 
         // >>> ===== Funciones para el registro de las empresas de hospedaje. ===== <<<
 
+        // Funcion para procesar el registro de la empresa de hospedaje.
+        public JsonResult ProcesarRegistroEmpresaHospedaje(RegistrarEmpresaHospedajeModel model) {
+
+            CambiarConexion("Administrador");
+
+            // Estos seria para devolver el resultado de cada insert e iformar de cada estado de registro. queda pendiente de implementacion.
+            List<int> resultadoRegistroGeneral2 = new List<int>();
+            List<int> resultadoTelefonos = new List<int>();
+            List<int> resultadoServicios = new List<int>();
+            List<int> resultadoRedes = new List<int>();
+
+
+            // Registrar los datos generales de la empresa.
+            int resultadoRegistroGeneral = RegistrarEmpresaHospedajeBD(model);
+            resultadoRegistroGeneral2.Add(resultadoRegistroGeneral);
+            // Si se pudo registrar entonces se proceden con los otros registros.
+            if (resultadoRegistroGeneral == 1)
+            {
+                // Registrar los telefonos de la empresa.
+                if (model.Telefono1 != null)
+                {
+                    RegistrarTelefonosEmpresaHospedajeBD(model.CedulaJuridica, model.Telefono1);
+                } 
+
+                if (model.Telefono2 != null)
+                {
+                    RegistrarTelefonosEmpresaHospedajeBD(model.CedulaJuridica, model.Telefono2);
+                }
+
+                if (model.Telefono3 != null)
+                {
+                    RegistrarTelefonosEmpresaHospedajeBD(model.CedulaJuridica, model.Telefono3);
+                }
+
+
+                // Registrar los servicios de la empresa.
+                foreach (int idServicio in model.ServiciosInstalacion)
+                {
+                    RegistrarServiciosEmpresaHospedajeBD(model.CedulaJuridica, idServicio );
+                }
+
+                // Registrar los datos de las redes sociales.
+                if (model.Facebook != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 1, model.Facebook);
+                }
+
+                if (model.Instagram != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 2, model.Instagram);
+                }
+
+                if (model.Twitter != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 3, model.Twitter);
+                }
+
+                if (model.TikTok != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 4, model.TikTok);
+                }
+
+                if (model.YouTube != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 5, model.YouTube);
+                }
+
+                if (model.WhatsApp != null)
+                {
+                    RegistrarRedesSocialesEmpresaHospedajeBD(model.CedulaJuridica, 6, model.WhatsApp);
+                }
+
+            }
+
+            CambiarConexion("Cliente");
+
+            // Devolver la lista de resultados.
+            //return [resultadoRegistroGeneral2, resultadoTelefonos, resultadoServicios, resultadoRedes];
+
+            return new JsonResult(new { EstadoGeneral = resultadoRegistroGeneral, EstadoTelefonos = resultadoTelefonos, EstadoServicios = resultadoServicios, EstadoRedes = resultadoRedes });
+        }
+
         // Registrar la cuenta de una empresa de hospedaje.
-        //public int RegistrarEmpresaHospedajeBD(RegistrarEmpresaHospedajeModel model)
-        //{
-        //    Console.WriteLine("Iniciando proceso de registro de empresa de hospedaje.");
-        //    CambiarConexion("Administrador");
-        //    // Parametro de salida para el resultado.
-        //    SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
-        //    {
-        //        Direction = ParameterDirection.Output
-        //    };
-        //    // Armar la cadena de parametros del procedimiento.
-        //    var parametrosEmpresa = new SqlParameter[]
-        //    {
-        //        new("@IdEmpresa", model.IdEmpresa),
-        //        new("@NombreEmpresa", model.NombreEmpresa),
-        //        new("@IdPais", model.IdPais),
-        //        new("@IdProvincia", (object?)model.IdProvincia ?? DBNull.Value),
-        //        new("@IdCanton", (object?)model.IdCanton ?? DBNull.Value),
-        //        new("@IdDistrito", (object?)model.IdDistrito ?? DBNull.Value),
-        //        new("@CorreoElectronico", model.CorreoElectronico),
-        //        new("@Contrasena", model.Contrasena),
-        //        resultadoParam
-        //    };
-        //    // Ejecutar el procedimiento
-        //    int resultado = EjecutarProcedimientoIUD("sp_AgregarEmpresaHospedaje", parametrosEmpresa);
-        //    CambiarConexion("Cliente");
-        //    Console.WriteLine("Finalizando proceso de registro de empresa de hospedaje.");
-        //    return resultado;
-        //}
+        public int RegistrarEmpresaHospedajeBD(RegistrarEmpresaHospedajeModel model)
+        {
+            Console.WriteLine("Iniciando proceso de registro de empresa de hospedaje.");
+
+            // El dato de retorno.
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt) { 
+                Direction = ParameterDirection.Output 
+            };
+
+
+            var textoGps = $"POINT({model.Longitud.ToString(CultureInfo.InvariantCulture)} {model.Latitud.ToString(CultureInfo.InvariantCulture)})";
+            var referenciaGeografica = SqlGeography.STPointFromText(new SqlChars(textoGps), 4326);
+
+            SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt)
+            {
+                UdtTypeName = "geography",
+                Value = referenciaGeografica
+            };
+
+            //SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt) // Esto es un tipo de dato especial por lo tanto tuvimos que amarlo por aparte.
+            //{
+            //    UdtTypeName = "geography",
+            //    Value = $"POINT({model.Longitud} {model.Latitud})"
+            //};
+
+            // Crear la lista de parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@CedulaJuridica", model.CedulaJuridica),
+                new("@NombreHotel", model.NombreEmpresa),
+                new("@IdTipoHotel", model.Instalacion),
+                referenciaGps,
+                new("@CorreoElectronico", model.CorreoElectronico),
+                new("@SitioWeb", (object?)model.SitioWeb ?? DBNull.Value),
+                new("@Contrasena", model.Contrasena),
+                new("@IdProvincia", model.Provincia),
+                new("@IdCanton", model.Canton),
+                new("@IdDistrito", model.Distrito),
+                new("@Barrio", model.Barrio),
+                new("@SenasExactas", model.SenasExactas),
+                resultadoParam
+            };
+
+            // Ejecutar el procedimiento para registrar la empresa.
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarEmpresaHospedaje", parametros);
+
+            return resultado;
+        }
+
+
+        // Registrar los telefonos de la empresa de hospedaje.
+        public int RegistrarTelefonosEmpresaHospedajeBD(string cedulaJuridica, string numeroTelefonico) {
+
+            // Parametro de salida.
+            SqlParameter salida = new("@NuevoIdTelefono", SqlDbType.SmallInt) { 
+                Direction = ParameterDirection.Output 
+            };
+
+            // Asignar parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", cedulaJuridica),
+                new("@NumeroTelefonico", numeroTelefonico),
+                salida
+            };
+
+            // Ejecutar.
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarTelefonoEmpresaHospedaje", parametros);
+            Console.WriteLine($"Registro teléfono {numeroTelefonico} == resultado = {resultado}");
+
+            return resultado;
+        }
+
+
+        // Registrar el los servicios de la empresa de hospedaje.
+        public int RegistrarServiciosEmpresaHospedajeBD(string cedulaJuridica, int idServicio)
+        {
+            // Parametro de salida.
+            SqlParameter salida = new("@Resultado", SqlDbType.SmallInt) { 
+                Direction = ParameterDirection.Output 
+            };
+
+            // Asignar parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", cedulaJuridica),
+                new("@IdServicio", idServicio),
+                salida
+            };
+
+            // Ejecutar.
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarListaServiciosHospedaje", parametros);
+            Console.WriteLine($"Servicio {idServicio} == resultado: {resultado}");
+
+            return resultado;
+
+        }
+
+
+        // Registrar las redes sociales de la empresa.
+        public int RegistrarRedesSocialesEmpresaHospedajeBD(string cedulaJuridica, int idRedSocial, string enlace)
+        {
+            // Parametro de salida.
+            SqlParameter salida = new("@Resultado", SqlDbType.SmallInt) { 
+                Direction = ParameterDirection.Output 
+            };
+
+            // Asignar parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", cedulaJuridica),
+                new("@IdRedSocial", idRedSocial),
+                new("@Enlace", enlace),
+                salida
+            };
+
+            // Ejecutar.
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarListaRedesSociales", parametros);
+            Console.WriteLine($"Red social ID {idRedSocial}: {enlace} == resultado: {resultado}");
+
+            return resultado;
+        }
+
+
+
 
         // >>> ===== Funciones para el registro de las empresas de Recreacion. ===== <<<
+        public int RegistrarEmpresaRecreacionBD(RegistrarEmpresaRecreacionModel model)
+        {
+            CambiarConexion("Administrador");
+
+            // Parametro de salida.
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Agregar los parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@CedulaJuridica", model.CedulaJuridica),
+                new("@NombreEmpresa", model.NombreEmpresa),
+                new("@CorreoElectronico", model.CorreoElectronico),
+                new("@PersonaAContactar", model.PersonaAContactar),
+                new("@Telefono", model.Telefono),
+                new("@IdProvincia", model.Provincia),
+                new("@IdCanton", model.Canton),
+                new("@IdDistrito", model.Distrito),
+                new("@SenasExactas", model.SenasExactas), 
+                new("@Contrasena", model.Contrasena),
+                resultadoParam
+            };
+
+            // Ejecutar el procedimiento.
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarEmpresaRecreacion", parametros);
+
+            CambiarConexion("Cliente");
+
+            return resultado;
+        }
+
+
+
+        // >>> ===== Funciones para el registro de actividades de recreacion  ===== <<<
+        public int RegistrarActividadRecreacionBD(string idEmpresa, RegistrarActividadModel model)
+        {
+            //CambiarConexion("Administrador"); // Esto ya estan con una cuenta tipo administrador a la hora de hacer el registro.
+
+            // Parametro de salida
+            SqlParameter nuevoIdActividadParam = new("@NuevoIdActividad", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Establecer los parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@NombreActividad", model.NombreActividad),
+                new("@DescripcionActividad", model.DescripcionActividad),
+                nuevoIdActividadParam
+            };
+
+            // Ejecutar el procedimiento
+            int resultado = EjecutarProcedimientoIUD("sp_AgregarActividad", parametros);
+
+            return resultado;
+        }
+
+
+
+
+
+
+
+
+        //[FromForm] ConvertirDatosRegitroAsignacion request, [FromForm] List<IFormFile> DocumentosAsignacionInput
+        // >>> ===== Funciones para el registro de tipos de habitaciones.  ===== <<< 
+        // Funcion para manejar el proceso de registro de todos los datos del tipo de habitacion.
+        public JsonResult RegistrarTipoHabitacionCompleto(string idEmpresa, RegistrarTipoHabitacionModel dataModel, List<IFormFile> fotos)
+        {
+            // Regiistrar el tipo de habitacion en la BD
+            int idTipoHabitacion = RegistrarTipoHabitacionBD(idEmpresa, dataModel);
+
+            if (idTipoHabitacion <= 0)
+            {
+                Console.WriteLine("No se pudo registrar el tipo de habitacion.");
+                return new JsonResult(new { EstadoGeneral = idTipoHabitacion }); 
+            }
+
+            // Asociar la empresa y el tipo de habitacion.
+            int estadoAsociacion = RegistrarAsociacionEmpresaTipoHabitacionBD(idTipoHabitacion, idEmpresa);
+
+            // Para devolver el estado de cada ejecucion.
+            List<int> estadoComodidades = new List<int>();
+            List<int> estadoFotos = new List<int>();
+
+
+            // Registrar las comodidades de la habitacion.
+            foreach (int idComodidad in dataModel.ListaComodidades)
+            {
+                int resultadoComodidad = RegistrarComodidadDeHabitacionBD(idTipoHabitacion, idComodidad);
+
+                if (resultadoComodidad < 0)
+                { 
+                    Console.WriteLine($"Error al asociar comodidad {idComodidad} a habitacion {idTipoHabitacion}");
+                    estadoComodidades.Add(resultadoComodidad);
+                }
+            }
+
+            // Registrar las fotos del tipo de habitacion.
+            foreach (var archivo in fotos)
+            {
+                // Pasar las fotos a formato bynario para poderlas guardar en la base de datos.
+                using var stream = new MemoryStream();
+                archivo.CopyTo(stream);
+                byte[] imagenBytes = stream.ToArray();
+
+                int resultadoFoto = RegistrarFotoHabitacionBD(idTipoHabitacion, imagenBytes);
+
+                if (resultadoFoto < 0)
+                {
+                    Console.WriteLine("Error al guardar una foto de la habitacion.");
+                    estadoFotos.Add(resultadoFoto);
+
+                }
+            }
+
+            return new JsonResult(new { EstadoGeneral = idTipoHabitacion, EstadoAsociacion = estadoAsociacion, EstadoComodidades = estadoComodidades, EstadoFotos = estadoFotos }); 
+        }
+
+        // Funcion para el registro de los tipos de habitaciones en la base de datos.
+        public int RegistrarTipoHabitacionBD(string idEmpresa, RegistrarTipoHabitacionModel model)
+        {
+            // Parametros de salida.
+            SqlParameter idGenerado = new("@NuevoIdTipoHabitacion", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Establecer la lista de parametros
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@Nombre", model.NombreTipoHabitacion),
+                new("@Descripcion", model.Descripcion),
+                new("@IdTipoCama", model.TipoCama),
+                new("@Precio", model.PrecioPorNoche),
+                idGenerado
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarTipoHabitacion", parametros);
+
+            return estado; 
+        }
+
+        // Funcion para el registro de las comodidades que posee esa habitacion.
+        public int RegistrarComodidadDeHabitacionBD(int idHabitacion, int idComodidad)
+        {
+            SqlParameter resultado = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idHabitacion),
+                new("@IdComodidad", idComodidad),
+                resultado
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarListaComodidades", parametros);
+
+            return estado;
+        }
+
+        // Funcion para el registro de las fotos de las habitacion.
+        public int RegistrarFotoHabitacionBD(int idHabitacion, byte[] imagen)
+        {
+            // Parametro de salida.
+            SqlParameter nuevoIdFoto = new("@NuevoIdImagen", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Armar la lista de parametros para ejecutar el escript.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idHabitacion),
+                new("@Imagen", imagen),
+                nuevoIdFoto
+            };
+            
+            // Devolver el resultado.
+            int estado = EjecutarProcedimientoIUD("sp_AgregarFoto", parametros);
+            return estado;
+        }
+
+        // Funcion para registrar la asociacion entre la empresa y el tipo de habitacion en la base de datos.
+        public int RegistrarAsociacionEmpresaTipoHabitacionBD(int idTipoHabitacion, string idEmpresa)
+        {
+            // Parametro de salida.
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            // Armar la lista de parametros.
+            var parametros = new SqlParameter[]
+            {
+                new("@IdTipoHabitacion", idTipoHabitacion),
+                new("@IdEmpresa", idEmpresa),
+                resultadoParam
+            };
+
+            int estado = EjecutarProcedimientoIUD("sp_AgregarTipoHabitacionEmpresa", parametros);
+
+            return estado;
+        }
+
+
+
+        // >>> ===== Funciones para el registro de servicios de recreacion.  ===== <<<
+
+        // Funcion para controlar el proceso de registro de los servicios.
+        public JsonResult ProcesarRRegistroDeServiciosDeRecreacion(string idEmpresa, RegistrarServicioModel model)
+        {
+            // Registrar el servicio.
+            int idServicio = RegistrarServicioRecreacionBD(idEmpresa, model.NombreServicio, model.Precio);
+
+            if (idServicio <= 0)
+            {
+                Console.WriteLine("No se pudo registrar el servicio.");
+                return new JsonResult(new { EstadoGeneral = idServicio }); ;
+            }
+
+            List<int> estadoActividades = new List<int>();
+            // Agregar las actividades al servicio.
+            foreach (int idActividad in model.ListasActividades)
+            {
+                int resultadoActividad = AgregarActividadAServicioBD(idServicio, idActividad);
+
+                if (resultadoActividad < 0)
+                { 
+                    Console.WriteLine($"Error ial agregar actividad {idActividad} al servicio {idServicio}."); 
+                }
+                estadoActividades.Add(resultadoActividad);
+            }
+
+            return new JsonResult(new { EstadoGeneral = idServicio, EstadoActividades = estadoActividades });
+
+        }
+
+        // funcion para registrar los datos generales de los servicios en la BD.
+        public int RegistrarServicioRecreacionBD(string idEmpresa, string nombreServicio, double precio)
+        {
+
+            SqlParameter nuevoIdServicio = new("@NuevoIdServicio", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa),
+                new("@NombreServicio", nombreServicio),
+                new("@Precio", precio),
+                nuevoIdServicio
+            };
+
+            int idGenerado = EjecutarProcedimientoIUD("sp_AgregarServiciosRecreacion", parametros);
+
+            return idGenerado;
+        }
+
+        // Funcion registrar las actividades asociadas al servicio.
+        public int AgregarActividadAServicioBD(int idServicio, int idActividad)
+        {
+            SqlParameter resultadoParam = new("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdServicio", idServicio),
+                new("@IdActividad", idActividad),
+                resultadoParam
+            };
+
+            return EjecutarProcedimientoIUD("sp_AgregarListaActividades", parametros);
+        }
+
+
+
+
+
 
 
 
@@ -561,9 +1062,150 @@ namespace GestionHotelera.Services
 
 
         // >>> ===== Funciones para optener los datos de un cliente especifico. ===== <<<
+
+        // Funcion general para el proceso de optencion de datos de los clientes.
+        public ClienteModel ProcesarOptencionDeDatosCliente(string cedula)
+        {
+            ClienteModel cliente = ObtenerDatosGeneralesClienteDB(cedula);
+            if (cliente == null) { 
+                return null;
+            }
+
+            cliente.Telefonos = ObtenerTelefonosClienteDB(cedula);
+            return cliente;
+
+        }
+
         // Optener el registro del cliente por su ID.
+        public ClienteModel ObtenerDatosGeneralesClienteDB(string cedula)
+        {
+            // Establecer el parametro del cliente a buscar.
+            SqlParameter[] parametros = {
+                new SqlParameter("@Cedula", cedula)
+            };
+
+            // Si no se encentran datos del cliente se devuelve un null, con eso podemos indicar que el cliente no se encontro.
+            DataTable tabla = EjecutarProcedimientoConParametros("sp_ObtenerDatosCliente", parametros);
+            if (tabla.Rows.Count == 0) { 
+                return null;
+            }
+
+            // Puede traer mas de una fila.
+            DataRow row = tabla.Rows[0];
+
+            //Devolver los datos del cliente.
+            return new ClienteModel
+            {
+                Cedula = row["Cedula"].ToString(),
+
+                NombreCompleto = row["NombreCompleto"].ToString(),
+
+                TipoIdentificacion = row["TipoIdentificacion"].ToString(),
+
+                IdPais = Convert.ToInt32(row["IdPais"]),
+
+                PaisResidencia = row["PaisResidencia"].ToString(),
+
+                FechaNacimiento = DateOnly.FromDateTime(Convert.ToDateTime(row["FechaNacimiento"])), // Este viene en date time.
+
+                Edad = Convert.ToInt32(row["Edad"]),
+
+                CorreoElectronico = row["CorreoElectronico"].ToString(),
+
+
+                // Estos valores de la ubicacion pueden ser null dependiendo del pais de residencia del cliente.
+                IdProvincia = row["IdProvincia"] != DBNull.Value ? Convert.ToInt32(row["IdProvincia"]) : 0, 
+                NombreProvincia = row["Provincia"]?.ToString(),
+
+                IdCanton = row["IdCanton"] != DBNull.Value ? Convert.ToInt32(row["IdCanton"]) : 0,
+                NombreCanton = row["Canton"]?.ToString(),
+
+                IdDistrito = row["IdDistrito"] != DBNull.Value ? Convert.ToInt32(row["IdDistrito"]) : 0,
+                NombreDistrito = row["Distrito"]?.ToString()
+            };
+        }
 
         // Optener los telefonos del cliente.
+        public List<TelefonoClienteModel> ObtenerTelefonosClienteDB(string cedula)
+        {
+            // Establecer el parametro con la cedula del cliente.
+            SqlParameter[] parametros = {
+                new SqlParameter("@Cedula", cedula)
+            };
+
+            // Extraer el resultdo con los datos del cliente, si el cliente existe tiene al menos 1 telefono registrado.
+            DataTable tabla = EjecutarProcedimientoConParametros("sp_ObtenerTelefonosCliente", parametros);
+            List<TelefonoClienteModel> telefonos = new();
+
+            // Sacar y guardar los datos que llegaron.
+            foreach (DataRow fila in tabla.Rows)
+            {
+                telefonos.Add(new TelefonoClienteModel
+                {
+                    IdTelefono = Convert.ToInt32(fila["IdTelefono"]),
+                    Cedula = fila["CedulaCliente"].ToString(),
+                    NombreCompleto = fila["NombreCliente"].ToString(),
+                    NumeroTelefonico = fila["NumeroTelefonico"].ToString(),
+                    CodigoPais = fila["CodigoPais"].ToString()
+                });
+            }
+
+            // Devolver el resultado.
+            return telefonos;
+        }
+
+
+
+
+
+        // >>> ===== Funciones para la autenticacion de los usuarios en la base de datos. ===== <<<
+        // Funcion para verificar la cuenta de los clientes.
+        public string VerificarCuentaCliente(string correo, string contrasena)
+        {
+
+            SqlParameter idClienteParam = new("@IdCliente", SqlDbType.VarChar, 15)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@Correo", correo),
+                new("@Contrasena", contrasena),
+                idClienteParam
+            };
+
+            string resultado = EjecutarProcedimientoConParametroSalidaTexto("sp_VerificarCliente", parametros);
+            //EjecutarProcedimientoIUD("sp_VerificarCliente", parametros);
+
+
+            return resultado;
+        }
+
+
+        // Funcion para verificar la cuentas de las empresas.
+        public string VerificarCuentaEmpresa(string procedimiento, string correo, string contrasena)
+        {
+            //CambiarConexion("Administrador");
+
+            SqlParameter idEmpresaParam = new("@IdEmpresa", SqlDbType.VarChar, 15)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new("@Correo", correo),
+                new("@Contrasena", contrasena),
+                idEmpresaParam
+            };
+
+            string resultado = EjecutarProcedimientoConParametroSalidaTexto(procedimiento, parametros);
+
+            //CambiarConexion("Cliente");
+
+            return resultado;
+        }
 
 
     }

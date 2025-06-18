@@ -820,6 +820,7 @@ GO
 
 -- Agregar (Antes de agregarlo aqui hay que validar que la empresa no tenga el tipo de habitacion ya registrados)
 CREATE PROCEDURE sp_AgregarTipoHabitacion
+    @IdEmpresa VARCHAR(15),
     @Nombre VARCHAR(40),
     @Descripcion VARCHAR(150),
     @IdTipoCama SMALLINT,
@@ -829,21 +830,61 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        INSERT INTO TipoHabitacion (Nombre, Descripcion, IdTipoCama, Precio)
-        VALUES (@Nombre, @Descripcion, @IdTipoCama, @Precio);
+        -- Revisar si ya existe para esa empresa
+        IF EXISTS (
+            SELECT 1
+            FROM TipoHabitacionEmpresa THE
+            JOIN TipoHabitacion TH ON THE.IdTipoHabitacion = TH.IdTipoHabitacion
+            WHERE THE.IdEmpresa = @IdEmpresa AND TH.Nombre = @Nombre
+        )
+        BEGIN
+            SET @NuevoIdTipoHabitacion = -1;
+        END
+        ELSE
+        BEGIN
+            INSERT INTO TipoHabitacion (Nombre, Descripcion, IdTipoCama, Precio)
+            VALUES (@Nombre, @Descripcion, @IdTipoCama, @Precio);
 
-        SET @NuevoIdTipoHabitacion = SCOPE_IDENTITY();
+            SET @NuevoIdTipoHabitacion = SCOPE_IDENTITY();
+
+            INSERT INTO TipoHabitacionEmpresa (IdTipoHabitacion, IdEmpresa)
+            VALUES (@NuevoIdTipoHabitacion, @IdEmpresa);
+        END
     END TRY
     BEGIN CATCH
         -- PRINT 'Error en sp_AgregarTipoHabitacion: ' + ERROR_MESSAGE();
-        SET @NuevoIdTipoHabitacion = -99; 
+        SET @NuevoIdTipoHabitacion = -99;
     END CATCH
 END;
 GO
 
 
+-- CREATE PROCEDURE sp_AgregarTipoHabitacion
+--     @Nombre VARCHAR(40),
+--     @Descripcion VARCHAR(150),
+--     @IdTipoCama SMALLINT,
+--     @Precio FLOAT,
+--     @NuevoIdTipoHabitacion SMALLINT OUTPUT
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+--     BEGIN TRY
+--         INSERT INTO TipoHabitacion (Nombre, Descripcion, IdTipoCama, Precio)
+--         VALUES (@Nombre, @Descripcion, @IdTipoCama, @Precio);
+
+--         SET @NuevoIdTipoHabitacion = SCOPE_IDENTITY();
+--     END TRY
+--     BEGIN CATCH
+--         -- PRINT 'Error en sp_AgregarTipoHabitacion: ' + ERROR_MESSAGE();
+--         SET @NuevoIdTipoHabitacion = -99; 
+--     END CATCH
+-- END;
+-- GO
+
+
 -- Editar ()
 CREATE PROCEDURE sp_ActualizarTipoHabitacion
+    @IdEmpresa VARCHAR(15),
     @IdTipoHabitacion SMALLINT,
     @Nombre VARCHAR(40),
     @Descripcion VARCHAR(150),
@@ -854,22 +895,37 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        -- Validar que el ID de la habitación exista antes de actualizar
-        IF EXISTS (SELECT 1 FROM TipoHabitacion WHERE IdTipoHabitacion = @IdTipoHabitacion)
+        -- Validar que el tipo de habitación pertenezca a la empresa
+        IF EXISTS (
+            SELECT 1 
+            FROM TipoHabitacionEmpresa 
+            WHERE IdTipoHabitacion = @IdTipoHabitacion AND IdEmpresa = @IdEmpresa
+        )
         BEGIN
-            UPDATE TipoHabitacion
-            SET Nombre = @Nombre,
-                Descripcion = @Descripcion,
-                IdTipoCama = @IdTipoCama,
-                Precio = @Precio
-            WHERE IdTipoHabitacion = @IdTipoHabitacion;
+            -- Validar que no exista otro tipo con el mismo nombre para esta empresa
+            IF NOT EXISTS (
+                SELECT 1 
+                FROM TipoHabitacionEmpresa THE
+                JOIN TipoHabitacion TH ON THE.IdTipoHabitacion = TH.IdTipoHabitacion
+                WHERE THE.IdEmpresa = @IdEmpresa 
+                AND TH.Nombre = @Nombre 
+                AND THE.IdTipoHabitacion != @IdTipoHabitacion
+            )
+            BEGIN
+                UPDATE TipoHabitacion
+                SET Nombre = @Nombre,
+                    Descripcion = @Descripcion,
+                    IdTipoCama = @IdTipoCama,
+                    Precio = @Precio
+                WHERE IdTipoHabitacion = @IdTipoHabitacion;
 
-            SET @Resultado = 1;  
+                SET @Resultado = 1;
+            END
+            ELSE
+                SET @Resultado = -2; -- Ya existe otro con ese nombre
         END
         ELSE
-        BEGIN
-            SET @Resultado = -1;  -- Tipo de habitacióo no encontrada
-        END
+            SET @Resultado = -1; -- No pertenece a la empresa
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_ActualizarTipoHabitacion: ' + ERROR_MESSAGE();
@@ -877,6 +933,41 @@ BEGIN
     END CATCH
 END;
 GO
+
+-- CREATE PROCEDURE sp_ActualizarTipoHabitacion
+--     @IdTipoHabitacion SMALLINT,
+--     @Nombre VARCHAR(40),
+--     @Descripcion VARCHAR(150),
+--     @IdTipoCama SMALLINT,
+--     @Precio FLOAT,
+--     @Resultado SMALLINT OUTPUT
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+--     BEGIN TRY
+--         -- Validar que el ID de la habitación exista antes de actualizar
+--         IF EXISTS (SELECT 1 FROM TipoHabitacion WHERE IdTipoHabitacion = @IdTipoHabitacion)
+--         BEGIN
+--             UPDATE TipoHabitacion
+--             SET Nombre = @Nombre,
+--                 Descripcion = @Descripcion,
+--                 IdTipoCama = @IdTipoCama,
+--                 Precio = @Precio
+--             WHERE IdTipoHabitacion = @IdTipoHabitacion;
+
+--             SET @Resultado = 1;  
+--         END
+--         ELSE
+--         BEGIN
+--             SET @Resultado = -1;  -- Tipo de habitacióo no encontrada
+--         END
+--     END TRY
+--     BEGIN CATCH
+--         --PRINT 'Error en sp_ActualizarTipoHabitacion: ' + ERROR_MESSAGE();
+--         SET @Resultado = -99;
+--     END CATCH
+-- END;
+-- GO
 
 
 -- Eliminar: (Aparte de que no este en datoshabitacion, se debe de validar que solo la empresa a la que le pertenece, pueda eliminarla.)
@@ -1203,7 +1294,7 @@ BEGIN
         END
     END TRY
     BEGIN CATCH
-        PRINT 'Error en sp_EliminarHabitacionesEmpresa: ' + ERROR_MESSAGE();
+        -- PRINT 'Error en sp_EliminarHabitacionesEmpresa: ' + ERROR_MESSAGE();
         SET @Resultado = -99;
     END CATCH
 END;
@@ -2495,12 +2586,12 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdEmpresa IS NULL -- Me da ansiedad pero es mas rapido asi.
-            SET @IdEmpresa = -1;
+            SET @IdEmpresa = 'Fallo';
 
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarEmpresaHospedaje: ' + ERROR_MESSAGE();
-        SET @IdEmpresa = -99; 
+        SET @IdEmpresa = 'FalloI'; 
     END CATCH
 END;
 GO
@@ -2520,12 +2611,12 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdCliente IS NULL 
-            SET @IdCliente = -1;
+            SET @IdCliente = 'Fallo';
 
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarCliente: ' + ERROR_MESSAGE();
-        SET @IdCliente = -99;
+        SET @IdCliente = 'FalloI';
     END CATCH
 END;
 GO
@@ -2545,11 +2636,11 @@ BEGIN
         WHERE CorreoElectronico = @Correo AND Contrasena = @Contrasena;
 
         IF @IdEmpresa IS NULL
-            SET @IdEmpresa = -1;
+            SET @IdEmpresa = 'Fallo';
     END TRY
     BEGIN CATCH
         --PRINT 'Error en sp_VerificarEmpresaRecreacion: ' + ERROR_MESSAGE();
-        SET @IdEmpresa = -99; 
+        SET @IdEmpresa = 'FalloI'; 
     END CATCH
 END;
 GO
