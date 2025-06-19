@@ -51,28 +51,28 @@
     @* ========= Para cada seccion se va a tener un div diferentes. ===================  *@
     @* Div para la consulta por reservacion especifica *@
     <div class="reserva-especifca-div hidden" id="ReservaEspecificaDiv">
-        <form >
+        <form id="reservaEspecificaID">
 
             <div class="filtro-id">
                 <label id="labelFiltro">Introduzca el ID de su reservacion</label><br />
-                <input type="text" id="inputFiltro" placeholder="Ej: 12345" required/>
+                <input type="number" id="idReservacionInput" name="IdReservacion" placeholder="Ej: 12345" required/>
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('reservaEspecifica')">Consultar</button>
+            <button class="buscar-btn" type="submit">Consultar</button>
 
         </form>
 
     </div>
 
 
-    @* Div para la consulta de facturas para un tipo de habitacion especifica *@
+    @* Div para la consulta de facturas para un tipo de habitacion especifica. *@
     <div class="reserva-especifca-div hidden" id="TipoHabitacionEspecificaDiv">
-        <form>
+        <form id="tipoHabitacionEspecifica">
 
             <div class="filtro-id">
           
                 @* Esto seria un select para saber que tipo de habitacion soncusltar *@
-                <select id="tipoHabitacionesSelect">
+                <select id="tipoHabitacionesSelect" name="IdTipoHabitacion" required>
                     <option value="0" disabled selected>Seleccione un tipo de habitacion</option>
                     @foreach (var tipoHabitacion in Model.ListaTiposHabitaciones)
                     {
@@ -82,7 +82,7 @@
 
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('tipoHabitacionEspecifica')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -91,14 +91,14 @@
 
     @* Div para la consulta de facturas por el numero de una habitacion *@
     <div class="reserva-especifca-div hidden" id="HabitacionEspecificaDiv">
-        <form>
+        <form id="habitacionEspecificaForm">
 
             <div class="filtro-id">
                 <label id="labelFiltro">Introduzca el ID el numero de habitacion a consultar</label><br />
-                <input type="number" id="habitacionEspecificaInput" placeholder="Ej: 12345" required />
+                <input type="number" id="habitacionEspecificaInput" name="IdHabitacion" placeholder="Ej: 12345" required />
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('habitacionEspecifica')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -107,14 +107,14 @@
 
     @* Div para la consulta de facturas por dia*@
     <div class="reserva-especifca-div hidden" id="DiaEspecificoDiv">
-        <form>
+        <form id="diaEspecificoForm">
 
             <div class="filtro-id">
                 <label id="labelFiltro">Selecciona un dia especifico</label><br />
-                <input type="date" id="diaInput"  required />
+                <input type="date" id="diaInput" name="FechaDia" required />
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('FacturacionDia')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -123,10 +123,10 @@
 
     @* Div para la consulta de facturas por mes especifico *@
     <div class="reserva-especifca-div hidden" id="mesEspecificoDiv">
-        <form>
+        <form id="mesEspecificoForm">
 
             <div class="filtro-id">
-                <select id="mesEspecificoSelect" required>
+                <select id="mesEspecificoSelect" name="Mes" required>
                     <option value="0" disabled selected>Seleccione un mes...</option>
                     <option value="1">Enero </option>
                     <option value="2">Febrero </option>
@@ -144,7 +144,7 @@
             </select>
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('mes')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -153,14 +153,14 @@
 
     @* Div para la consulta de facturas por año especifico *@
     <div class="reserva-especifca-div hidden" id="AnioEspecifivoDiv">
-        <form>
+        <form id="anioEspecificoForm">
 
             <div class="filtro-id">
                 <label id="labelFiltro">Introduzca el año a consultar:</label><br />
-                <input type="number" id="añoEspecificoInput" placeholder="Ej: 2025" required />
+                <input type="number" id="anioEspecificoInput" name="Anio" placeholder="Ej: 2025" required />
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('anio')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -169,14 +169,14 @@
 
     @* Div para la consulta de facturas por rango de fechas especifico *@
     <div class="reserva-especifca-div hidden" id="fechaEspecificaDiv">
-        <form>
+        <form id="fechaEspecificaForm">
 
             <div class="filtro-fechas">
-                <input type="date" id="fechaInicioRango" style="margin-right: 10px;" required/>
-                <input type="date" id="fechaFinRango" required/>
+                <input type="date" id="fechaInicioRango" name="FechaInicioRango" style="margin-right: 10px;" required/>
+                <input type="date" id="fechaFinRango" name="FechaFinRango" required/>
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('rangoFechas')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -185,14 +185,23 @@
 
     @* Div para la consulta de reservas por tipos de habitaciones.*@
     <div class="reserva-especifca-div hidden" id="TiposHabitacionesDiv">
-        <form>
+        <form id="tiposHabitacionesForm">
 
-            <div class="filtro-id">
-                <label id="labelFiltro">Selecciona un dia especifico</label><br />
-                <input type="date" id="diaInput" required />
+
+            <div class="checkbox-grid">
+                @foreach (var tipo in Model.ListaTiposHabitaciones)
+                {
+                    <label class="checkbox-tile">
+                        <input type="checkbox" name="ListaTiposHabitacion" value="@tipo.IdTipoHabitacion" />
+                        <span class="etiqueta">
+                            @tipo.NombreTipoHabitacion<br />
+                            <small>₡@tipo.Precio</small>
+                        </span>
+                    </label>
+                }
             </div>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('FacturacionDia')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 
@@ -201,14 +210,11 @@
 
     @* Div para la consulta de la edad de las personas que han realizado reservas. *@
     <div class="reserva-especifca-div hidden" id="EdadEspecificaDiv">
-        <form>
+        <form id="edadesForm">
 
-            @* <div class="filtro-id">
-                <label id="labelFiltro">Selecciona un dia especifico</label><br />
-                <input type="date" id="diaInput" required />
-            </div> *@
+            <label>Ver el rango de edades de las personas que han realizado reservas... </label>
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('edades')">Consultar</button>
+            <button class="buscar-btn" type="submit">Consultar</button>
 
         </form>
 
@@ -217,31 +223,33 @@
 
     @* Div para la consulta de hoteles con mayor demanda por fecha y ubicacion.*@
     <div class="reserva-especifca-div hidden" id="demandaDiv">
-        <form>
+        <form id="demadaForm">
+
+            <label>Conocer los oteles con mas demanda por fecha y ubicacion:</label>
 
             <div class="filtro-id">
                 <label id="labelFiltro">la fecha a consultar.</label><br />
-                <input type="date" id="fechaDemandaInput" required />
+                <input type="date" id="fechaDemandaInput" name="FechaDemanda" required />
             </div>
 
-            <select id="provinciaHabitacion">
-                <option value="0" disabled selected>Seleccione una provincia</option>
+            <select id="provinciaHabitacion" name="Provincia">
+                <option value="0">Seleccione una provincia</option>
                 @foreach (var provincia in Model.Provincias)
                 {
                     <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
                 }
             </select>
 
-            <select id="cantonHabitacion">
-                <option value="0" disabled selected>Seleccione un canton</option>
+            <select id="cantonHabitacion" name="Canton">
+                <option value="0">Seleccione un canton</option>
             </select>
 
-            <select id="distritoHabitacion">
-                <option value="0" disabled selected>Seleccione un distrito</option>
+            <select id="distritoHabitacion" name="Distrito">
+                <option value="0">Seleccione un distrito</option>
             </select>
 
 
-            <button class="buscar-btn" type="submit" onclick="procesarReportes('demanda')">Consultar</button>
+            <button class="buscar-btn" type="submit" >Consultar</button>
 
         </form>
 

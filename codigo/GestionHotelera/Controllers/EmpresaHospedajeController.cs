@@ -1,5 +1,6 @@
 ﻿using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
+using GestionHotelera.Models.FacturasYReservasModel.ConsultaReportesModels;
 using GestionHotelera.Models.RegistrarModels;
 using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
@@ -156,13 +157,18 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
+
+        // Para lanzar la ventana de reportes.
         public IActionResult VerFacturaciones()
         {
+
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
 
             ReportesViewModel reportes = new ReportesViewModel()
             {
 
-                //ListaTiposHabitaciones = _dataBaseServices.Obtene
+                ListaTiposHabitaciones = _dataBaseServices.ObtenerTiposHabitacionesPorEmpresaBD(idEmpresaHospedaje),
                 Provincias = _dataBaseServices.ObtenerProvincias()
 
             };
@@ -170,6 +176,83 @@ namespace GestionHotelera.Controllers
 
             return View(reportes);
         }
+
+
+        // Para los que seria reaccionar a cada una de las consultas de los reportes.
+
+
+
+        [HttpPost]
+        public JsonResult ReporteReservaEspecifica(ReporteReservaEspecificaModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+        [HttpPost]
+        public JsonResult ReporteTipoHabitacionEspecifico(ConsultaReporteTipoHabitacionEspecificoModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+        [HttpPost]
+        public JsonResult ReporteHabitacionEspecifica(ReporteHabitacionModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+
+        [HttpPost]
+        public JsonResult ReporteDiaEspecifico(ConsultaReporteDiaEspecificoModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+        [HttpPost]
+        public JsonResult ReporteMesEspecifico(ConsultaReporteMesModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+        [HttpPost]
+        public JsonResult ReporteAnioEspecifico(ConsultaReporteAnioModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+        [HttpPost]
+        public JsonResult ReporteRangoDeFechas(ConsultaRangoDeFechasModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+        [HttpPost]
+        public JsonResult ReporteTiposDeHabitaciones(ReporteHabitacionModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+        [HttpGet]
+        public JsonResult ReporteRangoDeEdades()
+        {
+            return Json(new { Estado = 1 });
+        }
+
+        [HttpPost]
+        public JsonResult ReporteHotelesConMayorDemanda(ConsultaReporteDemandaHotelesModel dataRquest)
+        {
+            return Json(new { Estado = 1 });
+        }
+
+
+
+
+
+
 
         public IActionResult VerReservasPendientes()
         {
@@ -181,7 +264,7 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
-        // 🔽 NUEVAS ACCIONES
+        // NUEVAS ACCIONES
         public IActionResult VerHabitacion()
         {
             return View();

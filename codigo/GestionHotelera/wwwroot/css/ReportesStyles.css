@@ -98,3 +98,38 @@ h2 {
 .hidden {
     display: none;
 }
+
+
+/* Para la parte de los checkbox para la secleccion de tipo de habitaciones para la consulta. */
+.checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox-tile {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #f4f4f4;
+    cursor: pointer;
+    width: 220px;
+    transition: background-color 0.2s ease;
+}
+
+.checkbox-tile:hover {
+    background-color: #e8f0fe;
+}
+
+.checkbox-tile input[type="checkbox"] {
+    margin-top: 5px;
+}
+
+.etiqueta {
+    display: block;
+    font-weight: bold;
+}
