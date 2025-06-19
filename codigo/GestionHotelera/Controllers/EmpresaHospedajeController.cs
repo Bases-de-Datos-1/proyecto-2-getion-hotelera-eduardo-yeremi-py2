@@ -2,6 +2,7 @@
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.FacturasYReservasModel;
 using GestionHotelera.Models.FacturasYReservasModel.ConsultaReportesModels;
+using GestionHotelera.Models.FacturasYReservasModel.ReservarHabitacionesModels;
 using GestionHotelera.Models.FacturasYReservasModel.RespuestaReportesModels;
 using GestionHotelera.Models.RegistrarModels;
 using GestionHotelera.Models.VistasModel;
@@ -335,15 +336,60 @@ namespace GestionHotelera.Controllers
 
 
 
-
+        // Para desplegar la ventana de ver reservas pendientes por aceptar.
         public IActionResult VerReservasPendientes()
         {
-            return View();
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            string idEmpresa = HttpContext.Session.GetString("UsuarioID");
+            VerReservasPendientesModel reservasPendientes = new VerReservasPendientesModel
+            {
+                ListaReservacionesTemporales = _reservacionesServices.ObtenerRservacionesTemporalesBD(idEmpresa)
+            };
+
+            return View(reservasPendientes);
         }
+
+
+        // Funcion para la aceptacion de una solicitud de reservacion.
+        [HttpPost]
+        public JsonResult AceptarReservacion([FromBody] ProcesamientoSolicitudesReservacionModel dataRequest)
+        {
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            int resultado = _reservacionesServices.ProcesarRegistroRecervacion(dataRequest.IdReservaTemporalM);
+
+            return Json(new { Estado = resultado });
+
+        }
+
+
+        [HttpPost]
+        public JsonResult RechazoReservacion([FromBody] ProcesamientoSolicitudesReservacionModel dataRequest)
+        {
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            int resultado = _reservacionesServices.EliminarReservaTemporalPorIdBD(dataRequest.IdReservaTemporalM);
+
+            return Json(new { Estado = resultado });
+
+        }
+
+
+
 
         public IActionResult VerReservasActivas()
         {
-            return View();
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            string idEmpresa = HttpContext.Session.GetString("UsuarioID");
+
+            VerReservasActivasViewModel reservasPendientes = new VerReservasActivasViewModel
+            {
+                ListaReservaciones = _reservacionesServices.ObtenerReservasActivasEmpresaBD(idEmpresa)
+            };
+
+            return View(reservasPendientes);
         }
 
 
@@ -359,6 +405,24 @@ namespace GestionHotelera.Controllers
             };
 
             return View(datos);
+        }
+
+        [HttpPost]
+        public JsonResult RegistrarReservacionTemporal(ReservarHabitacionModel dataRequest)
+        {
+
+            //bool tieneVehiculo = !string.IsNullOrEmpty(dataRequest.PoseeVehiculo);
+            //if (!tieneVehiculo) {
+            //    dataRequest.PoseeVehiculo = "No";
+            //}
+
+            string idCliente = "703200140";//HttpContext.Session.GetString("UsuarioID");
+
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            int resultado = _reservacionesServices.RegistrarReservacionTemporarBD(dataRequest, idCliente);
+
+            return Json(new { Estado = resultado });
         }
 
 

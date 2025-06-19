@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@model GestionHotelera.Models.VistasModel.VerReservasPendientesModel;
+
 <div style="padding: 30px;">
     <a href="/EmpresaHospedaje/Menu" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Atrás</a>
 
@@ -12,16 +14,35 @@
         <thead style="background-color: #f4f4f4;">
             <tr>
                 <th style="padding: 10px;">Cliente</th>
-                <th style="padding: 10px;">Habitación</th>
+                <th style="padding: 10px;">Habitacion</th>
                 <th style="padding: 10px;">Fecha</th>
                 <th style="padding: 10px;">Acciones</th>
             </tr>
         </thead>
         <tbody id="tabla-pendientes">
-            <tr>
-                <td>Juan Pérez</td>
-                <td>Suite Familiar</td>
-                <td>20/06/2025</td>
+
+            @foreach (var reserva in Model.ListaReservacionesTemporales)
+            {
+                <tr>
+                    <td>@reserva.Cliente</td>
+                    <td>Habitación @reserva.NumeroHabitacion</td>
+                    <td>
+                        Entrada: @reserva.FechaHoraIngreso.ToString("dd/MM/yyyy HH:mm") <br />
+                        Salida: @reserva.FechaHoraSalida.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+                    <td>
+                        <button onclick="resolverReserva(@reserva.IdReservacionTemporal, 'aceptada')" style="background-color: #28a745; color: white; border: none; padding: 8px; border-radius: 4px;">Aceptar
+                        </button>
+                        <button onclick="resolverReserva(@reserva.IdReservacionTemporal, 'rechazada')" style="background-color: #dc3545; color: white; border: none; padding: 8px; border-radius: 4px;">Rechazar
+                        </button>
+                    </td>
+                </tr>
+            }
+
+            @* <tr>
+                <td>Cliente: </td>
+                <td>Numero de habitacion:   -- Nombre de la habitacion: </td>
+                <td>Fecha de entrada:   -----  Fecha de salida:   </td>
                 <td>
                     <button onclick="resolverReserva(this, 'aceptada')" style="background-color: #28a745; color: white; border: none; padding: 8px; border-radius: 4px;">Aceptar</button>
                     <button onclick="resolverReserva(this, 'rechazada')" style="background-color: #dc3545; color: white; border: none; padding: 8px; border-radius: 4px;">Rechazar</button>
@@ -35,12 +56,14 @@
                     <button onclick="resolverReserva(this, 'aceptada')" style="background-color: #28a745; color: white; border: none; padding: 8px; border-radius: 4px;">Aceptar</button>
                     <button onclick="resolverReserva(this, 'rechazada')" style="background-color: #dc3545; color: white; border: none; padding: 8px; border-radius: 4px;">Rechazar</button>
                 </td>
-            </tr>
+            </tr> *@
         </tbody>
     </table>
 </div>
 
-<script>
+<script src="~/js/VerReservacionesPendientesScript.js"></script>
+
+@* <script>
     function resolverReserva(button, estado) {
         const fila = button.closest("tr");
         const mensaje = document.createElement("tr");
@@ -54,4 +77,4 @@
         fila.parentNode.insertBefore(mensaje, fila.nextSibling);
         fila.remove();
     }
-</script>
+</script> *@

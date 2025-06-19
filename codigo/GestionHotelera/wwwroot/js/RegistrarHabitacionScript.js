@@ -65,8 +65,8 @@ async function enviarDatosRegistroHabitacion() {
 
             const resultado = await response.json();
             console.log("Datos del regitro de la habitacion: ", resultado);
-
-            if (resultado.estado[0] === 1) {
+            let res = resultado.estado;
+            if (res[0] === 1) {
                 alert("Tipo de habitacion registrada exitodamente.");
                 location.replace("/EmpresaHospedaje/Menu");
 

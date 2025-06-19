@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+
 using System.Data;
 using System.Data.SqlTypes;
+using Microsoft.Data.SqlClient;
+using Microsoft.SqlServer.Types;
+
 using System.Diagnostics;
 using System.Globalization;
 using GestionHotelera.Models;
@@ -12,10 +16,12 @@ using GestionHotelera.Models.EmpresaRecreacionModels;
 using GestionHotelera.Models.EmpresaRecreacionModels.ServiciosModels;
 using GestionHotelera.Models.RegistrarModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
-using Microsoft.SqlServer.Types;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
+
+//using Microsoft.Data.SqlClient.SqlConnection;
+//using Microsoft.Data.SqlClient.SqlCommand;
+//using Microsoft.Data.SqlClient.SqlDataAdapter;
+
 namespace GestionHotelera.Services
 {
     
@@ -88,7 +94,7 @@ namespace GestionHotelera.Services
                     catch (Exception ex)
                     {
                         // Devolvemos -99 para indicar errores inesperados.
-                        Console.WriteLine($"Error ejecutando procedimiento: {ex.Message}");
+                        Console.WriteLine($"Error ejecutando procedimiento UID: {ex.Message}");
                         return -99;
                     }
                 }
@@ -303,7 +309,7 @@ namespace GestionHotelera.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error obteniendo distritos: {ex.Message}");
+                Console.WriteLine($"Error obteniendo distritos: {ex.Message}");
             }
             return distritos;
         }

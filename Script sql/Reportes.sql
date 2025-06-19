@@ -380,3 +380,31 @@ BEGIN
     WHERE IdEmpresaHospedaje = @IdEmpresa;
 END;
 GO
+
+-- Obtener una reservacion temporal especifica.
+CREATE PROCEDURE sp_ObtenerReservaTemporalePorID
+    @IdReservacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ReservasTemporales
+    WHERE IdReservacionTemporal = @IdReservacion;
+END;
+GO
+
+
+-- Obtener las reservas con estado Activo que tenga una empresa de hospedaje.
+CREATE PROCEDURE sp_ObtenerReservasActivasEmpresa
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Reservaciones
+    WHERE IdEmpresaHospedaje = @IdEmpresa
+    AND Estado = 'Activo';
+END;
+GO

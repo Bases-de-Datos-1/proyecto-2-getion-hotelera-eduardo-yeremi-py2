@@ -274,8 +274,8 @@ CREATE TABLE Reservacion (
     IdHabitacion SMALLINT NOT NULL,
     FechaHoraIngreso DATETIME CHECK (FechaHoraIngreso >= GETDATE()) NOT NULL,
     FechaHoraSalida DATETIME NOT NULL,
-    CantidadPersonas TINYINT CHECK (CantidadPersonas > 0) NOT NULL,
-    Vehiculo VARCHAR(2) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
+    CantidadPersonas SMALLINT CHECK (CantidadPersonas > 0) NOT NULL,
+    Vehiculo VARCHAR(3) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
 
     -- Agregar el estado de la reserva.
     Estado Varchar(20) NOT NULL CHECK (Estado IN ('Activo', 'Cerrado')),
@@ -303,8 +303,8 @@ CREATE TABLE ReservasTemporales (
     IdHabitacion SMALLINT NOT NULL,
     FechaHoraIngreso DATETIME CHECK (FechaHoraIngreso >= GETDATE()) NOT NULL,
     FechaHoraSalida DATETIME NOT NULL,
-    CantidadPersonas TINYINT CHECK (CantidadPersonas > 0) NOT NULL,
-    Vehiculo VARCHAR(2) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
+    CantidadPersonas SMALLINT CHECK (CantidadPersonas > 0) NOT NULL,
+    Vehiculo VARCHAR(3) NOT NULL CHECK (Vehiculo IN ('Si', 'No')),
 
     -- Agregar el estado de la reserva.
     --Estado Varchar(20) NOT NULL CHECK (Estado IN ('Activo', 'Cerrado')),

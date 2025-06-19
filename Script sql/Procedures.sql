@@ -1823,8 +1823,9 @@ CREATE PROCEDURE sp_AgregarReservacion
     @IdHabitacion SMALLINT,
     @FechaHoraIngreso DATETIME,
     @FechaHoraSalida DATETIME,
-    @CantidadPersonas TINYINT,
+    @CantidadPersonas SMALLINT,
     @Vehiculo VARCHAR(2),
+	@Estado VARCHAR(20),
     @NuevoIdReservacion SMALLINT OUTPUT
 AS
 BEGIN
@@ -1837,6 +1838,7 @@ BEGIN
             IF NOT EXISTS (
                 SELECT 1 FROM Reservacion
                 WHERE IdHabitacion = @IdHabitacion
+				AND Estado = 'Activo'
                 AND (
                     (@FechaHoraIngreso BETWEEN FechaHoraIngreso AND FechaHoraSalida) OR
                     (@FechaHoraSalida BETWEEN FechaHoraIngreso AND FechaHoraSalida) OR
@@ -1845,8 +1847,8 @@ BEGIN
                 )
             )
             BEGIN
-                INSERT INTO Reservacion (IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo)
-                VALUES (@IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo);
+                INSERT INTO Reservacion (IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo, Estado)
+                VALUES (@IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo, @Estado);
 
                 SET @NuevoIdReservacion = SCOPE_IDENTITY();
             END
@@ -1891,6 +1893,7 @@ BEGIN
                 IF NOT EXISTS (
                     SELECT 1 FROM Reservacion
                     WHERE IdHabitacion = @IdHabitacion
+					AND Estado = 'Activo'
                     AND IdReservacion <> @IdReservacion
                     AND (
                         (@FechaHoraIngreso BETWEEN FechaHoraIngreso AND FechaHoraSalida) OR
@@ -2097,24 +2100,70 @@ CREATE PROCEDURE sp_InsertarReservaTemporal
     @IdHabitacion SMALLINT,
     @FechaHoraIngreso DATETIME,
     @FechaHoraSalida DATETIME,
-    @CantidadPersonas TINYINT,
+    @CantidadPersonas SMALLINT,
     @Vehiculo VARCHAR(2),
     @Resultado SMALLINT OUTPUT
 AS
 BEGIN
     SET NOCOUNT ON;
-    BEGIN TRY
-        INSERT INTO ReservasTemporales (IdEmpresa, IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo)
-        VALUES (@IdEmpresa, @IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo);
 
-        SET @Resultado = 1; 
+    BEGIN TRY
+        -- Revisar que no haya una reservacion en ese rango de fechas.
+        IF NOT EXISTS (
+            SELECT 1
+            FROM Reservacion
+            WHERE IdHabitacion = @IdHabitacion
+              AND Estado = 'Activo'
+              AND ((@FechaHoraIngreso BETWEEN FechaHoraIngreso AND FechaHoraSalida)
+                    OR (@FechaHoraSalida BETWEEN FechaHoraIngreso AND FechaHoraSalida)
+                    OR (FechaHoraIngreso BETWEEN @FechaHoraIngreso AND @FechaHoraSalida)
+                    OR (FechaHoraSalida BETWEEN @FechaHoraIngreso AND @FechaHoraSalida))
+		)
+        BEGIN
+            INSERT INTO ReservasTemporales ( IdEmpresa, IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo)
+            VALUES ( @IdEmpresa, @IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo);
+
+            SET @Resultado = 1;
+        END
+        ELSE
+        BEGIN
+            SET @Resultado = -2; -- Hay una reserva activa
+        END
     END TRY
     BEGIN CATCH
-        -- PRINT 'Error en sp_InsertarReservaTemporal: ' + ERROR_MESSAGE();
+        --PRINT 'Error en sp_InsertarReservaTemporal: ' + ERROR_MESSAGE();
         SET @Resultado = -99;
     END CATCH
 END;
 GO
+
+
+
+
+-- CREATE PROCEDURE sp_InsertarReservaTemporal
+--     @IdEmpresa VARCHAR(15),
+--     @IdCliente VARCHAR(15),
+--     @IdHabitacion SMALLINT,
+--     @FechaHoraIngreso DATETIME,
+--     @FechaHoraSalida DATETIME,
+--     @CantidadPersonas SMALLINT,
+--     @Vehiculo VARCHAR(2),
+--     @Resultado SMALLINT OUTPUT
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+--     BEGIN TRY
+--         INSERT INTO ReservasTemporales (IdEmpresa, IdCliente, IdHabitacion, FechaHoraIngreso, FechaHoraSalida, CantidadPersonas, Vehiculo)
+--         VALUES (@IdEmpresa, @IdCliente, @IdHabitacion, @FechaHoraIngreso, @FechaHoraSalida, @CantidadPersonas, @Vehiculo);
+
+--         SET @Resultado = 1; 
+--     END TRY
+--     BEGIN CATCH
+--         --PRINT 'Error en sp_InsertarReservaTemporal: ' + ERROR_MESSAGE();
+--         SET @Resultado = -99;
+--     END CATCH
+-- END;
+-- GO
 
 -- Eliminar:
 CREATE PROCEDURE sp_EliminarReservaTemporal
