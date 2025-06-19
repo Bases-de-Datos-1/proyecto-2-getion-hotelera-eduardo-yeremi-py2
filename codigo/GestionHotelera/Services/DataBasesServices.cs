@@ -1331,6 +1331,35 @@ namespace GestionHotelera.Services
             return lista;
         }
 
+        // Obtener la ubicacion GPS especifica de una empresa de hospedaje.
+        public UbicacionGPSModel ObtenerReferenciaGPSEmpresaHospedajeBD(string idEmpresa)
+        {
+
+            var parametros = new SqlParameter[]
+            {
+                new("@IdEmpresa", idEmpresa)
+            };
+
+            DataTable datos = EjecutarProcedimientoConParametros("sp_ObtenerUbicacionGPSEmpresa", parametros);
+            if (datos == null || datos.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = datos.Rows[0];
+
+            UbicacionGPSModel ubicacionEmpresa = new UbicacionGPSModel();
+            var geo = fila["ReferenciaGPS"] as SqlGeography;
+            if (geo != null && !geo.IsNull)
+            {
+                ubicacionEmpresa.Latitud = geo.Lat.Value;
+                ubicacionEmpresa.Longitud = geo.Long.Value;
+            }
+            return ubicacionEmpresa;
+
+
+        }
+
 
         // >>> ===== Funciones para optener los datos de las hbitaciones de una empresa. ===== <<<
         // Optener todas las habitaciones que tiene una empresa de hospedaje.
@@ -1381,6 +1410,8 @@ namespace GestionHotelera.Services
                             Distrito = fila["Distrito"].ToString(),
                             Barrio = fila["Barrio"].ToString(),
                         };
+
+                        tipo.ListaFotosHabitacion = ObtenerFotosTipoHabitacionBD(tipo.IdTipoHabitacion);
 
                         tiposHabitaciones.Add(tipo);
                     }
@@ -1436,9 +1467,12 @@ namespace GestionHotelera.Services
                     Canton = fila["Canton"].ToString(),
                     IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
                     Distrito = fila["Distrito"].ToString(),
-                    Barrio = fila["Barrio"].ToString(),
+                    Barrio = fila["Barrio"].ToString()
+                   
+                     
                 };
-
+            datosHabitacion.DatosTipoHabitacion = ObtenerTipoHabitacionEspecificaBD(datosHabitacion.IdTipoHabitacion);
+            datosHabitacion.DatosUbicacionGPS = ObtenerReferenciaGPSEmpresaHospedajeBD(datosHabitacion.CedulaJuridica);
             return datosHabitacion;
         }
 
@@ -1521,6 +1555,7 @@ namespace GestionHotelera.Services
                             NombreCama = row["NombreCama"].ToString(),
                             Precio = Convert.ToDouble(row["Precio"])
                         };
+                        tipo.Imagenes = ObtenerFotosTipoHabitacionBD(tipo.IdTipoHabitacion);
 
                         tiposHabitaciones.Add(tipo);
                     }
@@ -1534,7 +1569,7 @@ namespace GestionHotelera.Services
         }
 
 
-        // Obtener tipo de habitacion pro ID.
+        // Obtener tipo de habitacion por ID.
         public TiposHabitacionesModel ObtenerTipoHabitacionEspecificaBD(int IdTipoHabitacion)
         {
             SqlParameter[] parametros = {
@@ -1557,12 +1592,16 @@ namespace GestionHotelera.Services
                 Descripcion = row["Descripcion"].ToString(),
                 IdTipoCama = Convert.ToInt32(row["IdTipoCama"]),
                 NombreCama = row["NombreCama"].ToString(),
-                Precio = Convert.ToDouble(row["Precio"])
+                Precio = Convert.ToDouble(row["Precio"]),
+                Imagenes = ObtenerFotosTipoHabitacionBD(IdTipoHabitacion),
+                Comodidades = ObtenerComodidadesPorTipoHabitacionBD(IdTipoHabitacion)
             };
 
             return datosHabitacion;
         }
 
+
+        // Obtener los datos de un tipo de habitacion especifico con detalles, es decir, con fotos y lista de comodidades.
 
 
 

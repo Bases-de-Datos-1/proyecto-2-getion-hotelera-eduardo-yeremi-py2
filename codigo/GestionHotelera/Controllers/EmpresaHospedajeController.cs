@@ -171,7 +171,8 @@ namespace GestionHotelera.Controllers
             {
 
                 ListaTiposHabitaciones = _dataBaseServices.ObtenerTiposHabitacionesPorEmpresaBD(idEmpresaHospedaje),
-                Provincias = _dataBaseServices.ObtenerProvincias()
+                Provincias = _dataBaseServices.ObtenerProvincias()              
+           
 
             };
 
@@ -324,13 +325,17 @@ namespace GestionHotelera.Controllers
             return View();
         }
 
-        // NUEVAS ACCIONES
-        public IActionResult VerHabitacion()
+
+        // Metodos para lanzar la ventana que muestra los datos de una habitacion especifica.
+        public IActionResult VerHabitacion(int idDatosHabitacion)
         {
+
             return View();
         }
 
-        public IActionResult VerTipoHabitacion()
+
+        // Metodo para lanzar la ventana que muestra un tipo de habitacion especifica.
+        public IActionResult VerTipoHabitacion(int tipoHabitacion)
         {
             return View();
         }

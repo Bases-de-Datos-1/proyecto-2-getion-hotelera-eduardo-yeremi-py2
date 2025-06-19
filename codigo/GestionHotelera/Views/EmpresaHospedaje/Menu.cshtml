@@ -6,6 +6,9 @@
 @model GestionHotelera.Models.VistasModel.EmpresaHospedaje1ViewModel;
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+<link href="~/css/MenuEmpresaHospedajeStyles.css" rel="stylesheet" />
+
+
 <div style="background-color: white; font-family: 'Segoe UI', sans-serif; padding: 20px; max-width: 1200px; margin: auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
 
     <!-- Botón de retroceso -->
@@ -111,9 +114,10 @@
         </div>
     </section>
 
+    @*Renderizar los datos de las habitaciones.*@
     <section style="margin-bottom: 30px;">
         <h3 style="color: #2c3e50;">Habitaciones</h3>
-        <div style="display: flex; gap: 15px;">
+        @* <div style="display: flex; gap: 15px;">
             <div>
                 <img src="https://source.unsplash.com/200x140/?resort" style="border-radius: 5px;">
                 <p style="text-align: center;">
@@ -127,25 +131,58 @@
             <div>
                 <img src="https://source.unsplash.com/200x140/?bedroom" style="border-radius: 5px;">
                 <p style="text-align: center;">Habitación Estándar</p>
-            </div>
+            </div> 
+        </div>
+
+
+        @foreach (var habitaciones in Model.ListaHabitaciones)
+        {
+
+
+        } *@
+        <div class="habitaciones-grid">
+            @foreach (var habitacion in Model.ListaHabitaciones)
+            {
+                var imagenBase64 = habitacion.ListaFotosHabitacion?.FirstOrDefault()?.Imagen != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(habitacion.ListaFotosHabitacion.First().Imagen)}"
+                : "https://via.placeholder.com/220x140?text=Sin+foto"; // Imagen por defecto
+
+                <div class="habitacion-card" onclick="location.href='@Url.Action("VerHabitacion", "EmpresaHospedaje", new { idDatosHabitacion = habitacion.IdDatosHabitacion })'">
+                    <img src="@imagenBase64" alt="Imagen habitación" />
+                    <div class="habitacion-info">
+                        <p class="habitacion-numero">Habitación #@habitacion.NumeroHabitacion</p>
+                        <p class="habitacion-tipo">@habitacion.TipoHabitacionNombre</p>
+                        <p class="habitacion-precio">₡@habitacion.Precio.ToString("N2")</p>
+                    </div>
+                </div>
+            }
+        </div>
+
+
+    </section>
+
+    @*Renderizar datos de los tipos de habitaciones de las empresas.*@
+    <section style="margin-bottom: 30px;">
+        <h3 style="color: #2c3e50;">Tipos de habitaciones</h3>
+
+        <div class="habitaciones-grid">
+            @foreach (var tipo in Model.ListaTipoHabitaciones)
+            {
+                var imagenBase64 = tipo.Imagenes?.FirstOrDefault()?.Imagen != null
+                ? $"data:image/jpeg;base64,{Convert.ToBase64String(tipo.Imagenes.First().Imagen)}"
+                : "https://via.placeholder.com/220x140?text=Sin+imagen";
+
+                <div class="habitacion-card" onclick="location.href='@Url.Action("VerTipoHabitacion", "EmpresaHospedaje", new { tipoHabitacion = tipo.IdTipoHabitacion })'">
+                    <img src="@imagenBase64" alt="Imagen tipo habitación" />
+                    <div class="habitacion-info">
+                        <p class="habitacion-tipo">@tipo.NombreTipoHabitacion</p>
+                        <p class="habitacion-precio">₡@tipo.Precio.ToString("N2")</p>
+                    </div>
+                </div>
+            }
         </div>
     </section>
 
-    <section>
-        <h3 style="color: #2c3e50;">Tipos de habitaciones</h3>
-        <div style="display: flex; gap: 15px;">
-            <div>
-                <img src="https://source.unsplash.com/200x140/?suite" style="border-radius: 5px;">
-                <p style="text-align: center;">
-                    <a href="/EmpresaHospedaje/VerTipoHabitacion" style="text-decoration:none; color:#2c3e50;">Suite Familiar</a>
-                </p>
-            </div>
-            <div>
-                <img src="https://source.unsplash.com/200x140/?room" style="border-radius: 5px;">
-                <p style="text-align: center;">Habitación Doble</p>
-            </div>
-        </div>
-	</section>
 </div>
 
 

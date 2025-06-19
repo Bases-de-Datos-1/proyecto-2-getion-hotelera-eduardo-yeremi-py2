@@ -36,7 +36,11 @@
 
         public string Barrio { get; set; }
 
+        public TiposHabitacionesModel DatosTipoHabitacion = new TiposHabitacionesModel();
 
+        public UbicacionGPSModel DatosUbicacionGPS = new UbicacionGPSModel();
+
+        public List<FotosTipoHabitacionModel> ListaFotosHabitacion { get; set; } = new List<FotosTipoHabitacionModel>();
 
     }
 }

@@ -323,6 +323,19 @@ END;
 GO
 
 
+-- Optener la ubicacion GPS de una empresa de hospedaje.
+CREATE PROCEDURE sp_ObtenerUbicacionGPSEmpresa
+    @IdEmpresa VARCHAR(15)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT ubic
+    FROM view_EmpresasHospedaje
+    WHERE CedulaJuridica = @IdEmpresa;
+END;
+GO
+
 
 
 -- Optener los tipos de habitacion por empresa.
