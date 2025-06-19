@@ -187,7 +187,7 @@ GO
 -- Optener las facturas por mes.
 CREATE PROCEDURE sp_ConsultarFacturasPorMes
     @IdEmpresa VARCHAR(15),
-    @Mes TINYINT
+    @Mes SMALLINT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -312,7 +312,10 @@ BEGIN
         R.TipoHabitacion,
         R.PrecioPorNoche,
         R.IdEmpresaHospedaje,
-        R.NombreEmpresa
+        R.NombreEmpresa,
+		R.Estado,
+		R.EstadiaTotal,
+		R.NumeroHabitacion
       
     FROM view_Reservaciones R
     WHERE R.IdTipoHabitacion IN (SELECT value FROM STRING_SPLIT(@ListaTiposHabitacion, ','))
