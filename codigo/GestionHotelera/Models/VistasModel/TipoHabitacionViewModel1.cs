@@ -5,7 +5,7 @@ namespace GestionHotelera.Models.VistasModel
     public class TipoHabitacionViewModel1
     {
 
-        TiposHabitacionesModel DatosTipoHabitacion = new TiposHabitacionesModel();
+        public TiposHabitacionesModel DatosTipoHabitacion = new TiposHabitacionesModel();
 
     }
 }

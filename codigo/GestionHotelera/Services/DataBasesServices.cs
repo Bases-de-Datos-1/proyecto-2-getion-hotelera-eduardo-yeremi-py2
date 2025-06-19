@@ -1447,18 +1447,19 @@ namespace GestionHotelera.Services
 
                     NumeroHabitacion = Convert.ToInt32(fila["NumeroHabitacion"]),
 
-                    TipoHabitacionNombre = fila["TipoHabitacionNombre"].ToString(),
+                    TipoHabitacionNombre = fila["TipoHabitacion"].ToString(),
 
+                    Descripcion = fila["Descripcion"].ToString(),
 
                     IdTipoCama = Convert.ToInt32(fila["IdTipoCama"]),
 
-                    NombreCama = fila["NombreCama"].ToString(),
+                    NombreCama = fila["TipoCama"].ToString(),
 
                     Precio = Convert.ToDouble(fila["Precio"]),
 
-                    CedulaJuridica = fila["CedulaJuridica"].ToString(),
+                    CedulaJuridica = fila["IdEmpresaHospedaje"].ToString(),
 
-                    NombreHotel = fila["NombreHotel"].ToString(),
+                    NombreHotel = fila["EmpresaHospedaje"].ToString(),
 
 
                     IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
@@ -1467,12 +1468,15 @@ namespace GestionHotelera.Services
                     Canton = fila["Canton"].ToString(),
                     IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
                     Distrito = fila["Distrito"].ToString(),
-                    Barrio = fila["Barrio"].ToString()
-                   
-                     
-                };
-            datosHabitacion.DatosTipoHabitacion = ObtenerTipoHabitacionEspecificaBD(datosHabitacion.IdTipoHabitacion);
+                    Barrio = fila["Barrio"].ToString(),
+                    DireccionExacta = fila["SenasExactas"].ToString()
+
+
+            };
+            //datosHabitacion.DatosTipoHabitacion = ObtenerTipoHabitacionEspecificaBD(datosHabitacion.IdTipoHabitacion);
             datosHabitacion.DatosUbicacionGPS = ObtenerReferenciaGPSEmpresaHospedajeBD(datosHabitacion.CedulaJuridica);
+            datosHabitacion.ListaDeComodidades = ObtenerComodidadesPorTipoHabitacionBD(datosHabitacion.IdTipoHabitacion);
+            datosHabitacion.ListaFotosHabitacion = ObtenerFotosTipoHabitacionBD(datosHabitacion.IdTipoHabitacion);
             return datosHabitacion;
         }
 

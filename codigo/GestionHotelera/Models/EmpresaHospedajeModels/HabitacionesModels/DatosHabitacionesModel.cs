@@ -10,6 +10,8 @@
 
         public string TipoHabitacionNombre { get; set; } //TipoHabitacion
 
+        public string Descripcion { get; set; }
+
         public double Precio { get; set; }
 
         public int IdTipoCama { get; set; }
@@ -36,11 +38,17 @@
 
         public string Barrio { get; set; }
 
+        public string DireccionExacta { get; set; }
+
+
         public TiposHabitacionesModel DatosTipoHabitacion = new TiposHabitacionesModel();
 
         public UbicacionGPSModel DatosUbicacionGPS = new UbicacionGPSModel();
 
         public List<FotosTipoHabitacionModel> ListaFotosHabitacion { get; set; } = new List<FotosTipoHabitacionModel>();
+
+        public List<ComodidadesHabitacionModel> ListaDeComodidades { get; set; } = new List<ComodidadesHabitacionModel>();
+
 
     }
 }

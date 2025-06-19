@@ -29,7 +29,7 @@ namespace GestionHotelera.Controllers
 
 
         // Vista principal del panel
-        public IActionResult Menu()
+        public IActionResult Menu(string idEmpresa)
         {
 
             string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
@@ -37,10 +37,10 @@ namespace GestionHotelera.Controllers
             string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
 
 
-            if (string.IsNullOrEmpty(estadoSesion) || tipoUsuario == "Cliente")
+            if (string.IsNullOrEmpty(estadoSesion) || tipoUsuario == "Cliente" || idEmpresa != "no" )
             {
                 // En este se supone que estaria guardada la informacion se la empresa que slecciono el usuario para ver.
-                string idEmpresa = HttpContext.Session.GetString("EmpresaSelect");
+                //string idEmpresa = HttpContext.Session.GetString("EmpresaSelect");
 
                 // Consultar los datos con el modo 0
                 EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa,0);
@@ -81,6 +81,27 @@ namespace GestionHotelera.Controllers
 
             return View(datosGeneralesEmpresa);
         }
+
+        //[HttpGet]
+        //public IActionResult Menu(string idEmpresa)
+        //{
+
+        //    EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa, 0);
+
+
+        //    List<DatosHabitacionesModel> habitacionesCliente = _dataBaseServices.ObtenerHabitacionesPorEmpresaBD(idEmpresa);
+
+
+        //    var datosGenerales = new EmpresaHospedaje1ViewModel
+        //    {
+        //        DatosEmpresa = datos,
+
+        //        ListaHabitaciones = habitacionesCliente
+        //    };
+
+        //    return View(datosGenerales);
+        //}
+
 
         public IActionResult AñadirHabitacion()
         {
@@ -330,15 +351,29 @@ namespace GestionHotelera.Controllers
         public IActionResult VerHabitacion(int idDatosHabitacion)
         {
 
-            return View();
+            HabitacionViewModel1 datos = new HabitacionViewModel1{
+
+                DatosHabitacion = _dataBaseServices.ObtenerHabitacionEspecificaBD(idDatosHabitacion)
+
+
+            };
+
+            return View(datos);
         }
 
 
         // Metodo para lanzar la ventana que muestra un tipo de habitacion especifica.
         public IActionResult VerTipoHabitacion(int tipoHabitacion)
         {
-            return View();
+
+            TipoHabitacionViewModel1 datos = new TipoHabitacionViewModel1{
+
+                DatosTipoHabitacion = _dataBaseServices.ObtenerTipoHabitacionEspecificaBD(tipoHabitacion)
+            };
+
+            return View(datos);
         }
+
         public IActionResult EditarHabitacion()
         {
             return View();

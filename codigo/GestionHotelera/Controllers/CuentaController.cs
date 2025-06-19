@@ -87,7 +87,7 @@ namespace GestionHotelera.Controllers
                     HttpContext.Session.SetString("EstadoSesion", "Inciada");
                     _dataBaseServices.CambiarConexion("Administrador");
 
-                    return RedirectToAction("Menu", "EmpresaHospedaje");
+                    return RedirectToAction("Menu", "EmpresaHospedaje", new { idEmpresa = "no" });
 
                 }
                 else

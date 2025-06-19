@@ -96,6 +96,7 @@ SELECT
     TH.IdTipoHabitacion,
     DH.Numero AS NumeroHabitacion,
     TH.Nombre AS TipoHabitacion,
+	TH.Descripcion,
     TH.Precio,
     TC.IdTipoCama,
     TC.NombreCama AS TipoCama,
@@ -107,7 +108,8 @@ SELECT
     C.NombreCanton AS Canton,
     D.IdDistrito,
     D.NombreDistrito AS Distrito,
-    EH.Barrio
+    EH.Barrio,
+	EH.SenasExactas
     -- STRING_AGG(CO.Nombre, ', ') AS Comodidades
 FROM DatosHabitacion DH
 JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion

@@ -330,7 +330,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SELECT ubic
+    SELECT ReferenciaGPS
     FROM view_EmpresasHospedaje
     WHERE CedulaJuridica = @IdEmpresa;
 END;
