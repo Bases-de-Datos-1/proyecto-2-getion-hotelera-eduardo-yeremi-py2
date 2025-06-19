@@ -5,15 +5,15 @@
 
         public int IdReservacion { get; set; }
 
-        public DateOnly FechaHoraIngreso { get; set; }
+        public DateTime FechaHoraIngreso { get; set; }
 
-        public DateOnly FechaHoraSalida { get; set; }
+        public DateTime FechaHoraSalida { get; set; }
 
         public int CantidadPersonas { get; set; }
 
         public string Vehiculo { get; set; }
 
-        public int PrecioTotal { get; set; }
+        public double PrecioTotal { get; set; }
 
         public string Estado { get; set; }
 

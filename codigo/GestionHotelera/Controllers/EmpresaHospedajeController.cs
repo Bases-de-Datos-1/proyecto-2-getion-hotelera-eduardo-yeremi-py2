@@ -1,6 +1,8 @@
 ﻿using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
+using GestionHotelera.Models.FacturasYReservasModel;
 using GestionHotelera.Models.FacturasYReservasModel.ConsultaReportesModels;
+using GestionHotelera.Models.FacturasYReservasModel.RespuestaReportesModels;
 using GestionHotelera.Models.RegistrarModels;
 using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
@@ -185,19 +187,37 @@ namespace GestionHotelera.Controllers
         [HttpPost]
         public JsonResult ReporteReservaEspecifica(ReporteReservaEspecificaModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            ReservacionesModel rerservaciones = _reportesServices.ObtenerReservacionPorIDBD(idEmpresaHospedaje, dataRquest.IdReservacion);
+
+            return Json(new { Estado = 1, Facturas = rerservaciones });
         }
 
         [HttpPost]
         public JsonResult ReporteTipoHabitacionEspecifico(ConsultaReporteTipoHabitacionEspecificoModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorHabitacionBD(idEmpresaHospedaje, dataRquest.IdTipoHabitacion);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
         [HttpPost]
         public JsonResult ReporteHabitacionEspecifica(ReporteHabitacionModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorHabitacionBD(idEmpresaHospedaje, dataRquest.IdHabitacion);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
 
@@ -205,47 +225,87 @@ namespace GestionHotelera.Controllers
         [HttpPost]
         public JsonResult ReporteDiaEspecifico(ConsultaReporteDiaEspecificoModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorDiaBD(idEmpresaHospedaje, dataRquest.FechaDia);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
 
         [HttpPost]
         public JsonResult ReporteMesEspecifico(ConsultaReporteMesModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorMesBD(idEmpresaHospedaje, dataRquest.Mes);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
 
         [HttpPost]
         public JsonResult ReporteAnioEspecifico(ConsultaReporteAnioModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorAnioBD(idEmpresaHospedaje, dataRquest.Anio);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
         [HttpPost]
         public JsonResult ReporteRangoDeFechas(ConsultaRangoDeFechasModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+            string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorRangoFechasBD(idEmpresaHospedaje, dataRquest.FechaInicioRango, dataRquest.FechaFinRango);
+
+            return Json(new { Estado = 1, Facturas = facturaciones });
         }
 
 
         [HttpPost]
-        public JsonResult ReporteTiposDeHabitaciones(ReporteHabitacionModel dataRquest)
+        public JsonResult ReporteTiposDeHabitaciones(ConsultaReporteTiposDeHabitaciones dataRquest)
         {
-            return Json(new { Estado = 1 });
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<ReservacionesModel> reservaciones = _reportesServices.ObtenerReportePorTiposDeHabitacionesBD(dataRquest);
+
+            return Json(new { Estado = 1, Reservaciones = reservaciones });
         }
 
 
-        [HttpGet]
+        [HttpPost]
         public JsonResult ReporteRangoDeEdades()
         {
-            return Json(new { Estado = 1 });
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            EdadesReservasModel rangoEdades = _reportesServices.ObtenerRangoEdadesClientesConReservasBD();
+
+
+            return Json(new { Estado = 1, RangoEdades = rangoEdades });
         }
 
         [HttpPost]
         public JsonResult ReporteHotelesConMayorDemanda(ConsultaReporteDemandaHotelesModel dataRquest)
         {
-            return Json(new { Estado = 1 });
+
+            ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
+
+            List<DemandaHotelesModel> hoteles = _reportesServices.ObtenerDemandaDeHotelesPorFechaYUbicacionBD(dataRquest);
+
+
+            return Json(new { Estado = 1, DemandaHoteles = hoteles });
         }
 
 

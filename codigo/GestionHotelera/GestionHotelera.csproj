@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\FacturasYReservasModel\RespuestaReportesModels\" />
     <Folder Include="Models\UbicacionesModel\" />
   </ItemGroup>
 

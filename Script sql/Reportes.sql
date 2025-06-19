@@ -262,6 +262,21 @@ END;
 GO
 
 
+CREATE PROCEDURE sp_ObtenerReservacionPorID
+    @IdEmpresa VARCHAR(15),
+    @IdReservacion SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_Reservaciones
+    WHERE IdEmpresaHospedaje = @IdEmpresa
+    AND IdReservacion = @IdReservacion;
+END;
+GO
+
+
 
 
 
@@ -321,7 +336,7 @@ BEGIN
 END;
 GO
 
--- Conocer cuáles son los hoteles de mayor demanda por fecha y ubicación. 
+-- Conocer cuales son los hoteles de mayor demanda por fecha y ubicación. 
 CREATE PROCEDURE sp_HotelesMayorDemandaPorFechaUbicacion
     @Fecha DATE,
     @IdProvincia SMALLINT = NULL,

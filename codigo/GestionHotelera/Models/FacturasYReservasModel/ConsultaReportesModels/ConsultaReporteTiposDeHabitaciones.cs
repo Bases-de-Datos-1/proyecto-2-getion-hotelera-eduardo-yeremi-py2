@@ -5,5 +5,10 @@
 
         public List<int> ListaTiposHabitacion { get; set; }
 
+        public DateOnly FechaInicio { get; set; }
+
+        public DateOnly FechaFin {  get; set; }
+
+
     }
 }

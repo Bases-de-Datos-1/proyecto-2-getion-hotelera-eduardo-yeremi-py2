@@ -288,21 +288,21 @@ function inicarListenersReportes() {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarTipoHabitacionEspecifica();
     });
 
     habitacionEspecificaForm.addEventListener("submit", function (event) {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarHabitacionEspecifica();
     });
 
     diaEspecificoForm.addEventListener("submit", function (event) {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaDiaEspecifico();
     });
 
 
@@ -310,7 +310,7 @@ function inicarListenersReportes() {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaPorMes();
     });
 
 
@@ -318,21 +318,21 @@ function inicarListenersReportes() {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaPorAnio();
     });
 
     fechaEspecificaForm.addEventListener("submit", function (event) {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaPorRangoFechas();
     });
 
     tiposHabitacionesForm.addEventListener("submit", function (event) {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaTiposDeHabitaciones();
     });
 
 
@@ -340,14 +340,14 @@ function inicarListenersReportes() {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaEdadReservas();
     });
 
     demadaForm.addEventListener("submit", function (event) {
         event.preventDefault();
         //console.log("Empezando envio del formulario");
         //const formData = new FormData(form);
-        procesarBusquedaReservacion();
+        procesarConsultaDemandaHoteles();
     });
 
 
@@ -422,6 +422,7 @@ function procesarReportes(tipoReporte) {
 
 }
 
+// >>> ===== Seccion para el repotere de un reservacion especifica. ===== <<<
 
 // Procesar el reporte para una habitacion especifica.
 async function procesarBusquedaReservacion() {
@@ -505,6 +506,9 @@ function renderizarResultadosReservaEspecifica(datos) {
 }
 
 
+
+// >>> =====  ===== <<<
+
 // Para el tipo de habitacion especifica.
 async function procesarTipoHabitacionEspecifica() {
     const data = new FormData(document.getElementById("tipoHabitacionEspecifica"));
@@ -515,6 +519,7 @@ async function procesarTipoHabitacionEspecifica() {
     let datos = await enviarConsultaTipoHabitacionEspecifica(data);
     if (datos.estado === 1) {
         renderizarResultadosTipoHabitacion(datos);
+        console.log("Datos del resultado para tipo de habitacion: ", datos);
     } else {
         alert("Ocurrió un error con la consulta.");
     }
@@ -554,7 +559,6 @@ async function enviarConsultaTipoHabitacionEspecifica(datos) {
     }
 }
 
-
 function renderizarResultadosTipoHabitacion(datos) {
 
 
@@ -564,7 +568,7 @@ function renderizarResultadosTipoHabitacion(datos) {
 
 
 
-
+// >>> =====  ===== <<<
 async function procesarHabitacionEspecifica() {
     const data = new FormData(document.getElementById("habitacionEspecificaForm"));
     if (!validarHabitacionEspecifica()) {
@@ -613,6 +617,8 @@ async function enviarConsultaHabitacionEspecifica(datos) {
 }
 
 
+
+// >>> =====  ===== <<<
 
 async function procesarConsultaDiaEspecifico() {
 
@@ -669,6 +675,9 @@ async function enviarConsultaDiaEspecifico(datos) {
 }
 
 
+
+// >>> =====  ===== <<<
+
 async function procesarConsultaPorMes() {
     const data = new FormData(document.getElementById("mesEspecificoForm"));
     if (!validarConsultaMes()) {
@@ -713,6 +722,8 @@ async function enviarConsultaPorMes(datos) {
 }
 
 
+// >>> =====  ===== <<<
+
 async function procesarConsultaPorAnio() {
     const data = new FormData(document.getElementById("anioEspecificoForm"));
     if (!validarConsultaAnio()) return;
@@ -755,7 +766,9 @@ async function enviarConsultaPorAnio(datos) {
     }
 }
 
-// Tango de fechas.
+// >>> =====  ===== <<<
+
+// Rango de fechas.
 async function procesarConsultaPorRangoFechas() {
     const data = new FormData(document.getElementById("fechaEspecificaForm"));
     if (!validarRangoFechas()) {
@@ -803,11 +816,15 @@ async function enviarConsultaRangoFechas(datos) {
 }
 
 
+
+// >>> =====  ===== <<<
+
 // Lista de tipo de habitaciones.
-async function procesarConsultaMultipleTiposHabitacion() {
+async function procesarConsultaTiposDeHabitaciones() {
     const data = new FormData(document.getElementById("tiposHabitacionesForm"));
     const seleccionados = data.getAll("ListaTiposHabitacion");
 
+    console.log("Pass1")
     if (!validarConsultaTiposDeHabitaciones(seleccionados)) {
         return;
     }
@@ -825,8 +842,9 @@ function validarConsultaTiposDeHabitaciones(data) {
 
     if (!data.length) {
         alert("Selecciona al menos un tipo de habitacion.");
-        return;
+        return false;
     }
+    return true;
 }
 
 async function enviarConsultaReporteTiposDeHabitacion(datos) {
@@ -849,7 +867,7 @@ async function enviarConsultaReporteTiposDeHabitacion(datos) {
 
 
 
-
+// >>> =====  ===== <<<
 async function procesarConsultaEdadReservas() {
     const data = new FormData(document.getElementById("edadesForm"));
 
@@ -862,6 +880,7 @@ async function procesarConsultaEdadReservas() {
         alert("Consulta de edades fallida.");
     }
 }
+
 
 async function enviarConsultaEdades(datos) {
     try {
@@ -883,6 +902,7 @@ async function enviarConsultaEdades(datos) {
 
 
 
+// >>> =====  ===== <<<
 
 // Rango de edades:
 async function procesarConsultaDemandaHoteles() {
@@ -945,6 +965,7 @@ async function enviarConsultaDemandaHoteles(datos) {
 
 
 
+// >>> =====  ===== <<<
 
 
 document.addEventListener("DOMContentLoaded", function () {

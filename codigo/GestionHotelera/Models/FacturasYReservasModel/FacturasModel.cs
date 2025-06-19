@@ -13,7 +13,7 @@
 
         public int CantidadPersonas { get; set; }
 
-        public int PrecioTotal { get; set; }
+        public double PrecioTotal { get; set; }
 
         public int NumeroHabitacion { get; set; }
 
