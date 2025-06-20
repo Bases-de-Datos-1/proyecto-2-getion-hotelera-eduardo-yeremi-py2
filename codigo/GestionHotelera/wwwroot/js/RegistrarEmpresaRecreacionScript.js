@@ -23,7 +23,7 @@ function iniciarUbicacionesDinamicas() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un cantón</option>';
+        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
@@ -87,6 +87,39 @@ function validarDatosRegistroEmpresa() {
 
     // Validar que la fecha de nacimiento sea menor a la fecha actual.
 
+    let cedula = document.getElementById('cedulaJuridica').value.trim();
+    let pass = document.getElementById('contrasena').value;
+    let confirm = document.getElementById('confirmar').value;
+    let correo = document.getElementById('correo').value.trim();
+    let telefono = document.getElementById('telefono1ID').value.trim();
+
+    let provincia = document.getElementById('provincia').value;
+    let canton = document.getElementById('canton').value;
+    let distrito = document.getElementById('distrito').value;
+
+
+    // Contraseñas diferentes.
+    if (pass !== confirm) {
+        alert("La contraseña y su confirmacion no coinciden.");
+        return false;
+    }
+
+    // Revisar las ceculas.
+    if (!/^\d{10,12}$/.test(cedula)) {
+        alert("La cedula juridica debe contener entre 10 y 12 digitos.");
+        return false;
+    }
+
+    // Revisar las provincias.
+    if (provincia === '0' || canton === '0' || distrito === '0') {
+        alert("Seleccione una provincia, canton y distrito validos.");
+        return false;
+    }
+
+    if (!validarTelefonos(telefono, true)) {
+        alert("En numero de telefono debe de tener digitos entre 1 y 8.");
+        return false;
+    }
 
     return true;
 }
@@ -108,14 +141,19 @@ async function enviarDatosRegistroEmpresa() {
             const resultado = await response.json();
             console.log("Datos del regitro de la empresa: ", resultado);
             //let result = resultado.estadoGeneral;
-            if (resultado.estado === 1) {
+            if (resultado.estado > 0) {
                 alert("Empresa hospedaje registrado exitosamente.");
                 //window.location.href = '@Url.Action("Cuenta", "Login")';
                 location.replace("/Cuenta/Login");
 
                 //window.location.href = '/Cuentaedirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar el cliente: " + result.message);
+                if (resultado.estado === -1) {
+                    alert("Cedula de la empresa o correo ya registrados, por favor reviselos. ");
+
+                } else {
+                    alert("Error al registrar la empresa de recreacion.");
+                }
             }
         } else {
             alert("Error al registrar la empresa de hospedaje. Por favor, intente nuevamente.");

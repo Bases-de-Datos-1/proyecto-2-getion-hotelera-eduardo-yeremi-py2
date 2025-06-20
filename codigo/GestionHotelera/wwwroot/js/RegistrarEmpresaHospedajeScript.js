@@ -4,7 +4,7 @@
 
 //<div id="map" style="height: 400px; margin-bottom: 1rem;"></div>
 
-//<!--Campos ocultos para guardar coordenadas-- >
+// Para guardar las coodenadas.
 //<input type="hidden" id="Latitud" name="Latitud" />
 //<input type="hidden" id="Longitud" name="Longitud" />
 
@@ -16,7 +16,6 @@ function iniciarUbicacionesDinamicas() {
     const provinciaSelect = document.getElementById("provincia");
     const cantonSelect = document.getElementById("canton");
     const distritoSelect = document.getElementById("distrito");
-    //const ubicacionCR = document.getElementById("ubicacionCR");
 
     // Validar que se pudo optener todo.!paisSelect || || !ubicacionCR
     if (!provinciaSelect || !cantonSelect || !distritoSelect ) {
@@ -24,31 +23,34 @@ function iniciarUbicacionesDinamicas() {
         return;
     }
 
-    //paisSelect.addEventListener("change", function () {
-    //    ubicacionCR.style.display = (parseInt(this.value) === 1) ? "block" : "none";
-    //    cantonSelect.innerHTML = '<option value="">Seleccione un cantón</option>';
-    //    distritoSelect.innerHTML = '<option value="">Seleccione un distrito</option>';
-    //});
-
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0">Seleccione un cantón</option>';
+        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton...</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0">Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="" disabled selected>Seleccione un distrito...</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0">Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="" disabled selected>Seleccione un distrito...</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });
     });
 }
+
+// Validar los telefonos.
+function validarTelefonos(tel, estado = flase) {
+    if (tel === "" && !estado) {
+        return true;
+    }
+    return /^[1-8]{1}[0-9]{7}$/.test(tel);
+}
+
 
 
 // Inciar el listener al evento submit del forms.
@@ -130,6 +132,71 @@ function validarDatosRegistroEmpresa() {
 
     // Validar que la fecha de nacimiento sea menor a la fecha actual.
 
+    let cedula = document.getElementById('cedulaJuridica').value.trim();
+    let pass = document.getElementById('contrasena').value;
+    let confirm = document.getElementById('confirmar').value;
+    let latitud = document.getElementById('latitud').value;
+    let longitud = document.getElementById('longitud').value;
+    let correo = document.getElementById('correo').value;
+    let sitioWeb = document.getElementById('paginaWeb').value.trim();
+
+    let provincia = document.getElementById('provincia').value;
+    let canton = document.getElementById('canton').value;
+    let distrito = document.getElementById('distrito').value;
+    let instalacion = document.getElementById('alojamiento').value;
+
+    let telefono1 = document.getElementById('telefono1ID').value.trim();
+    let telefono2 = document.getElementById('telefono2ID').value.trim();
+    let telefono3 = document.getElementById('telefono3ID').value.trim();
+
+    // Contraseñas diferentes.
+    if (pass !== confirm) {
+        alert("La contraseña y su confirmacion no coinciden.");
+        return false;
+    }
+
+    // Revisar las ceculas.
+    if (!/^\d{10,12}$/.test(cedula)) {
+        alert("La cedula juridica debe contener entre 10 y 12 digitos.");
+        return false;
+    }
+
+    // las coordenadas.
+    if (latitud === '' || longitud === '') {
+        alert("Debe seleccionar una ubicacion en el mapa.");
+        return false;
+    }
+
+    // Este deberia de estar con el select diable
+    if (instalacion === '0' || instalacion === '') {
+        alert("Seleccione un tipo de instalación.");
+        return false;
+    }
+
+    // Sitio web, 
+    //if (sitioWeb !== "" && !/^https?:\/\/.+\..+/.test(sitioWeb)) {
+    //    alert("El sitio web debe empezar con http:// o https:// y ser una URL valida.");
+    //    return false;
+    //}
+
+
+
+    // Revisar la ubicacion
+    if (provincia === '0' || canton === '0' || distrito === '0') {
+        alert("Seleccione una provincia, canton y distrito validos.");
+        return false;
+    }
+
+    // Revisar los telefonos.
+    if (!validarTelefonos(telefono1, true)) {
+        alert("El telefono principal debe tener 8 digitos y comenzar con 1 a 8.");
+        return false;
+    }
+    if (!validarTelefonos(telefono2) || !validarTelefonos(telefono3)) {
+        alert("Los telefonos secundarios deben tener 8 digitos validos.");
+        return false;
+    }
+
 
     return true;
 }
@@ -159,7 +226,12 @@ async function enviarDatosRegistroEmpresa() {
 
                 //window.location.href = '/Cliente/Informacion'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar el cliente: " + result.message);
+                if (resultado.estado === -1) {
+                    alert("Cedula de la empresa o correo ya registrados, por favor reviselos. ");
+
+                } else {
+                    alert("Error al registrar la empresa.");
+                }
             }
         } else {
             alert("Error al registrar la empresa de hospedaje. Por favor, intente nuevamente.");

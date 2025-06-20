@@ -169,7 +169,7 @@
             <div class="form-group">
                 <label>Tipo de cama:</label>
                 <select id="tipoCamaSelect">
-                    <option value="0" disabled selected>Seleccione un tipo de cama</option>
+                    <option value="0">Seleccione un tipo de cama</option>
                     @foreach (var tipo in Model.ListaTiposDeCamas)
                     {
                         <option value="@tipo.IdTipoCama">@tipo.NombreCama</option>
@@ -186,7 +186,7 @@
                 <label>Ubicacion:</label>
 
                 <select id="provinciaHabitacion" >
-                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    <option value="0">Seleccione una provincia</option>
                     @foreach (var provincia in Model.Provincias)
                     {
                         <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
@@ -194,11 +194,11 @@
                 </select>
 
                 <select id="cantonHabitacion">
-                    <option value="0" disabled selected>Seleccione un canton</option>
+                    <option value="0" >Seleccione un canton</option>
                 </select>
    
                 <select id="distritoHabitacion" >
-                    <option value="0" disabled selected>Seleccione un distrito</option>
+                    <option value="0">Seleccione un distrito</option>
                 </select>
          
 
@@ -243,7 +243,7 @@
                 <label>Ubicacion:</label>
 
                 <select id="provinciaHotel">
-                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    <option value="0" >Seleccione una provincia</option>
                     @foreach (var provincia in Model.Provincias)
                     {
                         <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
@@ -251,11 +251,11 @@
                 </select>
 
                 <select id="cantonHotel"  >
-                    <option value="0" disabled selected>Seleccione un canton</option>
+                    <option value="0" >Seleccione un canton</option>
                 </select>
 
                 <select id="distritoHotel"  >
-                    <option value="0" disabled selected>Seleccione un distrito</option>
+                    <option value="0">Seleccione un distrito</option>
                 </select>
 
             </div>
@@ -286,7 +286,7 @@
 
                 <label for="alojamiento">Tipo de alojamiento: </label>
                 <select id="alojamiento">
-                    <option value="0" disabled selected>Seleccione Un tipo de instalacion:</option>
+                    <option value="0">Seleccione Un tipo de instalacion:</option>
                     @foreach (var tipo in Model.ListaTiposInstalaciones)
                     {
                         <option value="@tipo.IdTipoInstalacion">@tipo.NombreInstalacion</option>
@@ -303,7 +303,7 @@
                 <label>Ubicación:</label>
 
                 <select id="provinciaRecreacion">
-                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    <option value="0" >Seleccione una provincia</option>
                     @foreach (var provincia in Model.Provincias)
                     {
                         <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
@@ -311,11 +311,11 @@
                 </select>
 
                 <select id="cantonRecreacion">
-                    <option value="" disabled selected>Seleccione un canton</option>
+                    <option value="0" >Seleccione un canton</option>
                 </select>
 
                 <select id="distritoRecreacion">
-                    <option value="" disabled selected>Seleccione un distrito</option>
+                    <option value="0" >Seleccione un distrito</option>
                 </select>
 
             </div>
@@ -368,7 +368,7 @@
                 <label>Ubicacion:</label>
 
                 <select id="provinciaServicio">
-                    <option value="0" disabled selected>Seleccione una provincia</option>
+                    <option value="0" d>Seleccione una provincia</option>
                     @foreach (var provincia in Model.Provincias)
                     {
                         <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
@@ -376,11 +376,11 @@
                 </select>
 
                 <select id="cantonServicio">
-                    <option value="" disabled selected>Seleccione un canton</option>
+                    <option value="0" >Seleccione un canton</option>
                 </select>
 
                 <select id="distritoServicio">
-                    <option value="" disabled selected>Seleccione un distrito</option>
+                    <option value="0" >Seleccione un distrito</option>
                 </select>
 
             </div>

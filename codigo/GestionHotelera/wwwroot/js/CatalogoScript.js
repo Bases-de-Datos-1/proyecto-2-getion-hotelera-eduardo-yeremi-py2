@@ -2,15 +2,14 @@
 // Esto es para seleccionar un input de fecha y establecerle una fecha minima, se puede modificar para que establezca una fecha mazima.
 function EstablecerFecha() {
 
-    var fechaInput = document.getElementsByName('FechaAsignacionInput');
+    var fechaInput = document.getElementById("fechaEntradaInput");
     var today = new Date();
     var day = String(today.getDate()).padStart(2, '0');
-    var month = String(today.getMonth() + 1).padStart(2, '0'); // Enero es 0
+    var month = String(today.getMonth() + 1).padStart(2, '0');
     var year = today.getFullYear();
 
     var todayDate = year + '-' + month + '-' + day;
     fechaInput[0].setAttribute('min', todayDate);
-
 };
 
 function InicarInteractividadFiltros() {
@@ -74,17 +73,17 @@ function iniciarUbicacionesDinamicasHospedaje() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton</option>';
+        cantonSelect.innerHTML = '<option value="0" >Seleccione un canton</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });
@@ -107,17 +106,17 @@ function iniciarUbicacionesDinamicasEmpresaHospedaje() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton</option>';
+        cantonSelect.innerHTML = '<option value="0" >Seleccione un canton</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });
@@ -140,17 +139,17 @@ function iniciarUbicacionesDinamicasRecreacion() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton</option>';
+        cantonSelect.innerHTML = '<option value="0">Seleccione un canton</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0">Seleccione un distrito</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });
@@ -173,17 +172,17 @@ function iniciarUbicacionesDinamicasServiciosRecreacion() {
     provinciaSelect.addEventListener("change", function () {
         const cantones = window.listaCantones || [];
         const filtrados = cantones.filter(c => c.idProvincia == this.value);
-        cantonSelect.innerHTML = '<option value="0" disabled selected>Seleccione un canton</option>';
+        cantonSelect.innerHTML = '<option value="0" >Seleccione un canton</option>';
         filtrados.forEach(c => {
             cantonSelect.innerHTML += `<option value="${c.idCanton}">${c.nombreCanton}</option>`;
         });
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
     });
 
     cantonSelect.addEventListener("change", function () {
         const distritos = window.listaDistritos || [];
         const filtrados = distritos.filter(d => d.idCanton == this.value);
-        distritoSelect.innerHTML = '<option value="0" disabled selected>Seleccione un distrito</option>';
+        distritoSelect.innerHTML = '<option value="0" >Seleccione un distrito</option>';
         filtrados.forEach(d => {
             distritoSelect.innerHTML += `<option value="${d.idDistrito}">${d.nombreDistrito}</option>`;
         });
@@ -241,6 +240,10 @@ async function ProcesarBusquedaHospedaje() {
 
     let idTipoCama = parseInt(document.getElementById("tipoCamaSelect")?.value) || null;
 
+    if (idTipoCama === 0) {
+        idTipoCama = null;
+    }
+
     let precioMinimo = parseFloat(document.getElementById("precioMinimoHabitacionInput").value) || null;
 
     let precioMaximo = parseFloat(document.getElementById("precioMaximoHabitacionInput").value) || null;
@@ -248,9 +251,19 @@ async function ProcesarBusquedaHospedaje() {
     // Ubicacion.
     let idProvincia = parseInt(document.getElementById("provinciaHotel").value) || null;
 
+    if (idProvincia === 0) {
+        idProvincia = null;
+    }
+
     let idCanton = parseInt(document.getElementById("cantonHotel").value) || null;
+    if (idCanton === 0) {
+        idCanton = null;
+    }
 
     let idDistrito = parseInt(document.getElementById("distritoHotel").value) || null;
+    if (idDistrito === 0) {
+        idDistrito = null;
+    }
 
     // Parsar los seleciconados de los selects a int: parseInt(seleccion)
 
@@ -293,11 +306,17 @@ async function ProcesarBusquedaEmpresaHospedaje() {
 
     // Ubicacion.
     let idProvincia = parseInt(document.getElementById("provinciaHotel").value) || null;
-
+    if (idProvincia === 0) {
+        idProvincia = null;
+    }
     let idCanton = parseInt(document.getElementById("cantonHotel").value) || null;
-
+    if (idCanton === 0) {
+        idCanton = null;
+    }
     let idDistrito = parseInt(document.getElementById("distritoHotel").value) || null;
-
+    if (idDistrito === 0) {
+        idDistrito = null;
+    }
     // Lista de comodidades seleccionadas.
     let comodiadesSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaServiciosHoteles"]:checked'))
         .map(checkbox => parseInt(checkbox.value));
@@ -305,7 +324,9 @@ async function ProcesarBusquedaEmpresaHospedaje() {
     console.log("Servicios de hotel seleccionados:", comodiadesSeleccionadas);
 
     let idTipoHotel = parseInt(document.getElementById("alojamiento").value) || null;
-
+    if (idTipoHotel === 0) {
+        idTipoHotel = null;
+    }
     // Aqui se guardarina los datos que se obtuvieron.
 
     const filtros = {
@@ -336,10 +357,19 @@ async function ProcesarBusquedaEmpresaRecreacion() {
 
     // Ubicacion.
     let idProvincia = parseInt(document.getElementById("provinciaRecreacion").value) || null;
+    if (idProvincia === 0) {
+        idProvincia = null;
+    }
 
     let idCanton = parseInt(document.getElementById("cantonRecreacion").value) || null;
+    if (idCanton === 0) {
+        idCanton = null;
+    }
 
     let idDistrito = parseInt(document.getElementById("distritoRecreacion").value) || null;
+    if (idDistrito === 0) {
+        idDistrito = null;
+    }
 
     // Servicios seleccionados.
     let serviciosSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaServiciosEmpresaRecreacion"]:checked'))
@@ -379,10 +409,19 @@ async function ProcesarBusquedaServicios() {
 
     // Ubicacion.
     let idProvincia = parseInt(document.getElementById("provinciaServicio").value) || null;
+    if (idProvincia === 0) {
+        idProvincia = null;
+    }
 
     let idCanton = parseInt(document.getElementById("cantonServicio").value) || null;
+    if (idCanton === 0) {
+        idCanton = null;
+    }
 
     let idDistrito = parseInt(document.getElementById("distritoServicio").value) || null;
+    if (idDistrito === 0) {
+        idDistrito = null;
+    }
 
     // Actividades seleccionados.
     let actividadesSeleccionadas = Array.from(document.querySelectorAll('input[name="ListaActividadesServicio"]:checked'))

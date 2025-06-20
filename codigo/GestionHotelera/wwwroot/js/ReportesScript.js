@@ -955,7 +955,9 @@ async function enviarConsultaEdades(datos) {
 async function procesarConsultaDemandaHoteles() {
     const data = new FormData(document.getElementById("demadaForm"));
 
-    if (!validarDemandaUbicacion()) return;
+    if (!validarDemandaUbicacion()) {
+        return;
+    }
 
     const datos = await enviarConsultaDemandaHoteles(data);
     if (datos.estado === 1) {

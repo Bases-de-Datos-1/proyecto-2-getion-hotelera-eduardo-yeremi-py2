@@ -39,6 +39,12 @@ async function registrarActividad() {
 // funcion para la validacion de los datos del formulario. Esto seria solo para las validaciones basicas, las demas se hacen en la base de datos.
 function validarDatosRegistroActividad() {
 
+    const select = document.getElementById("listasActividadesSelectID");
+    if (parseInt(select.value) <= 0) {
+        alert("Debes de seleccionar al menos una actividad.");
+        return false;
+    }
+    return true;
     // Validar que la contraseña sea igual a la de la confirmacion.
 
     // Validar el formato de la cedula.
@@ -46,7 +52,7 @@ function validarDatosRegistroActividad() {
     // Validar que la fecha de nacimiento sea menor a la fecha actual.
 
 
-    return true;
+    //return true;
 }
 
 // Funcion para el envio de los datos del formulario al controlador.
@@ -74,7 +80,7 @@ async function enviarDatosRegistroActividad() {
                 //window.location.href = `/Producto/Detalles?id=${id}`;
                 //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar el servicio: " + result.message);
+                alert("Error al registrar el servicio: " + resultado.estadoGeneral.toString());
             }
         } else {
             alert("Error al registrar el servicio. Por favor, intente nuevamente.");

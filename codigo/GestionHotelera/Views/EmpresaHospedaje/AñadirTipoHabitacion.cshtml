@@ -12,17 +12,17 @@
     <form id="registrarNuevoTipoHabitacion" enctype="multipart/form-data">
         <div style="margin-bottom: 20px;">
             <label><strong>Nombre del tipo de habitacion:</strong></label>
-            <input type="text" name="NombreTipoHabitacion" placeholder="Ej: Suite Familiar" class="form-control" style="width: 100%; padding: 10px; margin-top: 5px;" />
+            <input type="text" name="NombreTipoHabitacion" required placeholder="Ej: Suite Familiar" class="form-control" style="width: 100%; padding: 10px; margin-top: 5px;" />
         </div>
 
         <div style="margin-bottom: 20px;">
             <label><strong>Descripcion:</strong></label>
-            <textarea class="form-control" name="Descripcion" rows="4" placeholder="Describa brevemente la habitación..." style="width: 100%; padding: 10px; margin-top: 5px;"></textarea>
+            <textarea class="form-control" name="Descripcion" required rows="4" placeholder="Describa brevemente la habitación..." style="width: 100%; padding: 10px; margin-top: 5px;"></textarea>
         </div>
 
         <div style="margin-bottom: 20px;">
             <label><strong>Precio por noche:</strong></label>
-            <input type="number" name="PrecioPorNoche" placeholder="Ej: 250" class="form-control" style="width: 50%; padding: 10px; margin-top: 5px;" />
+            <input type="number" name="PrecioPorNoche"  min="1" placeholder="Ej: 250" class="form-control" style="width: 50%; padding: 10px; margin-top: 5px;" />
         </div>
 
         <div style="margin-bottom: 20px;">
@@ -30,7 +30,7 @@
             @* <input type="text" placeholder="Ej: Cama King" class="form-control" style="width: 50%; padding: 10px; margin-top: 5px;" /> *@
 
             <select id="tipoCama" name="TipoCama" required>
-                <option value="" disabled selected>Seleccione un tipo de cama</option>
+                <option value="0" disabled selected>Seleccione un tipo de cama</option>
                 @foreach (var tipo in Model.ListaTiposDeCamas)
                 {
                     <option value="@tipo.IdTipoCama">@tipo.NombreCama</option>

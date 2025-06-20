@@ -37,7 +37,7 @@
             @foreach(var actividad in Model.ListaActividades)
             {
                 <div class="actividad" >
-                    <input type="checkbox" name="ListasActividades" value="@actividad.IdActividad" style="margin-right: 10px;">
+                    <input type="checkbox" name="ListasActividades" id="listasActividadesSelectID" value="@actividad.IdActividad" style="margin-right: 10px;">
                     <label for="act2"><strong>@actividad.NombreActividad</strong></label>
                     <p>@actividad.DescripcionActividad</p>
                 </div>

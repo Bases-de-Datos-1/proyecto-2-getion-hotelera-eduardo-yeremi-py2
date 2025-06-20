@@ -85,6 +85,38 @@ function validarReservacionHabitacion() {
 
     // Que la cantidad de personas sea mayor a cero.
 
+    let entrada = document.getElementById('entrada').value;
+    let salida = document.getElementById('salida').value;
+    let cantidad = parseInt(document.getElementById('personas').value);
+
+    // Validar que las fechas esten completas
+    if (!entrada || !salida) {
+        alert("Debe seleccionar la fecha y hora de entrada y salida.");
+        return false;
+    }
+
+    const fechaEntrada = new Date(entrada);
+    const fechaSalida = new Date(salida);
+
+    if (fechaSalida <= fechaEntrada) {
+        alert("La fecha de salida debe ser posterior a la fecha de entrada.");
+        return false;
+    }
+
+    const diferenciaMs = fechaSalida - fechaEntrada;
+    const diferenciaDias = diferenciaMs / (1000 * 60 * 60 * 24);
+
+    if (diferenciaDias < 1) {
+        alert("La reserva debe tener al menos una noche de duracion.");
+        return false;
+    }
+
+    if (isNaN(cantidad) || cantidad < 1) {
+        alert("Debes de ingresar una cantidad de personas mayor a 0.");
+        return false;
+    }
+
+    return true;
 
     return true;
 }
