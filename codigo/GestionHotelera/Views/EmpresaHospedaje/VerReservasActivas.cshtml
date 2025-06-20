@@ -2,7 +2,7 @@
     ViewData["Title"] = "Reservas Activas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@model GestionHotelera.Models.VistasModel.VerReservasActivasViewModel;
 <div style="padding: 30px;">
     <a href="/EmpresaHospedaje/Menu" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Atrás</a>
 
@@ -13,26 +13,40 @@
             <tr>
                 <th style="padding: 10px;">Cliente</th>
                 <th style="padding: 10px;">Habitación</th>
-                <th style="padding: 10px;">Desde</th>
-                <th style="padding: 10px;">Acción</th>
+                <th style="padding: 10px;">Fechas</th>
+                <th style="padding: 10px;">Aciones</th>
             </tr>
         </thead>
         <tbody id="tabla-activas">
-            <tr>
+            @* <tr>
                 <td>Carlos Rivera</td>
                 <td>Villa Caribeña</td>
                 <td>15/06/2025</td>
                 <td>
                     <button onclick="terminarReserva(this)" style="background-color: #f39c12; color: white; border: none; padding: 8px; border-radius: 4px;">Terminar Reserva</button>
                 </td>
-            </tr>
+            </tr> *@
+
+
+            @foreach (var reserva in Model.ListaReservaciones)
+            {
+                <tr>
+                    <td>@reserva.Cliente</td>
+                    <td>Habitación @reserva.NumeroHabitacion</td>
+                    <td>
+                        Entrada: @reserva.FechaHoraIngreso.ToString("dd/MM/yyyy HH:mm") <br />
+                        Salida: @reserva.FechaHoraSalida.ToString("dd/MM/yyyy HH:mm")
+                    </td>
+                    <td>
+                        <button onclick="terminarReserva(@reserva.IdReservacion)" style="background-color: #f39c12; color: white; border: none; padding: 8px; border-radius: 4px;">Terminar Reserva</button>
+                    
+                        @* Tabien se podria tener un boton para cancelar reserva. *@
+                    </td>
+                </tr>
+            }
+
         </tbody>
     </table>
 </div>
 
-<script>
-    function terminarReserva(button) {
-        const fila = button.closest("tr");
-        fila.remove();
-    }
-</script>
+<script src="~/js/VerReservasActivas.js"></script>

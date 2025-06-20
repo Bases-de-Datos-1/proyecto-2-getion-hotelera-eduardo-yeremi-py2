@@ -223,5 +223,27 @@ namespace GestionHotelera.Services
         }
 
 
+
+
+        // Cerrar una reservacion especifica:
+        public int CerrarReservacionPorIdBD(int idReservacion)
+        {
+            var resultadoParam = new SqlParameter("@Resultado", SqlDbType.SmallInt)
+            {
+                Direction = ParameterDirection.Output
+            };
+
+            var parametros = new SqlParameter[]
+            {
+                new ("@IdReservacion", idReservacion),
+                resultadoParam
+            };
+
+            return _dataBaseServices.EjecutarProcedimientoIUD("sp_CerrarReservacion", parametros);
+        }
+
+
+
+
     }
 }

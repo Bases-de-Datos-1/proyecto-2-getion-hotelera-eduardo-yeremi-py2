@@ -393,6 +393,19 @@ namespace GestionHotelera.Controllers
         }
 
 
+        public JsonResult CerrarReserva([FromBody] ProcesamientoSolicitudesReservacionModel dataRequest)
+        {
+            ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
+
+            int estado = _reservacionesServices.CerrarReservacionPorIdBD(dataRequest.IdReservaTemporalM);
+
+            return Json(new { Estado = estado });
+
+        }
+
+
+
+
         // Metodos para lanzar la ventana que muestra los datos de una habitacion especifica.
         public IActionResult VerHabitacion(int idDatosHabitacion)
         {
