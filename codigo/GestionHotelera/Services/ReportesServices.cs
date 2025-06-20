@@ -274,7 +274,7 @@ namespace GestionHotelera.Services
         {
             var resultado = new List<ReservacionesModel>();
 
-            // Convertir lista de IDs a cadena CSV para el procedimiento
+            
             //string listaCsv = filtros.ListaTiposHabitacion != null && filtros.ListaTiposHabitacion.Any()
             //    ? string.Join(",", filtros.ListaTiposHabitacion)
             //    : null;
