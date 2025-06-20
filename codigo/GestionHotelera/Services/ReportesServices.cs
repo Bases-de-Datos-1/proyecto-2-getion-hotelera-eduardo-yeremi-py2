@@ -284,8 +284,8 @@ namespace GestionHotelera.Services
             var parametros = new[]
             {
                 new SqlParameter("@ListaTiposHabitacion", listaTiposHabitaciones),
-                new SqlParameter("@FechaInicio", filtros.FechaInicio.ToDateTime(TimeOnly.MinValue)),
-                new SqlParameter("@FechaFin", filtros.FechaFin.ToDateTime(TimeOnly.MaxValue))
+                new SqlParameter("@FechaInicio", filtros.FechaInicioTipos.ToDateTime(TimeOnly.MinValue)),
+                new SqlParameter("@FechaFin", filtros.FechaFinTipos.ToDateTime(TimeOnly.MaxValue))
             };
 
             var tabla = _dataBaseServices.EjecutarProcedimientoConParametros("sp_ReporteReservasFinalizadasPorTipoHabitacion", parametros);

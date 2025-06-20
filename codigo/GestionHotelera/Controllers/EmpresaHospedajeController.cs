@@ -216,7 +216,7 @@ namespace GestionHotelera.Controllers
 
             ReservacionesModel rerservaciones = _reportesServices.ObtenerReservacionPorIDBD(idEmpresaHospedaje, dataRquest.IdReservacion);
 
-            return Json(new { Estado = 1, Facturas = rerservaciones });
+            return Json(new { Estado = 1, Reservacion = rerservaciones });
         }
 
         [HttpPost]
@@ -392,7 +392,7 @@ namespace GestionHotelera.Controllers
             return View(reservasPendientes);
         }
 
-
+        [HttpPost]
         public JsonResult CerrarReserva([FromBody] ProcesamientoSolicitudesReservacionModel dataRequest)
         {
             ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
@@ -450,6 +450,10 @@ namespace GestionHotelera.Controllers
 
             return View(datos);
         }
+
+
+
+
 
         public IActionResult EditarHabitacion()
         {

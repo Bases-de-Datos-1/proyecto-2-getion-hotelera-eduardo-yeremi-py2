@@ -57,6 +57,18 @@ function InciarUbicacionesDinamicas() {
 }
 
 
+function formatearFecha(fechaString) {
+    const fecha = new Date(fechaString);
+    return fecha.toLocaleString('es-CR', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+    });
+}
+
+function formatearFechaCorta(fechaOnly) {
+    const fecha = new Date(fechaOnly + "T00:00:00");
+    return fecha.toLocaleDateString('es-CR', { dateStyle: 'medium' });
+}
 
 // Funcion para lo que seria desplesgar y mostrar los div para cada tipo de reportes.
 function controlSeccionesV1(seccion) {
@@ -444,7 +456,7 @@ async function procesarBusquedaReservacion() {
 
     if (datos.estado === 1) {
 
-        renderizarResultadosReservaEspecifica(datos);
+        renderizarResultadosReservaEspecifica(datos.reservacion);
 
     } else {
 
@@ -494,13 +506,45 @@ async function enviarConsultaReservaEspecifica(datos) {
 }
 
 // Renderizar los resultados optenidos.
-function renderizarResultadosReservaEspecifica(datos) {
-
+function renderizarResultadosReservaEspecifica(reserva) {
+    
     const contenedorResultados = document.getElementById('contenerdorResultados');
 
     contenedorResultados.innerHTML = '';
 
     // Renderizar los datos que se recibieron.
+
+    //if (!Array.isArray(datos) || datos.length === 0) {
+    //    contenedorResultados.innerHTML = '<p>No se encontraron resultados para esta búsqueda.</p>';
+    //    return;
+    //}
+
+    //datos.forEach(reserva => {
+        const tarjeta = document.createElement('div');
+        tarjeta.style.border = '1px solid #ccc';
+        tarjeta.style.padding = '15px';
+        tarjeta.style.marginBottom = '20px';
+        tarjeta.style.borderRadius = '6px';
+        tarjeta.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+        tarjeta.style.backgroundColor = '#fff';
+
+        tarjeta.innerHTML = `
+            <h4 style="margin-top: 0;">Reservación #${reserva.idReservacion}</h4>
+            <p><strong>Habitación:</strong> ${reserva.numeroHabitacion}</p>
+            <p><strong>Cliente:</strong> ${reserva.cliente}</p>
+            <p><strong>Entrada:</strong> ${formatearFecha(reserva.fechaHoraIngreso)}</p>
+            <p><strong>Salida:</strong> ${formatearFecha(reserva.fechaHoraSalida)}</p>
+            <p><strong>Personas:</strong> ${reserva.cantidadPersonas}</p>
+            <p><strong>Vehiculo:</strong> ${reserva.vehiculo}</p>
+            <p><strong>Estadía total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Precio total:</strong> ₡${Number(reserva.precioTotal).toLocaleString()}</p>
+            <p><strong>Estado:</strong> ${reserva.estado}</p>
+        `;
+
+        contenedorResultados.appendChild(tarjeta);
+    //});
+
+    return;
 
 
 }
@@ -518,7 +562,7 @@ async function procesarTipoHabitacionEspecifica() {
 
     let datos = await enviarConsultaTipoHabitacionEspecifica(data);
     if (datos.estado === 1) {
-        renderizarResultadosTipoHabitacion(datos);
+        renderizarResultadosFacturas(datos.facturas);
         console.log("Datos del resultado para tipo de habitacion: ", datos);
     } else {
         alert("Ocurrió un error con la consulta.");
@@ -579,7 +623,7 @@ async function procesarHabitacionEspecifica() {
     if (datos.estado === 1) {
         console.log("Consulta exitosa.", datos);
 
-        //renderizarResultadosHabitacion(datos);
+        renderizarResultadosFacturas(datos.facturas);
     } else {
         alert("Consulta fallida.");
     }
@@ -631,7 +675,7 @@ async function procesarConsultaDiaEspecifico() {
 
     if (datos.estado === 1) {
 
-        //renderizarResultadosPorDia(datos);
+        renderizarResultadosFacturas(datos.facturas);
         console.log("Consulta exitosa.", datos);
 
 
@@ -689,7 +733,8 @@ async function procesarConsultaPorMes() {
     if (datos.estado === 1) {
         console.log("Consulta exitosa.", datos);
 
-        //renderizarResultadosPorMes(datos);
+        renderizarResultadosFacturas(datos.facturas);
+
     } else {
         alert("Consulta por mes fallida.");
     }
@@ -733,7 +778,8 @@ async function procesarConsultaPorAnio() {
         console.log("Consulta exitosa.", datos);
 
 
-        //renderizarResultadosPorAnio(datos);
+        renderizarResultadosFacturas(datos.facturas);
+
     } else {
         alert("Consulta por año fallida.");
     }
@@ -780,7 +826,8 @@ async function procesarConsultaPorRangoFechas() {
         console.log("Consulta exitosa.", datos);
 
 
-        //renderizarResultadosRangoFechas(datos);
+        renderizarResultadosFacturas(datos.facturas);
+
     } else {
         alert("Consulta por rango de fechas fallida fallida.");
     }
@@ -832,7 +879,7 @@ async function procesarConsultaTiposDeHabitaciones() {
     const datos = await enviarConsultaReporteTiposDeHabitacion(data);
     if (datos.estado === 1) {
         console.log("Consulta exitosa.", datos);
-        //renderizarResultadosPorListaHabitacion(datos);
+        renderizarResultadosReservaciones(datos.reservaciones);
     } else {
         alert("No se pudo consultar los tipos de habitacion.");
     }
@@ -873,7 +920,7 @@ async function procesarConsultaEdadReservas() {
 
     const datos = await enviarConsultaEdades(data);
     if (datos.estado === 1) {
-        //renderizarResultadosEdades(datos);
+        renderizarRangoEdadReservas(datos.rangoEdades);
         console.log("Consulta exitosa.", datos);
 
     } else {
@@ -912,7 +959,7 @@ async function procesarConsultaDemandaHoteles() {
 
     const datos = await enviarConsultaDemandaHoteles(data);
     if (datos.estado === 1) {
-        //renderizarResultadosDemanda(datos);
+        renderizarDemandaHoteles(datos.demandaHoteles);
         console.log("Consulta exitosa.", datos);
 
     } else {
@@ -962,6 +1009,155 @@ async function enviarConsultaDemandaHoteles(datos) {
 }
 
 
+
+function renderizarResultadosFacturas(facturas) {
+    const contenedor = document.getElementById('contenerdorResultados');
+    contenedor.innerHTML = '';
+
+    if (!Array.isArray(facturas) || facturas.length === 0) {
+        contenedor.innerHTML = '<p>No se encontraron facturas para mostrar.</p>';
+        return;
+    }
+
+    facturas.forEach(factura => {
+        const tarjeta = document.createElement('div');
+        tarjeta.style.border = '1px solid #ccc';
+        tarjeta.style.borderRadius = '6px';
+        tarjeta.style.padding = '15px';
+        tarjeta.style.marginBottom = '20px';
+        tarjeta.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+        tarjeta.style.backgroundColor = '#fff';
+
+        tarjeta.innerHTML = `
+            <h4 style="margin-top: 0;">Factura #${factura.idFacturacion}</h4>
+            <p><strong>Reservación:</strong> ${factura.idReservacion}</p>
+            <p><strong>Fecha:</strong> ${formatearFechaCorta(factura.fechaFacturacion)}</p>
+            <p><strong>Metodo de pago:</strong> ${factura.metodoPago}</p>
+            <p><strong>Cliente:</strong> ${factura.cliente}</p>
+            <p><strong>Habitación:</strong> ${factura.numeroHabitacion} (Tipo ID: ${factura.idTipoHabitacion})</p>
+            <p><strong>Estadía:</strong> ${factura.estadiaTotal} noche${factura.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Personas:</strong> ${factura.cantidadPersonas}</p>
+            <p><strong>Total:</strong> ₡${Number(factura.precioTotal).toLocaleString()}</p>
+        `;
+
+        contenedor.appendChild(tarjeta);
+    });
+}
+
+
+function renderizarResultadosReservaciones(datos) {
+
+    const contenedorResultados = document.getElementById('contenerdorResultados');
+
+    contenedorResultados.innerHTML = '';
+
+     //Renderizar los datos que se recibieron.
+
+    if (!Array.isArray(datos) || datos.length === 0) {
+        contenedorResultados.innerHTML = '<p>No se encontraron resultados para esta búsqueda.</p>';
+        return;
+    }
+
+    datos.forEach(reserva => {
+    const tarjeta = document.createElement('div');
+    tarjeta.style.border = '1px solid #ccc';
+    tarjeta.style.padding = '15px';
+    tarjeta.style.marginBottom = '20px';
+    tarjeta.style.borderRadius = '6px';
+    tarjeta.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+    tarjeta.style.backgroundColor = '#fff';
+
+    tarjeta.innerHTML = `
+            <h4 style="margin-top: 0;">Reservación #${reserva.idReservacion}</h4>
+            <p><strong>Habitación:</strong> ${reserva.numeroHabitacion}</p>
+            <p><strong>Cliente:</strong> ${reserva.cliente}</p>
+            <p><strong>Entrada:</strong> ${formatearFecha(reserva.fechaHoraIngreso)}</p>
+            <p><strong>Salida:</strong> ${formatearFecha(reserva.fechaHoraSalida)}</p>
+            <p><strong>Personas:</strong> ${reserva.cantidadPersonas}</p>
+            <p><strong>Vehiculo:</strong> ${reserva.vehiculo}</p>
+            <p><strong>Estadía total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Precio total:</strong> ₡${Number(reserva.precioTotal).toLocaleString()}</p>
+            <p><strong>Estado:</strong> ${reserva.estado}</p>
+        `;
+
+    contenedorResultados.appendChild(tarjeta);
+    });
+
+    return;
+
+
+}
+
+function renderizarRangoEdadReservas(datos) {
+    const contenedor = document.getElementById('contenerdorResultados');
+    contenedor.innerHTML = '';
+
+    if (!datos || typeof datos !== 'object') {
+        contenedor.innerHTML = '<p>No se pudo obtener el rango de edades.</p>';
+        return;
+    }
+
+    const caja = document.createElement('div');
+    caja.style.border = '1px solid #aaa';
+    caja.style.borderRadius = '6px';
+    caja.style.padding = '20px';
+    caja.style.backgroundColor = '#f9f9f9';
+    caja.style.marginBottom = '20px';
+    caja.style.boxShadow = '0 2px 5px rgba(0,0,0,0.05)';
+    caja.style.textAlign = 'center';
+
+    caja.innerHTML = `
+        <h4 style="margin-top: 0;">Rango de edades de clientes</h4>
+        <p><strong>Minima:</strong> ${datos.edadMinima} años</p>
+        <p><strong>Maxima:</strong> ${datos.edadMaxima} años</p>
+    `;
+
+    contenedor.appendChild(caja);
+}
+
+// Funcion para renderizar los datis de la demanda de las empresas.
+function renderizarDemandaHoteles(lista) {
+    const contenedor = document.getElementById('contenerdorResultados');
+    contenedor.innerHTML = '';
+
+    if (!Array.isArray(lista) || lista.length === 0) {
+        contenedor.innerHTML = '<p>No se encontraron datos de demanda hotelera.</p>';
+        return;
+    }
+
+    // Crear tabla
+    const tabla = document.createElement('table');
+    tabla.style.width = '100%';
+    tabla.style.borderCollapse = 'collapse';
+    tabla.style.marginTop = '10px';
+
+    tabla.innerHTML = `
+        <thead style="background-color: #f1f1f1;">
+            <tr>
+                <th style="padding: 10px; text-align: left;">#</th>
+                <th style="padding: 10px; text-align: left;">Nombre del Hotel</th>
+                <th style="padding: 10px; text-align: left;">Cédula Jurídica</th>
+                <th style="padding: 10px; text-align: left;">Reservas</th>
+            </tr>
+        </thead>
+        <tbody id="cuerpo-demanda"></tbody>
+    `;
+
+    contenedor.appendChild(tabla);
+
+    const cuerpo = tabla.querySelector('#cuerpo-demanda');
+
+    lista.forEach((empresa, index) => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td style="padding: 8px;">${index + 1}</td>
+            <td style="padding: 8px;">${empresa.nombreEmpresa}</td>
+            <td style="padding: 8px;">${empresa.idEmpresaHospedaje}</td>
+            <td style="padding: 8px;">${empresa.cantidadReservas}</td>
+        `;
+        cuerpo.appendChild(fila);
+    });
+}
 
 
 

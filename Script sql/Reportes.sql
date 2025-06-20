@@ -339,7 +339,7 @@ BEGIN
 END;
 GO
 
--- Conocer cuales son los hoteles de mayor demanda por fecha y ubicación. 
+-- Conocer cuales son los hoteles de mayor demanda por fecha y ubicacion. 
 CREATE PROCEDURE sp_HotelesMayorDemandaPorFechaUbicacion
     @Fecha DATE,
     @IdProvincia SMALLINT = NULL,
