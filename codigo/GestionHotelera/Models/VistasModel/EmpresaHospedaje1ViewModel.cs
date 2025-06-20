@@ -5,6 +5,8 @@ namespace GestionHotelera.Models.VistasModel
 {
     public class EmpresaHospedaje1ViewModel
     {
+        public string TipoCuenta { get; set; }
+
         public EmpresaHospedajeModel DatosEmpresa { get; set; }
 
         public List<TiposHabitacionesModel> ListaTipoHabitaciones { get; set; } = new List<TiposHabitacionesModel>();

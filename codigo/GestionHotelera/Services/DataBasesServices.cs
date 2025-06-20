@@ -1,11 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-
 using System.Data;
 using System.Data.SqlTypes;
-using Microsoft.Data.SqlClient;
-using Microsoft.SqlServer.Types;
-
 using System.Diagnostics;
 using System.Globalization;
 using GestionHotelera.Models;
@@ -14,8 +10,11 @@ using GestionHotelera.Models.EmpresaHospedajeModels;
 using GestionHotelera.Models.EmpresaHospedajeModels.HabitacionesModels;
 using GestionHotelera.Models.EmpresaRecreacionModels;
 using GestionHotelera.Models.EmpresaRecreacionModels.ServiciosModels;
+using GestionHotelera.Models.FacturasYReservasModel;
 using GestionHotelera.Models.RegistrarModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.SqlServer.Types;
 
 
 //using Microsoft.Data.SqlClient.SqlConnection;
@@ -1786,7 +1785,7 @@ namespace GestionHotelera.Services
                 {
                     lista.Add(new ActividadesEmpresaRecreacionModel
                     {
-                        IdActividad = Convert.ToInt32(row["IdComodidad"]),
+                        IdActividad = Convert.ToInt32(row["IdActividad"]),
 
                         IdEmpresa = row["IdEmpresa"].ToString(),
 
@@ -1925,6 +1924,79 @@ namespace GestionHotelera.Services
 
         }
 
+
+        // Obtener los datos der un servicios especifico por su ID.
+        public ServiciosEmpresaRecreacionModel ObtenerServicioEspecificoPorIDBD(int idServicio)
+        {
+            var parametros = new SqlParameter[]
+{
+                new ("@IdServicio", idServicio)
+};
+
+            var tabla = EjecutarProcedimientoConParametros("sp_ObtenerServicioPorID", parametros);
+
+            if (tabla == null || tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = tabla.Rows[0];
+
+            return new ServiciosEmpresaRecreacionModel
+            {
+                IdServicio = Convert.ToInt32(fila["IdServicio"]),
+
+                NombreServicio = fila["NombreServicio"].ToString(),
+
+                CedulaJuridica = fila["IdEmpresaRecreacion"].ToString(),
+
+                Precio = Convert.ToDouble(fila["Precio"]),
+
+                IdProvincia = Convert.ToInt32(fila["IdProvincia"]),
+                NombreProvincia = fila["Provincia"].ToString(),
+                IdCanton = Convert.ToInt32(fila["IdCanton"]),
+                NombreCanton = fila["Canton"].ToString(),
+                IdDistrito = Convert.ToInt32(fila["IdDistrito"]),
+                NombreDistrito = fila["Distrito"].ToString(),
+                ListaActividades = ObtenerActividadesPorServicioBD(idServicio)
+
+            };
+
+        }
+
+        // Obtener los datos de una actividad especifica por sus ID.
+        public ActividadesEmpresaRecreacionModel ObtenerActividadEspecificaPorIDBD(int idActividad)
+        {
+
+            var parametros = new SqlParameter[]
+{
+                new ("@IdActividad", idActividad)
+};
+
+            var tabla = EjecutarProcedimientoConParametros("sp_ObtenerActividadPorID", parametros);
+
+            if (tabla == null || tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = tabla.Rows[0];
+
+            return new ActividadesEmpresaRecreacionModel
+            {
+                IdActividad = Convert.ToInt32(fila["IdActividad"]),
+
+                IdEmpresa = fila["IdEmpresa"].ToString(),
+
+                NombreActividad = fila["NombreActividad"].ToString(),
+
+                DescripcionActividad = fila["DescripcionActividad"].ToString()
+
+            };
+
+
+
+        }
 
 
 

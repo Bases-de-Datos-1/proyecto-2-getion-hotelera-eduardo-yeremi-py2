@@ -24,7 +24,7 @@ namespace GestionHotelera.Controllers
         }
 
 
-        public IActionResult Menu()
+        public IActionResult Menu(string idEmpresa)
         {
             // Optener los datos de la empresa de recreacion.
             string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
@@ -32,10 +32,10 @@ namespace GestionHotelera.Controllers
             string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
 
 
-            if (string.IsNullOrEmpty(estadoSesion) || tipoUsuario == "Cliente")
+            if (string.IsNullOrEmpty(estadoSesion) || tipoUsuario == "Cliente" || idEmpresa != "no")
             {
                 // En este se supone que estaria guardada la informacion se la empresa que slecciono el usuario para ver.
-                string idEmpresa = HttpContext.Session.GetString("EmpresaSelect");
+                //string idEmpresa2 = HttpContext.Session.GetString("EmpresaSelect");
 
                 // Consultar los datos con el modo 0
                 EmpresaRecreacionModel datos = _dataBaseServices.OptenerDatosGeneralesEmpresaRecreacionBD(idEmpresa, 0);
@@ -46,6 +46,7 @@ namespace GestionHotelera.Controllers
 
                 var datosGenerales = new EmpresaRecreacion1ViewModel
                 {
+                    TipoCuenta = "Cliente",
                     DatosEmpresa = datos,
                     ServiciosEmpresaRecreacion = servicios,
                     ActividadesEmpresaRecreacion = actividades
@@ -65,6 +66,7 @@ namespace GestionHotelera.Controllers
 
             var datosGenerales2 = new EmpresaRecreacion1ViewModel
             {
+                TipoCuenta = "Empresa",
                 DatosEmpresa = datos2,
                 ServiciosEmpresaRecreacion = servicios2,
                 ActividadesEmpresaRecreacion = actividades2
@@ -139,9 +141,36 @@ namespace GestionHotelera.Controllers
         {
             return View();
         }
-        public IActionResult Detalles()
+
+        // Desplegar la ventana para ver los detalles de un servicio.
+        public IActionResult VerServicio(int idServicio)
         {
-            return View("~/Views/EmpresaRecreacion/Servicios/Detalles.cshtml");
+            // Buscar si el que ve el servicio es un cliente o una empresa.
+            string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
+
+            string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            string tipoUsuarioActual = "no";
+
+            if (!string.IsNullOrEmpty(estadoSesion) && tipoUsuario != "Cliente")
+            {
+                tipoUsuarioActual = "Empresa";
+            } else
+            {
+                tipoUsuarioActual = "Cliente";
+            }
+
+
+            ServiciosEmpresaRecreacionModel servicio = _dataBaseServices.ObtenerServicioEspecificoPorIDBD(idServicio);
+
+            VerDetallesServicioRecreacionViewModel detallesServicio = new VerDetallesServicioRecreacionViewModel {
+                TipoCuenta = tipoUsuarioActual,
+                DatosServicio = servicio,
+                DatosEmpresa = _dataBaseServices.OptenerDatosGeneralesEmpresaRecreacionBD(servicio.CedulaJuridica, 0)
+
+            };
+            //"~/Views/EmpresaRecreacion/Servicios/Detalles.cshtml"
+            return View(detallesServicio);
         }
     }
 }

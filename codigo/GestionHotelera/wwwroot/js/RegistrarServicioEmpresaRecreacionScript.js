@@ -66,8 +66,8 @@ async function enviarDatosRegistroActividad() {
             const resultado = await response.json();
             console.log("Datos del regitro de la actividad: ", resultado);
 
-            if (resultado.estadoGeneral === 1) {
-                alert("Servicio registrado exitodamente.");
+            if (resultado.estadoGeneral > 0) {
+                alert("Servicio registrado exitodamente con el ID: ", resultado.estadoGeneral.toString());
                 location.replace("/EmpresaRecreacion/Menu");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";

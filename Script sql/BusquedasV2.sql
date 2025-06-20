@@ -490,6 +490,32 @@ END;
 GO
 
 
+-- Obtenter un servicios por su id especifico.
+CREATE PROCEDURE sp_ObtenerServicioPorID
+    @IdServicio SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ServiciosRecreacion
+    WHERE IdServicio = @IdServicio;
+END;
+GO
+
+-- Obtener una actividad por su id especifico.
+CREATE PROCEDURE sp_ObtenerActividadPorID
+    @IdActividad SMALLINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT *
+    FROM view_ActividadesServicio
+    WHERE IdActividad = @IdActividad;
+END;
+GO
+
 
 -- ======================= Algunas busquedas para los clientes ===================================
 -- Buscar clientes

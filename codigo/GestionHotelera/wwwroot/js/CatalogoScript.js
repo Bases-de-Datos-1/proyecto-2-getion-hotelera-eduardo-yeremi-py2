@@ -613,8 +613,8 @@ function RenderizarDatosHabitaciones(datos) {
             <p><strong>Empresa:</strong> ${h.idEmpresaHospedaje}</p>
         `;
         tarjeta.addEventListener("click", () => {
-            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
-            console.log(`/Habitaciones/DetalleHabitacion?id=${h.idDatosHabitacion}`)
+            window.location.href = `/EmpresaHospedaje/VerHabitacion?idDatosHabitacion=${h.idDatosHabitacion}`;
+            //console.log(`/Habitaciones/DetalleHabitacion?id=${h.idDatosHabitacion}`)
         });
         contenedor.appendChild(tarjeta);
     });
@@ -645,8 +645,8 @@ function RenderizarDatosEmpresaHospedaje(datos) {
         `;
         // ${e.SitioWeb ? `<p><a href="${e.SitioWeb}" target="_blank">Sitio Web</a></p>` <p><strong>Dirección:</strong> ${e.SenasExactas}</p>
         tarjeta.addEventListener("click", () => {
-            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
-            console.log(`/EmpresaRecreacion/Menu?id=${e.cedulaJuridica}`)
+            window.location.href = `/EmpresaHospedaje/Menu?idEmpresa=${e.cedulaJuridica}`;
+            //console.log(`/EmpresaRecreacion/Menu?id=${e.cedulaJuridica}`)
         });
         contenedor.appendChild(tarjeta);
     });
@@ -674,7 +674,7 @@ function RenderizarDatosEmpresaRecreacion(datos) {
             <p><strong>Ubicación:</strong> ${e.provincia}, ${e.canton}, ${e.distrito}</p>
         `;
         tarjeta.addEventListener("click", () => {
-            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            window.location.href = `/EmpresaRecreacion/Menu?idEmpresa=${e.cedulaJuridica}`;
             console.log(`/Habitaciones/DetalleHabitacion?id=${e.cedulaJuridica}`)
         });
         contenedor.appendChild(tarjeta);
@@ -705,7 +705,7 @@ function RenderizarDatosServicios(datos) {
         `;
  
         tarjeta.addEventListener("click", () => {
-            //window.location.href = `/Habitaciones/DetalleHabitacion?id=${h.IdDatosHabitacion}`;
+            window.location.href = `/EmpresaRecreacion/VerServicio?idServicio=${s.idServicio}`;
             console.log(`/Sercivios/SeviciosView?id=${s.idServicio}`)
         });
         contenedor.appendChild(tarjeta);

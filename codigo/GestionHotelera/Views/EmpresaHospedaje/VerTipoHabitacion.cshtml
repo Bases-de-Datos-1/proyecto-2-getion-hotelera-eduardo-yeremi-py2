@@ -14,7 +14,7 @@
 <link href="~/css/VerTipoHabitacionStyles.css" rel="stylesheet" />
 
 <div style="background-color: #2c2f36; font-family: 'Segoe UI', sans-serif; color: #ddd; padding: 20px; max-width: 900px; margin: auto; border-radius: 10px;">
-    <a href="'@Url.Action("Menu", "EmpresaHospedaje", new { idEmpresa = "SesionIniciada" })'" style="color: white; text-decoration: none;">← Atrás</a>
+    <a href="/EmpresaHospedaje/Menu?idEmpresa=no" style="color: white; text-decoration: none;">← Atrás</a> @*"'@Url.Action("Menu", "EmpresaHospedaje", new { idEmpresa = "SesionIniciada" })'"*@
 
     <div style="margin-top: 15px; background-color: #aaa; border-radius: 8px; overflow: hidden;">
         <img src="@imagenBase64" alt="Imagen tipo habitación" style="width: 100%; height: auto;">

@@ -46,13 +46,12 @@ namespace GestionHotelera.Controllers
                 // Consultar los datos con el modo 0
                 EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa,0);
 
-
                 List<DatosHabitacionesModel> habitacionesCliente = _dataBaseServices.ObtenerHabitacionesPorEmpresaBD(idEmpresa);
-
-
 
                 var datosGenerales = new EmpresaHospedaje1ViewModel
                 {
+                    TipoCuenta = "Cliente",
+
                     DatosEmpresa = datos,
 
                     ListaHabitaciones = habitacionesCliente
@@ -72,6 +71,8 @@ namespace GestionHotelera.Controllers
 
             var datosGeneralesEmpresa = new EmpresaHospedaje1ViewModel
             {
+                TipoCuenta = "Empresa",
+
                 DatosEmpresa = datosEmpresa,
 
                 ListaTipoHabitaciones = tiposHabitaciones,
@@ -410,12 +411,27 @@ namespace GestionHotelera.Controllers
         public IActionResult VerHabitacion(int idDatosHabitacion)
         {
 
-            HabitacionViewModel1 datos = new HabitacionViewModel1{
+            // Buscar si el que ve la habitacion es un cliente o una empresa.
+            string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
 
-                DatosHabitacion = _dataBaseServices.ObtenerHabitacionEspecificaBD(idDatosHabitacion)
+            string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
 
+            string tipoUsuarioActual = "no";
 
-            };
+            if (!string.IsNullOrEmpty(estadoSesion) && tipoUsuario != "Cliente")
+            {
+                tipoUsuarioActual = "Empresa";
+
+            } else if (tipoUsuario == "Cliente")
+            {
+                tipoUsuarioActual = "Cliente";
+            }
+
+            HabitacionViewModel1 datos = new HabitacionViewModel1
+                {
+                    TipoCuenta = tipoUsuarioActual,
+                    DatosHabitacion = _dataBaseServices.ObtenerHabitacionEspecificaBD(idDatosHabitacion)
+                };
 
             return View(datos);
         }
@@ -450,9 +466,6 @@ namespace GestionHotelera.Controllers
 
             return View(datos);
         }
-
-
-
 
 
         public IActionResult EditarHabitacion()

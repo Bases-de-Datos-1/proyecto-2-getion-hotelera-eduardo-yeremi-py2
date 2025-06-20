@@ -15,22 +15,31 @@
     @* <div style="margin-bottom: 20px;">
         <a href="/" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Volver a inicio</a>
     </div> *@
+    @if (Model.TipoCuenta == "Empresa")
+    {
+        
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="color: #2c3e50; font-size: 28px;">@Model.DatosEmpresa.NombreHotel <span style="color: #27ae60; font-size: 20px;">@Model.DatosEmpresa.NombreTipoHotel</span></h1>
+            <div style="display: flex; gap: 10px;">
+                <a href="/EmpresaHospedaje/VerReservasPendientes" style="background-color: #2980b9; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Reservas Pendientes</a>
+                <a href="/EmpresaHospedaje/VerReservasActivas" style="background-color: #8e44ad; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Reservas Activas</a>
+                <a href="/EmpresaHospedaje/VerFacturaciones" style="background-color: #333; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Ver facturaciones</a>
+            </div>
+        </header>
 
-    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-        <h1 style="color: #2c3e50; font-size: 28px;">@Model.DatosEmpresa.NombreHotel <span style="color: #27ae60; font-size: 20px;">@Model.DatosEmpresa.NombreTipoHotel</span></h1>
-        <div style="display: flex; gap: 10px;">
-            <a href="/EmpresaHospedaje/VerReservasPendientes" style="background-color: #2980b9; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Reservas Pendientes</a>
-            <a href="/EmpresaHospedaje/VerReservasActivas" style="background-color: #8e44ad; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Reservas Activas</a>
-            <a href="/EmpresaHospedaje/VerFacturaciones" style="background-color: #333; color: white; padding: 10px 16px; border-radius: 6px; text-decoration: none;">Ver facturaciones</a>
-        </div>
-    </header>
+        <section style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <a href="/EmpresaHospedaje/AñadirHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Habitación</a>
+            <a href="/EmpresaHospedaje/AñadirTipoHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Tipo De Habitación</a>
+            <a href="/EmpresaHospedaje/EditarPerfil" style="background-color: #f1c40f; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Editar Perfil</a>
+            <a href="/EmpresaHospedaje/EliminarPerfil" style="background-color: #e74c3c; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Eliminar perfil</a>
+        </section>
 
-    <section style="display: flex; gap: 10px; margin-bottom: 20px;">
-        <a href="/EmpresaHospedaje/AñadirHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Habitación</a>
-        <a href="/EmpresaHospedaje/AñadirTipoHabitacion" style="background-color: #27ae60; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">+ Añadir Tipo De Habitación</a>
-        <a href="/EmpresaHospedaje/EditarPerfil" style="background-color: #f1c40f; color: black; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Editar Perfil</a>
-        <a href="/EmpresaHospedaje/EliminarPerfil" style="background-color: #e74c3c; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none;">Eliminar perfil</a>
-    </section>
+    } else
+    {
+        <div style="margin-bottom: 20px;">
+        <a href="/Cliente/Menu" style="background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none;">← Volver a inicio</a>
+        </div> 
+    }
 
 
 
@@ -162,26 +171,29 @@
     </section>
 
     @*Renderizar datos de los tipos de habitaciones de las empresas.*@
-    <section style="margin-bottom: 30px;">
-        <h3 style="color: #2c3e50;">Tipos de habitaciones</h3>
+    @if (Model.TipoCuenta == "Empresa")
+    {
+        <section style="margin-bottom: 30px;">
+            <h3 style="color: #2c3e50;">Tipos de habitaciones</h3>
 
-        <div class="habitaciones-grid">
-            @foreach (var tipo in Model.ListaTipoHabitaciones)
-            {
-                var imagenBase64 = tipo.Imagenes?.FirstOrDefault()?.Imagen != null
-                ? $"data:image/jpeg;base64,{Convert.ToBase64String(tipo.Imagenes.First().Imagen)}"
-                : "https://via.placeholder.com/220x140?text=Sin+imagen";
+            <div class="habitaciones-grid">
+                @foreach (var tipo in Model.ListaTipoHabitaciones)
+                {
+                    var imagenBase64 = tipo.Imagenes?.FirstOrDefault()?.Imagen != null
+                    ? $"data:image/jpeg;base64,{Convert.ToBase64String(tipo.Imagenes.First().Imagen)}"
+                    : "https://via.placeholder.com/220x140?text=Sin+imagen";
 
-                <div class="habitacion-card" onclick="location.href='@Url.Action("VerTipoHabitacion", "EmpresaHospedaje", new { tipoHabitacion = tipo.IdTipoHabitacion })'">
-                    <img src="@imagenBase64" alt="Imagen tipo habitación" />
-                    <div class="habitacion-info">
-                        <p class="habitacion-tipo">@tipo.NombreTipoHabitacion</p>
-                        <p class="habitacion-precio">₡@tipo.Precio.ToString("N2")</p>
+                    <div class="habitacion-card" onclick="location.href='@Url.Action("VerTipoHabitacion", "EmpresaHospedaje", new { tipoHabitacion = tipo.IdTipoHabitacion })'">
+                        <img src="@imagenBase64" alt="Imagen tipo habitación" />
+                        <div class="habitacion-info">
+                            <p class="habitacion-tipo">@tipo.NombreTipoHabitacion</p>
+                            <p class="habitacion-precio">₡@tipo.Precio.ToString("N2")</p>
+                        </div>
                     </div>
-                </div>
-            }
-        </div>
-    </section>
+                }
+            </div>
+        </section>    
+    }
 
 </div>
 
