@@ -28,6 +28,7 @@ function inciarListenerFormRegitroHabitacion() {
 // Funcion para la parte del registro de cliente.
 async function registrarHabitacion() {
     // Validar los datos del formulario.
+
     if (!validarDatosRegistroHabitacion()) {
         return;
     }
@@ -39,13 +40,14 @@ async function registrarHabitacion() {
 // funcion para la validacion de los datos del formulario. Esto seria solo para las validaciones basicas, las demas se hacen en la base de datos.
 function validarDatosRegistroHabitacion() {
 
-    // Validar que la contraseña sea igual a la de la confirmacion.
-
-    // Validar el formato de la cedula.
-
-    // Validar que la fecha de nacimiento sea menor a la fecha actual.
+    let tipo = document.getElementById('tipo').value;
 
 
+    // Validar que se haya seleccionado un tipo de habitación
+    if (!tipo || tipo === 0) {
+        alert("Seleccione un tipo de habitacion antes de guardar.");
+        return false;
+    }
     return true;
 }
 
@@ -68,7 +70,9 @@ async function enviarDatosRegistroHabitacion() {
             let res = resultado.estado;
             console.log("Res: ", res);
             if (res[0] > 0) {
-                alert("Tipo de habitacion registrada exitodamente.");
+                //alert("Tipo de habitacion registrada exitodamente.");
+                alert(`Tipo de habitacion registrada exitodamente con el ID: ${res[0]}`);
+
                 location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
@@ -76,10 +80,10 @@ async function enviarDatosRegistroHabitacion() {
                 //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
             } else {
                 if (res[0] === -1) {
-                    alert("El numero de la habitacion ya esta en uso. ");
+                    alert("El numero de la habitacion ya esta en uso.");
 
                 } else {
-                    alert("Error al registrar la habitacion: ");
+                    alert("Error al registrar la habitacion.");
                 }
             }
         } else {

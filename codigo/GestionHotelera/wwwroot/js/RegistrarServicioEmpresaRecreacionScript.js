@@ -73,14 +73,22 @@ async function enviarDatosRegistroActividad() {
             console.log("Datos del regitro de la actividad: ", resultado);
 
             if (resultado.estadoGeneral > 0) {
-                alert("Servicio registrado exitodamente con el ID: ", resultado.estadoGeneral.toString());
+                //alert("Servicio registrado exitodamente con el ID: ", resultado.estadoGeneral.toString());
+                alert(`Servicio registrado exitodamente con el ID: ${resultado.estado}`);
+
                 location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;
                 //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar el servicio: " + resultado.estadoGeneral.toString());
+                if (resultado.estadoGeneral === -1) {
+                    //alert("Error al registrar el servicio: " + resultado.estadoGeneral.toString());
+                    alert(`Servicios ya registrado: ${resultado.estado}`);
+
+                } else {
+                    alert("Error al registrar el sevicio.");
+                }
             }
         } else {
             alert("Error al registrar el servicio. Por favor, intente nuevamente.");

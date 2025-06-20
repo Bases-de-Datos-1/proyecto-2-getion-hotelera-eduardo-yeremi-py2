@@ -115,9 +115,6 @@ function validarReservacionHabitacion() {
         alert("Debes de ingresar una cantidad de personas mayor a 0.");
         return false;
     }
-
-    return true;
-
     return true;
 }
 

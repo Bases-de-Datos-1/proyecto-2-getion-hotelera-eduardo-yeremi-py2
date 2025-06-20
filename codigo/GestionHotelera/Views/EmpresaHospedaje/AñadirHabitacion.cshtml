@@ -13,13 +13,13 @@
 
         <div style="margin-bottom: 20px;">
             <label for="numero" style="font-weight: bold; display: block; margin-bottom: 6px;">Número de la habitación:</label>
-            <input type="text" id="numero" name="NumeroHabitacion" placeholder="Ej: 101" min="0" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;" />
+            <input type="text" id="numero" required name="NumeroHabitacion" placeholder="Ej: 101" min="0" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;" />
         </div>
 
         <div style="margin-bottom: 30px;">
             <label for="tipo" style="font-weight: bold; display: block; margin-bottom: 6px;">Tipo de Habitación:</label>
-            <select id="tipo" name="TipoHabitacion" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
-                <option disabled selected>Seleccione un tipo</option>
+            <select id="tipo" name="TipoHabitacion" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                <option value="0" disabled selected>Seleccione un tipo de habitacion...</option>
                 @* <option value="1">Suite Familiar - $250/noche</option>
                 <option value="2">Habitación Doble - $180/noche</option> *@
                 @foreach (var tipo in Model.TiposHabitaciones)

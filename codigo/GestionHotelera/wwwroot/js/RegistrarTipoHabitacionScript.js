@@ -90,7 +90,9 @@ async function enviarDatosRegistroTipoHabitacion() {
             console.log("Datos del regitro de la habitacion: ", resultado);
 
             if (resultado.estadoGeneral > 0) {
-                alert("Tipo de habitacion registrada exitodamente con el ID: ", resultado.estadoGeneral.toString());
+                //alert("Tipo de habitacion registrada exitodamente con el ID: ", resultado.estadoGeneral.toString());
+                alert(`Tipo de habitacion registrada exitosamente con el ID: ${resultado.estadoGeneral}`);
+
                 location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";

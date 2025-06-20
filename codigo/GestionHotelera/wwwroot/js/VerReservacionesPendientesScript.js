@@ -19,11 +19,20 @@ async function procesarAceptacionDeReserva(idReservaTemporal) {
     let datos = await enviarDatosAceptacionReservaTemporal(idReservaTemporal);
     console.log("Resultado: ", datos);
     if (datos.estado > 0) {
-        alert("Reservacion registrada con el ID: ", datos.estado.toString());
+        //alert("Reservacion registrada con el ID: ", datos.estado.toString());
+        alert(`Reservacion registrada con el ID: ${resultado.estado}`);
 
         window.location.reload();
     } else {
-        alert("No se ha podido aceptar la reserva.")
+
+        if (datos.estado === -1) {
+            alert("Habitacion reservada en este rango de fechas.")
+
+        } else {
+            alert("No se ha podido aceptar la reserva.")
+
+        }
+
     }
     
 }
