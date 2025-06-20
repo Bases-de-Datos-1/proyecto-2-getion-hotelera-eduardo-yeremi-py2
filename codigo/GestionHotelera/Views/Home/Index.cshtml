@@ -1,43 +1,58 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Inicio";
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>Inicio - GestionHotelera</title>
-    <link rel="stylesheet" href="/css/auth.css" />
+    <title>Inicio - Hospedate Caribe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" />
 </head>
-<body>
-    <div class="hero-section">
-        <h1 class="hero-title">Bienvenido a GestionHotelera</h1>
-        <p class="hero-subtitle">Tu sistema integral para hospedajes y actividades recreativas.</p>
+<body style="font-family: 'Segoe UI', sans-serif; margin: 0; background-color: #f9f9f9;">
 
-        <div class="btn-group">
-            <a class="btn btn-primary" href="/Cuenta/Login">Iniciar Sesión</a>
-            <a class="btn btn-success" href="/Cuenta/Register">Registrarse</a>
+    <header style="background-color: #2c3e50; padding: 20px 40px; color: white; display: flex; justify-content: space-between; align-items: center;">
+        <h1 style="margin: 0; font-size: 24px;">Hospedate Caribe</h1>
+        <div>
+            <a href="/Cuenta/Login" style="color: white; background-color: #27ae60; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">Iniciar Sesión</a>
+            <a href="/Cuenta/Register" style="color: white; background-color: #3498db; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-left: 10px;">Registrarse</a>
         </div>
+    </header>
 
-        <!-- 🔽 Botón temporal para probar menú de empresa hospedaje -->
-        <div style="margin-top: 40px; text-align: center;">
-            <a href="/EmpresaHospedaje/Menu" style="
-                display: inline-block;
-                padding: 12px 24px;
-                background-color: #6f42c1;
-                color: white;
-                border-radius: 8px;
-                font-weight: bold;
-                text-decoration: none;
-                margin-right: 10px;
-            ">Ir al Menú Empresa Hospedaje (TEST)</a>
+    <section style="background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%); padding: 100px 40px; color: white; text-align: center;">
+        <h2 style="font-size: 40px; margin-bottom: 20px;">Descubre el paraíso en la costa caribeña</h2>
+        <p style="font-size: 18px; max-width: 700px; margin: 0 auto;">
+            Experimenta la belleza natural y la cultura vibrante del Caribe limonense. Encuentra el hospedaje o servicio perfecto para una experiencia inolvidable.
+        </p>
 
-            <a href="/EmpresaRecreacion/Menu" style="
-                display: inline-block;
-                padding: 12px 24px;
-                background-color: #20c997;
-                color: white;
-                border-radius: 8px;
-                font-weight: bold;
-                text-decoration: none;
-            ">Ir al Menú Empresa Recreación (TEST)</a>
+        <!-- Botón para redirigir al menú del cliente -->
+        <div style="margin-top: 40px;">
+            <a href="/Cliente/Menu" style="padding: 14px 30px; background-color: #2c3e50; color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: background-color 0.3s ease;">
+                Ver catalogo
+            </a>
         </div>
-    </div>
+    </section>
+
+    <section style="display: flex; justify-content: center; gap: 30px; padding: 60px 40px; background-color: #ecf0f1;">
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 280px;">
+            <h3 style="color: #2c3e50;">Servicios de recreación</h3>
+            <p style="color: #7f8c8d;">Contamos con múltiples actividades para disfrutar del entorno natural.</p>
+        </div>
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 280px;">
+            <h3 style="color: #2c3e50;">Respaldo municipal</h3>
+            <p style="color: #7f8c8d;">Plataforma avalada por la municipalidad de Limón para tu confianza.</p>
+        </div>
+        <div style="background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 280px;">
+            <h3 style="color: #2c3e50;">Hospedajes certificados</h3>
+            <p style="color: #7f8c8d;">Empresas locales verificadas y comprometidas con la calidad.</p>
+        </div>
+    </section>
+
+    <footer style="text-align: center; color: #aaa; font-size: 14px; padding: 20px; background-color: #2c3e50;">
+        &copy; 2025 Hospedate Caribe. Todos los derechos reservados.
+    </footer>
+
 </body>
 </html>
