@@ -68,7 +68,7 @@ async function enviarDatosRegistroTipoHabitacion() {
 
             if (resultado.estadoGeneral === 1) {
                 alert("Tipo de habitacion registrada exitodamente.");
-                location.replace("/EmpresaHospedaje/Menu");
+                location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;

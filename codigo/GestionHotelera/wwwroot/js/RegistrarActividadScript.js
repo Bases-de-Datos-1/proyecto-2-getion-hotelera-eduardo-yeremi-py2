@@ -68,7 +68,7 @@ async function enviarDatosRegistroActividad() {
 
             if (resultado.estado > 0) {
                 alert("Actividad registrada exitodamente con el ID:", resultado.estado.toString());
-                location.replace("/EmpresaRecreacion/Menu");
+                location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;

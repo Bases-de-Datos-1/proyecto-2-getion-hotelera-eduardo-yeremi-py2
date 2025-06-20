@@ -66,15 +66,21 @@ async function enviarDatosRegistroHabitacion() {
             const resultado = await response.json();
             console.log("Datos del regitro de la habitacion: ", resultado);
             let res = resultado.estado;
-            if (res[0] === 1) {
+            console.log("Res: ", res);
+            if (res[0] > 0) {
                 alert("Tipo de habitacion registrada exitodamente.");
-                location.replace("/EmpresaHospedaje/Menu");
+                location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;
                 //window.location.href = '/EmpresaHospedaje/Menu'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                alert("Error al registrar la habitacion: " + result.message);
+                if (res[0] === -1) {
+                    alert("El numero de la habitacion ya esta en uso. ");
+
+                } else {
+                    alert("Error al registrar la habitacion: ");
+                }
             }
         } else {
             alert("Error al registrar la hbaitacion. Por favor, intente nuevamente.");
