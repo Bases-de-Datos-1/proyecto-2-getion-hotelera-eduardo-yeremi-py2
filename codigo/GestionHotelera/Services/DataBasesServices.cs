@@ -34,7 +34,7 @@ namespace GestionHotelera.Services
         ///     Contructor que recibe la configuracion de la aplicacion para obtener las cadenas de conexion.
         /// </summary>
         /// <param name="configuration"> Elemento del appsetting.json</param>
-        public DataBasesServices(IConfiguration configuration)
+        public DataBasesServices(IConfiguration configuration) 
         {
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("ConexionClientes"); // Inicia la cadena de conexion con los datos de los clientes por defecto.
@@ -42,6 +42,8 @@ namespace GestionHotelera.Services
 
         // >>> ===== Funciones para la comunicacion con la base de datos. ===== <<<
 
+        // Funcion para el inicio de la conexion con la base de datos, usa la cadena de conexion de acuerdo al usuario actual
+        // 
         public SqlConnection IniciarConexion()
         {
             var conn = new SqlConnection(_connectionString);
@@ -49,6 +51,7 @@ namespace GestionHotelera.Services
             return conn;
         }
 
+        // Funcion para el cambio de la cadena de conexion del usuario, estas cadenas estan guardadas en el archivo appsettings.jsan
         public void CambiarConexion(string tipoUsuario)
         {
             _connectionString = tipoUsuario switch
@@ -57,7 +60,7 @@ namespace GestionHotelera.Services
                 "Cliente" => _configuration.GetConnectionString("ConexionClientes"),
                 _ => _connectionString
             };
-            Console.WriteLine($"Conexión cambiada a: {tipoUsuario}");
+            Console.WriteLine($"Conexion cambiada a: {tipoUsuario}");
             return;
         }
 
@@ -75,7 +78,7 @@ namespace GestionHotelera.Services
 
                     //foreach (SqlParameter param in cmd.Parameters)
                     //{
-                    //    Console.WriteLine($"-> Nombre: {param.ParameterName}, Dirección: {param.Direction}, Valor: {param.Value}");
+                    //    Console.WriteLine($"-> Nombre: {param.ParameterName}, Direccion: {param.Direction}, Valor: {param.Value}");
                     //}
 
 
@@ -670,9 +673,11 @@ namespace GestionHotelera.Services
             };
 
 
-            var textoGps = $"POINT({model.Longitud.ToString(CultureInfo.InvariantCulture)} {model.Latitud.ToString(CultureInfo.InvariantCulture)})";
-            var referenciaGeografica = SqlGeography.STPointFromText(new SqlChars(textoGps), 4326);
+            var textoGps = $"POINT({model.Longitud.ToString(CultureInfo.InvariantCulture)} {model.Latitud.ToString(CultureInfo.InvariantCulture)})"; // En esta parte se arma el tipo de dato Geography
+            // Por los problemas con el punto y coma, se tiene que usar el CultureInfo.
+            var referenciaGeografica = SqlGeography.STPointFromText(new SqlChars(textoGps), 4326); // Esta parte genera el obteneto tipo SqlGeography.
 
+            // Crea el parametro.
             SqlParameter referenciaGps = new("@ReferenciaGPS", SqlDbType.Udt)
             {
                 UdtTypeName = "geography",
@@ -728,7 +733,7 @@ namespace GestionHotelera.Services
 
             // Ejecutar.
             int resultado = EjecutarProcedimientoIUD("sp_AgregarTelefonoEmpresaHospedaje", parametros);
-            Console.WriteLine($"Registro teléfono {numeroTelefonico} == resultado = {resultado}");
+            Console.WriteLine($"Registro telefono {numeroTelefonico} == resultado = {resultado}");
 
             return resultado;
         }
@@ -1245,7 +1250,7 @@ namespace GestionHotelera.Services
                     SitioWeb = fila["SitioWeb"]?.ToString(),
                     Contrasena = fila["Contrasena"].ToString()
                 };
-            var geo = fila["ReferenciaGPS"] as SqlGeography;
+            var geo = fila["ReferenciaGPS"] as SqlGeography;// Procesar el dato de la ubicacion gps
             if (geo != null && !geo.IsNull)
             {
                 datosEmpresa.Latitud = geo.Lat.Value;
@@ -1629,7 +1634,7 @@ namespace GestionHotelera.Services
             {
                 foreach (DataRow row in datos.Rows)
                 {
-                    byte[] imagenBinaria = (byte[])row["Imagen"];
+                    byte[] imagenBinaria = (byte[])row["Imagen"]; // Despues se tiene que voler a procesar para mostrarlas.
 
                     lista.Add(new FotosTipoHabitacionModel
                     {
@@ -1639,9 +1644,7 @@ namespace GestionHotelera.Services
                     });
                 }
             }
-            //string base64 = Convert.ToBase64String(imagenBinaria);
-            //string imagenHTML = $"data:image/jpeg;base64,{base64}";
-            //<img src="@($"data:image/jpeg;base64,{Convert.ToBase64String(Model.Imagen)}")" />
+
 
             return lista;
         }
@@ -1969,9 +1972,9 @@ namespace GestionHotelera.Services
         {
 
             var parametros = new SqlParameter[]
-{
+            {
                 new ("@IdActividad", idActividad)
-};
+             };
 
             var tabla = EjecutarProcedimientoConParametros("sp_ObtenerActividadPorID", parametros);
 
@@ -1993,9 +1996,6 @@ namespace GestionHotelera.Services
                 DescripcionActividad = fila["DescripcionActividad"].ToString()
 
             };
-
-
-
         }
 
 

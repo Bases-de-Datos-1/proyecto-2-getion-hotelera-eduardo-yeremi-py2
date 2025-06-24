@@ -9,27 +9,7 @@
 <div class="cuenta-cliente-container">
     <h2>Informacion de la cuenta:</h2>
 
-    @* <div class="campo">
-        <strong>Nombre completo:</strong> @Model.DatosClientes.NombreCompleto
-    </div>
-    <div class="campo">
-        <strong>Tipo de identificacion:</strong> @Model.DatosClientes.TipoIdentificacion
-    </div>
-    <div class="campo">
-        <strong>Cedula:</strong> @Model.DatosClientes.Cedula
-    </div>
-    <div class="campo">
-        <strong>Correo electronico:</strong> @Model.DatosClientes.CorreoElectronico
-    </div>
-    <div class="campo">
-        <strong>Pais de residencia:</strong> @Model.DatosClientes.PaisResidencia
-    </div>
-    <div class="campo">
-        <strong>Fecha de nacimiento:</strong> @Model.DatosClientes.FechaNacimiento.ToString("dd/MM/yyyy")
-    </div>
-    <div class="campo">
-        <strong>Edad:</strong> @Model.DatosClientes.Edad años
-    </div> *@
+    @* Datos personales del clientes. *@
     <div class="caja-seccion">
         <h3>Datos personales</h3>
         <div class="dato">
@@ -48,7 +28,7 @@
     </div>
 
 
-
+    @* Aparatado de ubicacion, esta parte solo esta disoonible si el cliente es de costa rica. *@
     @if (!string.IsNullOrEmpty(Model.DatosClientes.NombreProvincia) ||
         !string.IsNullOrEmpty(Model.DatosClientes.NombreCanton) ||
         !string.IsNullOrEmpty(Model.DatosClientes.NombreDistrito))
@@ -73,6 +53,7 @@
 
     <hr />
 
+    @* Apartado de los telefonos. *@
     <h3>Telefonos</h3>
     @if (Model.ListaTelefonos.Any())
     {

@@ -1,50 +1,4 @@
-﻿/*.cuenta-cliente-container {
-    max-width: 800px;
-    margin: auto;
-    padding: 30px;
-    background-color: #fefefe;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-family: sans-serif;
-}
-
-.cuenta-cliente-container h2 {
-    margin-bottom: 25px;
-    color: #333;
-}
-
-.campo {
-    margin-bottom: 15px;
-}
-
-.lista-telefonos {
-    list-style: none;
-    padding-left: 0;
-}
-
-.lista-telefonos li {
-    margin-bottom: 8px;
-}
-
-.boton-editar {
-    margin-top: 30px;
-}
-
-.boton-editar .btn {
-    background-color: #3498db;
-    color: white;
-    padding: 10px 22px;
-    border-radius: 5px;
-    text-decoration: none;
-    border: none;
-}
-
-.boton-editar .btn:hover {
-    background-color: #2980b9;
-}
-*/
-
-
+﻿/*Div principal*/
 .cuenta-cliente-container {
     max-width: 850px;
     margin: 40px auto;
@@ -54,12 +8,14 @@
     font-family: 'Segoe UI', sans-serif;
 }
 
+/*Titulo de la pagina*/
 .cuenta-cliente-container h2 {
     text-align: center;
     margin-bottom: 30px;
     color: #2c3e50;
 }
 
+/*Cada una de las secciona que tendra la ventana, al ladito izquierdo tiene un borde*/
 .caja-seccion {
     background-color: #ffffff;
     border: 1px solid #ddd;
@@ -70,6 +26,7 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
+/*Titulo de cada seccion*/
 .caja-seccion h3 {
     margin-top: 0;
     margin-bottom: 15px;
@@ -79,6 +36,7 @@
     padding-bottom: 5px;
 }
 
+ Para la parte que muestra cada dato del cliente 
 .dato {
     margin-bottom: 12px;
     display: flex;
@@ -95,6 +53,7 @@
     color: #555;
 }
 
+/* Para los telefonos del cliente. */
 .lista-telefonos {
     list-style: none;
     padding-left: 0;
@@ -109,6 +68,7 @@
     font-weight: 500;
 }
 
+/*Bototones de acciones. */
 .boton-editar {
     text-align: center;
     margin-top: 35px;
