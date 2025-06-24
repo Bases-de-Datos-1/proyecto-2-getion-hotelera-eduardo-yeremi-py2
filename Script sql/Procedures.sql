@@ -1,4 +1,5 @@
-
+USE SistemaDeGestionHotelera;
+GO
 -- ========================== Para la tabla de TipoInstalacion, donde se alacenan los tipos de insyalacion para
 -- as empresas de hospesaje, en teoria ya deberian de estar agregados los tipos que estarna disponibles.
 

@@ -33,18 +33,6 @@ JOIN TipoInstalacion TI ON EH.IdTipoHotel = TI.IdTipoInstalacion
 JOIN Provincia P ON EH.IdProvincia = P.IdProvincia
 JOIN Canton C ON EH.IdCanton = C.IdCanton
 JOIN Distrito D ON EH.IdDistrito = D.IdDistrito;
--- GROUP BY -- Ya no lo ocupa por que los servicios del establecimiento sera optenido por aparte. 
---     EH.CedulaJuridica,
---     EH.NombreHotel,
---     TI.NombreInstalacion,
---     EH.ReferenciaGPS,
---     P.NombreProvincia,
---     C.NombreCanton,
---     D.NombreDistrito,
---     EH.Barrio,
---     EH.SenasExactas,
---     EH.CorreoElectronico,
---     EH.SitioWeb;
 GO
 
 -- Vista para tener los datos de todos los servicios ofrecidos por cada empresa.
@@ -110,7 +98,7 @@ SELECT
     D.NombreDistrito AS Distrito,
     EH.Barrio,
 	EH.SenasExactas
-    -- STRING_AGG(CO.Nombre, ', ') AS Comodidades
+
 FROM DatosHabitacion DH
 JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion
 JOIN TipoCama TC ON TH.IdTipoCama = TC.IdTipoCama
@@ -119,21 +107,6 @@ JOIN EmpresaHospedaje EH ON HE.IdEmpresa = EH.CedulaJuridica
 JOIN Provincia P ON EH.IdProvincia = P.IdProvincia
 JOIN Canton C ON EH.IdCanton = C.IdCanton
 JOIN Distrito D ON EH.IdDistrito = D.IdDistrito
--- LEFT JOIN ListaComodidades LC ON TH.IdTipoHabitacion = LC.IdTipoHabitacion
--- LEFT JOIN Comodidad CO ON LC.IdComodidad = CO.IdComodidad
---GROUP BY
-    --DH.IdDatosHabitacion,
-    --DH.Numero,
-    --TH.Nombre,
-    --TH.Precio,
-	--TC.IdTipoCama,
-    --TC.NombreCama,
-    --EH.CedulaJuridica,
-    --EH.NombreHotel,
-    --P.NombreProvincia,
-    --C.NombreCanton,
-    --D.NombreDistrito,
-    --EH.Barrio;
 GO
 
 -- Vista para tener los datos de las imagenes de las habitaciones.
@@ -278,17 +251,6 @@ JOIN EmpresaRecreacion ER ON SR.IdEmpresa = ER.CedulaJuridica
 JOIN Provincia P ON ER.IdProvincia = P.IdProvincia
 JOIN Canton C ON ER.IdCanton = C.IdCanton
 JOIN Distrito D ON ER.IdDistrito = D.IdDistrito
--- LEFT JOIN ListaActividades LA ON SR.IdServicio = LA.IdServicio
--- LEFT JOIN Actividad A ON LA.IdActividad = A.IdActividad
---GROUP BY -- En teoria esta parte ya no la ocupa.
-    --SR.IdServicio,
-    --SR.NombreServicio,
-    --SR.Precio,
-    --ER.CedulaJuridica,
-    --ER.NombreEmpresa,
-    --P.NombreProvincia,
-    --C.NombreCanton,
-    --D.NombreDistrito;
 GO
 
 -- Vista para las actividades que tenga una empresa de recreacion o un servicio en especifico. 
@@ -398,36 +360,6 @@ JOIN HabitacionesEmpresa HE ON DH.IdDatosHabitacion = HE.IdHabitacion -- Correcc
 JOIN EmpresaHospedaje EH ON HE.IdEmpresa = EH.CedulaJuridica; -- Ahora se relaciona correctamente
 GO
 
-
--- CREATE VIEW view_Reservaciones AS
--- SELECT 
---     R.IdReservacion,
---     R.FechaHoraIngreso,
---     R.FechaHoraSalida,
---     R.CantidadPersonas,
---     R.Vehiculo,
---     DATEDIFF(DAY, R.FechaHoraIngreso, R.FechaHoraSalida) * TH.Precio AS PrecioTotal, -- Precio total de la reserva
---     -- Datos del Cliente
---     C.Cedula AS IdCliente,
---     C.NombreCompleto AS Cliente,
---     C.CorreoElectronico,
---     PA.NombrePais AS PaisResidencia,
---     DATEDIFF(YEAR, C.FechaNacimiento, GETDATE()) as Edad,
---     -- Datos de la Habitacion
---     DH.IdDatosHabitacion AS IdHabitacion,
---     TH.Nombre AS TipoHabitacion,
---     TH.Precio AS PrecioPorNoche,
---     EH.CedulaJuridica AS IdEmpresa,
---     EH.NombreHotel AS NombreEmpresa,
---     EH.ReferenciaGPS
-    
--- FROM Reservacion R
--- JOIN Cliente C ON R.IdCliente = C.Cedula
--- JOIN Paises PA ON C.IdPais = PA.IdPais
--- JOIN DatosHabitacion DH ON R.IdHabitacion = DH.IdDatosHabitacion
--- JOIN TipoHabitacion TH ON DH.IdTipoHabitacion = TH.IdTipoHabitacion
--- JOIN EmpresaHospedaje EH ON DH.IdDatosHabitacion = EH.CedulaJuridica;
--- GO
 
 
 

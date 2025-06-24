@@ -136,7 +136,6 @@ END;
 GO
 
 -- Buscar servicios para el catalogo:
-
 CREATE PROCEDURE sp_BuscarServiciosRecreacion
     @NombreServicio VARCHAR(30) = NULL,
     @PrecioMin FLOAT = NULL,
@@ -167,48 +166,6 @@ BEGIN
 END;
 GO
 
--- CREATE PROCEDURE sp_BuscarHabitaciones_V2
---     @NombreTipoHabitacion VARCHAR(40) = NULL,
---     @FechaEntrada DATETIME = NULL,
---     @FechaSalida DATETIME = NULL,
---     @IdTipoCama SMALLINT = NULL,
---     @ListaComodidades VARCHAR(MAX) = NULL,
---     @PrecioMin FLOAT = NULL,
---     @PrecioMax FLOAT = NULL,
---     @Provincia VARCHAR(20) = NULL,
---     @Canton VARCHAR(30) = NULL,
---     @Distrito VARCHAR(30) = NULL,
---     @Barrio VARCHAR(40) = NULL
--- AS
--- BEGIN
---     SET NOCOUNT ON;
-
---     -- Seleccionamos las habitaciones distintas (hay varias habitaciones que tienen nada mas diferente el numero en la misma empresa) con los parámetros definidos
---     SELECT DISTINCT H.*
---     FROM HabitacionesView H
---     WHERE (@NombreTipoHabitacion IS NULL OR H.TipoHabitacion LIKE '%' + @NombreTipoHabitacion + '%')
---     AND (@IdTipoCama IS NULL OR H.IdTipoCama = @IdTipoCama)
---     AND (@ListaComodidades IS NULL OR EXISTS (SELECT 1 FROM STRING_SPLIT(@ListaComodidades, ',') AS cf WHERE CHARINDEX(cf.VALUE, H.Comodidades) > 0))
---     AND (@PrecioMin IS NULL OR H.Precio >= @PrecioMin)
---     AND (@PrecioMax IS NULL OR H.Precio <= @PrecioMax)
---     AND (@Provincia IS NULL OR H.Provincia = @Provincia)
---     AND (@Canton IS NULL OR H.Canton = @Canton)
---     AND (@Distrito IS NULL OR H.Distrito = @Distrito)
---     AND (@Barrio IS NULL OR H.Barrio = @Barrio)
-
---     -- Revisar disponibilidad de habitaciones en el rango de fechas seleccionado
---     AND (@FechaEntrada IS NULL OR NOT EXISTS (
---         SELECT 1 FROM Reservacion R2 WHERE R2.IdHabitacion = H.IdDatosHabitacion
---         AND (
---             (@FechaEntrada BETWEEN R2.FechaHoraIngreso AND R2.FechaHoraSalida) OR
---             (@FechaSalida BETWEEN R2.FechaHoraIngreso AND R2.FechaHoraSalida) OR
---             (R2.FechaHoraIngreso BETWEEN @FechaEntrada AND @FechaSalida) OR
---             (R2.FechaHoraSalida BETWEEN @FechaEntrada AND @FechaSalida)
---         )
---     ));
--- END;
--- GO
-
 
 
 
@@ -227,7 +184,7 @@ BEGIN
 END;
 GO
 
--- Buscar empresa por su id:
+-- Obtener los datos de los telefonos que tenga una empresa, mediante el id de la empresa:
 CREATE PROCEDURE sp_ObtenerTelefonosEmpresaHospedaje
     @IdEmpresa VARCHAR(15)
 AS
