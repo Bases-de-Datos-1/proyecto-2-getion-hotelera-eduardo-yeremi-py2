@@ -20,7 +20,7 @@ async function procesarAceptacionDeReserva(idReservaTemporal) {
     console.log("Resultado: ", datos);
     if (datos.estado > 0) {
         //alert("Reservacion registrada con el ID: ", datos.estado.toString());
-        alert(`Reservacion registrada con el ID: ${resultado.estado}`);
+        alert(`Reservacion registrada con el ID: ${datos.estado}`);
 
         window.location.reload();
     } else {

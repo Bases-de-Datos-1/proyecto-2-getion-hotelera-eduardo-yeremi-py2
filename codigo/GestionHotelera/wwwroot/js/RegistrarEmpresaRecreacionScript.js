@@ -65,7 +65,13 @@ function inciarListenerFormRegitroEmpresa() {
 
 }
 
-
+// Funcion para validar el formato de los numeros de telefono.
+function validarTelefonos(tel, estado = false) {
+    if (tel === "" && !estado) {
+        return true;
+    }
+    return /^[1-8]{1}[0-9]{7}$/.test(tel);
+}
 
 // Funcion para la parte del registro de cliente.
 async function registrarEmpresa() {

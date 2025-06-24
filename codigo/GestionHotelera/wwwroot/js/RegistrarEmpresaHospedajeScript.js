@@ -44,7 +44,7 @@ function iniciarUbicacionesDinamicas() {
 }
 
 // Validar los telefonos.
-function validarTelefonos(tel, estado = flase) {
+function validarTelefonos(tel, estado = false) {
     if (tel === "" && !estado) {
         return true;
     }

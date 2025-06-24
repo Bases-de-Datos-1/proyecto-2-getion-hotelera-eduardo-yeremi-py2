@@ -42,7 +42,7 @@ namespace GestionHotelera.Controllers
                 
                 TipoCuenta = usuario,
 
-                Provincias = _dataBaseServices.ObtenerProvincias(),
+                Provincias = _dataBaseServices.ObtenerProvinciasConCantonesYDistritos(),
                 ListaTiposInstalaciones = _dataBaseServices.OptenerTipoInstalacionesBD(),
                 ListaServiciosHotel = _dataBaseServices.OptenerServiciosHotelesBD(),
                 ListaTiposDeCamas = _dataBaseServices.OptenerTiposCamasBD(),

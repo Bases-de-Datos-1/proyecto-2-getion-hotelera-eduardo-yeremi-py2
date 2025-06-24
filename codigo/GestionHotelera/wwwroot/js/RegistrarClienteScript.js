@@ -44,7 +44,7 @@ function iniciarUbicacionesDinamicas() {
 }
 
 // Para lo que seria la verificacion de los tekefonos.
-function validarTelefonos(tel, estado = flase) {
+function validarTelefonos(tel, estado = false) {
     if (tel === "" && !estado) {
         return true;
     }
@@ -120,8 +120,8 @@ function validarDatosRegistroCliente() {
 
             // Cedula de menores.
         case "TIM":
-            if (!/^[0-9]{11,12}$/.test(cedula)) {
-                alert("El numero TIM debe contener entre 11 y 12 digitos.");
+            if (!/^[1-9]\d{8}$/.test(cedula)) {
+                alert("La cedula de menores debe contener 9 valores que sena numericos.");
                 return false;
             }
             break;

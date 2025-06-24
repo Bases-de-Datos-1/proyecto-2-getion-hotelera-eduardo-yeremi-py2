@@ -84,27 +84,9 @@ namespace GestionHotelera.Controllers
             return View(datosGeneralesEmpresa);
         }
 
-        //[HttpGet]
-        //public IActionResult Menu(string idEmpresa)
-        //{
-
-        //    EmpresaHospedajeModel datos = _dataBaseServices.ProcesarOptencionDeDatosEmpresaHospedaje(idEmpresa, 0);
 
 
-        //    List<DatosHabitacionesModel> habitacionesCliente = _dataBaseServices.ObtenerHabitacionesPorEmpresaBD(idEmpresa);
-
-
-        //    var datosGenerales = new EmpresaHospedaje1ViewModel
-        //    {
-        //        DatosEmpresa = datos,
-
-        //        ListaHabitaciones = habitacionesCliente
-        //    };
-
-        //    return View(datosGenerales);
-        //}
-
-
+        // Funcion para desplegar la ventana que permite añadir tipos de habitaciones.
         public IActionResult AñadirHabitacion()
         {
             string idEmpresaHospedaje = HttpContext.Session.GetString("UsuarioID");
@@ -445,7 +427,7 @@ namespace GestionHotelera.Controllers
             //    dataRequest.PoseeVehiculo = "No";
             //}
 
-            string idCliente = "703200140";//HttpContext.Session.GetString("UsuarioID");
+            string idCliente = HttpContext.Session.GetString("UsuarioID");
 
             ReservacionesServices _reservacionesServices = new ReservacionesServices(_dataBaseServices);
 
