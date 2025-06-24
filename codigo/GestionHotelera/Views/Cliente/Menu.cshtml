@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Menú Cliente";
+    ViewData["Title"] = "Menu Cliente";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -130,8 +130,14 @@
 <div class="top-bar">
     <a href="/Home/Index">← Volver</a>
     <div>
-        <a href="/Cliente/ModificarPerfil">Modificar perfil</a>
-        <a href="/Cliente/VerReservaciones">Ver reservaciones</a>
+        @* <a href="/Cliente/ModificarPerfil">Modificar perfil</a>
+        <a href="/Cliente/VerReservaciones">Ver reservaciones</a> *@
+
+        @if (Model.TipoCuenta == "Cliente")
+        {
+            <a href="/Cliente/VerCuentaCliente">Ver Cuenta</a>
+        }
+
     </div>
 </div>
 

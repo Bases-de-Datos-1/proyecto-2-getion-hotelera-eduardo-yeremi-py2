@@ -7,6 +7,8 @@ namespace GestionHotelera.Models.VistasModel
     public class CatalogoViewModel
     {
 
+        public string TipoCuenta { get; set; } // Para ver si la sesion esta iniciada.
+
         // Para los filtros de ubicaciones.
         public List<ProvinciasModel> Provincias { get; set; } = new List<ProvinciasModel>();
 

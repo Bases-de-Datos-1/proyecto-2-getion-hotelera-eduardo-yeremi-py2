@@ -1,4 +1,5 @@
-﻿using GestionHotelera.Models.FiltrosBusquedaModel.FiltrosBusqueda;
+﻿using GestionHotelera.Models.ClientesModels;
+using GestionHotelera.Models.FiltrosBusquedaModel.FiltrosBusqueda;
 using GestionHotelera.Models.VistasModel;
 using GestionHotelera.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,23 @@ namespace GestionHotelera.Controllers
         // Este esta es la funcion que lanza la ventana de catalogo.
         public IActionResult Menu()
         {
+            string estadoSesion = HttpContext.Session.GetString("EstadoSesion");
+
+            string tipoUsuario = HttpContext.Session.GetString("TipoUsuario");
+
+            string usuario = "No";
+
+            if (!string.IsNullOrEmpty(estadoSesion) && tipoUsuario == "Cliente")
+            {
+                usuario = "Cliente";
+            }
+
 
             // Obtener los datos que se ocupana para iniciar la ventana.
             CatalogoViewModel datosCatalogo = new CatalogoViewModel { 
                 
+                TipoCuenta = usuario,
+
                 Provincias = _dataBaseServices.ObtenerProvincias(),
                 ListaTiposInstalaciones = _dataBaseServices.OptenerTipoInstalacionesBD(),
                 ListaServiciosHotel = _dataBaseServices.OptenerServiciosHotelesBD(),
@@ -42,6 +56,22 @@ namespace GestionHotelera.Controllers
 
 
             return View(datosCatalogo);
+        }
+
+
+
+        public IActionResult VerCuentaCliente()
+        {
+            string idCliente = HttpContext.Session.GetString("UsuarioID");
+
+            VerCuentaClienteViewModel DatosCuenta = new VerCuentaClienteViewModel
+            {
+                DatosClientes = _dataBaseServices.ObtenerDatosGeneralesClienteDB(idCliente),
+                ListaTelefonos = _dataBaseServices.ObtenerTelefonosClienteDB(idCliente)
+            };
+
+
+            return View(DatosCuenta);
         }
 
         // GET: /Cliente/ModificarPerfil
