@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Añadir Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model GestionHotelera.Models.VistasModel.RegistroHabitacionesViewModel;
+
+<div style="max-width: 700px; margin: 40px auto; background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-family: 'Segoe UI', sans-serif;">
+    <a href="/EmpresaHospedaje/Menu" style="text-decoration:none; color:#2c3e50; font-weight:bold;">← Atrás</a>
+
+    <h2 style="text-align: center; color: #2c3e50; margin-bottom: 30px;">Registrar Nueva Habitación</h2>
+
+    <form id="RegistrarNuevaHabitacion">
+
+        <div style="margin-bottom: 20px;">
+            <label for="numero" style="font-weight: bold; display: block; margin-bottom: 6px;">Número de la habitación:</label>
+            <input type="text" id="numero" required name="NumeroHabitacion" placeholder="Ej: 101" min="0" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;" />
+        </div>
+
+        <div style="margin-bottom: 30px;">
+            <label for="tipo" style="font-weight: bold; display: block; margin-bottom: 6px;">Tipo de Habitación:</label>
+            <select id="tipo" name="TipoHabitacion" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                <option value="0" disabled selected>Seleccione un tipo de habitacion...</option>
+                @* <option value="1">Suite Familiar - $250/noche</option>
+                <option value="2">Habitación Doble - $180/noche</option> *@
+                @foreach (var tipo in Model.TiposHabitaciones)
+                {
+                    <option value="@tipo.IdTipoHabitacion">@tipo.NombreTipoHabitacion - $@tipo.Precio</option>
+                }
+            </select>
+        </div>
+
+        <div style="display: flex; justify-content: space-between;">
+            <button type="submit" style="padding: 10px 25px; background-color: #2ecc71; border: none; color: white; border-radius: 6px; font-weight: bold;">Guardar</button>
+            <a href="/EmpresaHospedaje/Menu?idEmpresa=no" style="padding: 10px 25px; background-color: #c0392b; color: white; border-radius: 6px; text-decoration: none; font-weight: bold;">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script src="~/js/RegistrarHabitacionScript.js"></script>

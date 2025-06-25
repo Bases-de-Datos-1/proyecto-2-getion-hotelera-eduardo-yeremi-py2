@@ -1,0 +1,282 @@
+﻿@{
+    ViewData["Title"] = "Ver Facturaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model GestionHotelera.Models.VistasModel.ReportesViewModel;
+
+<link href="~/css/ReportesStyles.css" rel="stylesheet" />
+
+
+<div class="contenedor">
+    <a href="/EmpresaHospedaje/Menu?idEmpresa=no" class="volver-btn">← Atrás</a>
+
+    <h2>Ver Facturas y Reservas</h2>
+
+    <div class="modo-filtros">
+        <button type="button" onclick="controlSecciones('reserva')">Ver reservacion</button>
+
+        <button type="button" onclick="controlSecciones('tipo')">ver facturas por tipo de habitacion</button>
+
+        <button type="button" onclick="controlSecciones('numero')">Por numero de habitacion</button>
+
+        <button type="button" onclick="controlSecciones('dia')">Por dia</button>
+
+        <button type="button" onclick="controlSecciones('mes')">Por mes</button>
+
+        <button type="button" onclick="controlSecciones('fechas')">Por rango de fechas</button>
+
+        <button type="button" onclick="controlSecciones('tipoHabitacion')">Ver reservas por tipos de habitacion</button>
+
+        <button type="button" onclick="controlSecciones('edad')">Conocer edad personas</button>
+
+        <button type="button" onclick="controlSecciones('demanda')">Conocer demanda de hoteles</button>
+
+
+    </div>
+
+    @* <div class="filtro-id">
+        <label id="labelFiltro">Introduzca el ID de su reservación</label><br />
+        <input type="text" id="inputFiltro" placeholder="Ej: 12345" />
+    </div>
+
+    <!-- Filtro de fechas simplificado -->
+    <div class="filtros-fecha">
+        <label><strong>Rango de fechas</strong></label><br />
+        <input type="date" id="fechaInicio" style="margin-right: 10px;" />
+        <input type="date" id="fechaFin" />
+    </div> *@
+
+
+    @* ========= Para cada seccion se va a tener un div diferentes. ===================  *@
+    @* Div para la consulta por reservacion especifica *@
+    <div class="reserva-especifca-div hidden" id="ReservaEspecificaDiv">
+        <form id="reservaEspecificaID">
+
+            <div class="filtro-id">
+                <label id="labelFiltro">Introduzca el ID de su reservacion</label><br />
+                <input type="number" id="idReservacionInput" name="IdReservacion" placeholder="Ej: 12345" required/>
+            </div>
+
+            <button class="buscar-btn" type="submit">Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas para un tipo de habitacion especifica. *@
+    <div class="reserva-especifca-div hidden" id="TipoHabitacionEspecificaDiv">
+        <form id="tipoHabitacionEspecifica">
+
+            <div class="filtro-id">
+          
+                @* Esto seria un select para saber que tipo de habitacion soncusltar *@
+                <select id="tipoHabitacionesSelect" name="IdTipoHabitacion" required>
+                    <option value="0" disabled selected>Seleccione un tipo de habitacion</option>
+                    @foreach (var tipoHabitacion in Model.ListaTiposHabitaciones)
+                    {
+                        <option value="@tipoHabitacion.IdTipoHabitacion" >@tipoHabitacion.NombreTipoHabitacion - Precio: @tipoHabitacion.Precio </option>
+                    }
+                </select>
+
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas por el numero de una habitacion *@
+    <div class="reserva-especifca-div hidden" id="HabitacionEspecificaDiv">
+        <form id="habitacionEspecificaForm">
+
+            <div class="filtro-id">
+                <label id="labelFiltro">Introduzca el ID el numero de habitacion a consultar</label><br />
+                <input type="number" id="habitacionEspecificaInput" name="IdHabitacion" placeholder="Ej: 12345" required />
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas por dia*@
+    <div class="reserva-especifca-div hidden" id="DiaEspecificoDiv">
+        <form id="diaEspecificoForm">
+
+            <div class="filtro-id">
+                <label id="labelFiltro">Selecciona un dia especifico</label><br />
+                <input type="date" id="diaInput" name="FechaDia" required />
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas por mes especifico *@
+    <div class="reserva-especifca-div hidden" id="mesEspecificoDiv">
+        <form id="mesEspecificoForm">
+
+            <div class="filtro-id">
+                <select id="mesEspecificoSelect" name="Mes" required>
+                    <option value="0" disabled selected>Seleccione un mes...</option>
+                    <option value="1">Enero </option>
+                    <option value="2">Febrero </option>
+                    <option value="3">Marzo </option>
+                    <option value="4">Abril </option>
+                    <option value="5">Mayo </option>
+                    <option value="6">Junio </option>
+                    <option value="7">Julio </option>
+                    <option value="8">Agosto </option>
+                    <option value="9">Septiembre </option>
+                    <option value="10">Octubre </option>
+                    <option value="11">Noviembre </option>
+                    <option value="12">Diciembre </option>
+
+            </select>
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas por año especifico *@
+    <div class="reserva-especifca-div hidden" id="AnioEspecifivoDiv">
+        <form id="anioEspecificoForm">
+
+            <div class="filtro-id">
+                <label id="labelFiltro">Introduzca el año a consultar:</label><br />
+                <input type="number" id="anioEspecificoInput" name="Anio" placeholder="Ej: 2025" required />
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de facturas por rango de fechas especifico *@
+    <div class="reserva-especifca-div hidden" id="fechaEspecificaDiv">
+        <form id="fechaEspecificaForm">
+
+            <div class="filtro-fechas">
+                <input type="date" id="fechaInicioRango" name="FechaInicioRango" style="margin-right: 10px;" required/>
+                <input type="date" id="fechaFinRango" name="FechaFinRango" required/>
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de reservas por tipos de habitaciones.*@
+    <div class="reserva-especifca-div hidden" id="TiposHabitacionesDiv">
+        <form id="tiposHabitacionesForm">
+
+
+            <div class="checkbox-grid">
+                @foreach (var tipo in Model.ListaTiposHabitaciones)
+                {
+                    <label class="checkbox-tile">
+                        <input type="checkbox" name="ListaTiposHabitacion" value="@tipo.IdTipoHabitacion" />
+                        <span class="etiqueta">
+                            @tipo.NombreTipoHabitacion<br />
+                            <small>₡@tipo.Precio</small>
+                        </span>
+                    </label>
+                }
+            </div>
+
+            <div class="filtro-fechas">
+                <input type="date" id="fechaInicioRango" name="FechaInicioTipos" style="margin-right: 10px;" required />
+                <input type="date" id="fechaFinRango" name="FechaFinTipos" required />
+            </div>
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de la edad de las personas que han realizado reservas. *@
+    <div class="reserva-especifca-div hidden" id="EdadEspecificaDiv">
+        <form id="edadesForm">
+
+            <label>Ver el rango de edades de las personas que han realizado reservas... </label>
+
+            <button class="buscar-btn" type="submit">Consultar</button>
+
+        </form>
+
+    </div>
+
+
+    @* Div para la consulta de hoteles con mayor demanda por fecha y ubicacion.*@
+    <div class="reserva-especifca-div hidden" id="demandaDiv">
+        <form id="demadaForm">
+
+            <label>Conocer los oteles con mas demanda por fecha y ubicacion:</label>
+
+            <div class="filtro-id">
+                <label id="labelFiltro">la fecha a consultar.</label><br />
+                <input type="date" id="fechaDemandaInput" name="FechaDemanda" required />
+            </div>
+
+            <select id="provinciaHabitacion" name="Provincia">
+                <option value="0">Seleccione una provincia</option>
+                @foreach (var provincia in Model.Provincias)
+                {
+                    <option value="@provincia.IdProvincia">@provincia.NombreProvincia</option>
+                }
+            </select>
+
+            <select id="cantonHabitacion" name="Canton">
+                <option value="0">Seleccione un canton</option>
+            </select>
+
+            <select id="distritoHabitacion" name="Distrito">
+                <option value="0">Seleccione un distrito</option>
+            </select>
+
+
+            <button class="buscar-btn" type="submit" >Consultar</button>
+
+        </form>
+
+    </div>
+
+
+
+
+    @* <button class="buscar-btn" onclick="buscarFacturas()">Consultar</button> *@
+
+    <div class="resultados" id="contenerdorResultados">
+        Resultados...
+    </div>
+</div>
+
+
+<script>
+    // Guardar los datos en las ventanas para usarlo en un archivo aparte.
+    window.listaCantones = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones)));
+    window.listaDistritos = @Html.Raw(Json.Serialize(Model.Provincias.SelectMany(p => p.Cantones).SelectMany(c => c.Distritos)));
+</script>
+
+
+<script src="~/js/ReportesScript.js"></script>
+

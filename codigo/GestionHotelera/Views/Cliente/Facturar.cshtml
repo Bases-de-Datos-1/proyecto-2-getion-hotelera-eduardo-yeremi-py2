@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Facturar habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .factura-container {
+            max-width: 500px;
+            margin: auto;
+            background-color: #888;
+            padding: 30px;
+            border-radius: 12px;
+            color: white;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .metodo {
+            background-color: #c7d7d4;
+            color: #222;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+        }
+
+            .metodo:hover {
+                background-color: #b0c6c3;
+            }
+
+        .tarjeta-form {
+            display: none;
+            margin-top: 20px;
+            background-color: #aaa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+            .tarjeta-form input {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 8px;
+                border: none;
+                border-radius: 5px;
+            }
+
+        .monto {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 20px;
+        }
+
+        .botones {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+            .botones button {
+                padding: 10px 20px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+            }
+
+        .procesar {
+            background-color: #229878;
+            color: white;
+        }
+
+        .cancelar {
+            background-color: #9c4f2e;
+            color: white;
+        }
+    </style>
+}
+
+<div class="factura-container">
+    <h2>Facturar habitación</h2>
+
+    <h4>Elegir método de pago:</h4>
+
+    <div>
+        <div class="metodo" onclick="seleccionarMetodo('Tarjeta')">Tarjeta</div>
+        <div class="metodo" onclick="seleccionarMetodo('Efectivo')">Efectivo</div>
+    </div>
+
+    <div class="tarjeta-form" id="tarjeta-form">
+        <input type="text" placeholder="Nombre en la tarjeta">
+        <input type="text" placeholder="Número de tarjeta">
+        <input type="text" placeholder="Fecha de vencimiento (MM/AA)">
+        <input type="text" placeholder="CVV">
+    </div>
+
+    <div class="monto">
+        <span>Monto total:</span>
+        <span id="total">378 000</span>
+    </div>
+
+    <div class="botones">
+        <button class="procesar" onclick="procesarPago()">Procesar</button>
+        <button class="cancelar" onclick="window.location.href='/Cliente/VerReservaciones'">Cancelar</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let metodoSeleccionado = "";
+
+        function seleccionarMetodo(metodo) {
+            metodoSeleccionado = metodo;
+            document.getElementById("tarjeta-form").style.display = (metodo === 'Tarjeta') ? 'block' : 'none';
+        }
+
+        function procesarPago() {
+            if (!metodoSeleccionado) {
+                alert("Por favor seleccione un método de pago.");
+                return;
+            }
+
+            // Simulación: guardar estado facturación por ID (usamos ID 1 como ejemplo)
+            localStorage.setItem("reserva_1_pago", metodoSeleccionado);
+            alert("Pago procesado con " + metodoSeleccionado);
+            window.location.href = "/Cliente/VerReservaciones";
+        }
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Cuenta Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model GestionHotelera.Models.VistasModel.VerCuentaClienteViewModel;
+
+<link href="~/css/VerCuentaClienteStyles.css" rel="stylesheet" />
+<div class="cuenta-cliente-container">
+    <h2>Informacion de la cuenta:</h2>
+
+    @* Datos personales del clientes. *@
+    <div class="caja-seccion">
+        <h3>Datos personales</h3>
+        <div class="dato">
+            <strong>Nombre:</strong> <span>@Model.DatosClientes.NombreCompleto</span>
+        </div>
+        <div class="dato"><strong>Tipo Identificacion:</strong> <span> @Model.DatosClientes.TipoIdentificacion </span></div>
+        <div class="dato"><strong>Cedula:</strong> <span>@Model.DatosClientes.Cedula</span></div>
+        <div class="dato"><strong>Correo electronico:</strong> <span> @Model.DatosClientes.CorreoElectronico </span></div>
+        <div class="dato"><strong>Pais de residencia:</strong> <span> @Model.DatosClientes.PaisResidencia </span></div>
+        <div class="dato"><strong>Fecha de nacimiento:</strong> <span> @Model.DatosClientes.FechaNacimiento.ToString("dd/MM/yyyy") </span></div>
+        <div class="dato"><strong>Edad:</strong> <span> @Model.DatosClientes.Edad años </span></div>
+        @* <div class="dato"><strong>:</strong> <span>  </span></div>
+        <div class="dato"><strong>:</strong> <span>  </span></div> *@
+
+   
+    </div>
+
+
+    @* Aparatado de ubicacion, esta parte solo esta disoonible si el cliente es de costa rica. *@
+    @if (!string.IsNullOrEmpty(Model.DatosClientes.NombreProvincia) ||
+        !string.IsNullOrEmpty(Model.DatosClientes.NombreCanton) ||
+        !string.IsNullOrEmpty(Model.DatosClientes.NombreDistrito))
+    {
+        @* <div class="campo">
+            <strong>Ubicacion:</strong>
+            <p>
+                @Model.DatosClientes.NombreProvincia,
+                @Model.DatosClientes.NombreCanton,
+                @Model.DatosClientes.NombreDistrito
+            </p>
+        </div> *@
+
+        <div class="caja-seccion">
+            <h3>Ubicacion</h3>
+            <div class="dato"><strong>Provincia:</strong> <span>@Model.DatosClientes.NombreProvincia</span></div>
+            <div class="dato"><strong>Canton:</strong> <span>@Model.DatosClientes.NombreCanton</span></div>
+            <div class="dato"><strong>Distrito:</strong> <span>@Model.DatosClientes.NombreDistrito</span></div>
+        </div>
+
+    }
+
+    <hr />
+
+    @* Apartado de los telefonos. *@
+    <h3>Telefonos</h3>
+    @if (Model.ListaTelefonos.Any())
+    {
+        @* <ul class="lista-telefonos">
+            @foreach (var tel in Model.ListaTelefonos)
+            {
+                <li><strong>@tel.CodigoPais</strong> - @tel.NumeroTelefonico</li>
+            }
+        </ul> *@
+        <div class="caja-seccion">
+            <h3>Telefonos</h3>
+            <ul class="lista-telefonos">
+                @foreach (var tel in Model.ListaTelefonos)
+                {
+                    <li>@tel.CodigoPais - @tel.NumeroTelefonico</li>
+                }
+            </ul>
+        </div>
+    }
+    else
+    {
+        <p>No hay telefonos registrados.</p>
+    }
+
+    <div class="boton-editar">
+        <a href="/Cliente/ModificarPerfil" class="btn btn-primary">Editar informacion</a>
+    </div>
+</div>

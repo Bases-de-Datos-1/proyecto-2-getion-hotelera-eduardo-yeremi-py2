@@ -1,0 +1,110 @@
+﻿@{
+    ViewData["Title"] = "Editar reservación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .form-editar {
+            max-width: 480px;
+            margin: auto;
+            padding: 30px;
+            background-color: #777;
+            color: white;
+            border-radius: 12px;
+        }
+
+            .form-editar label {
+                display: block;
+                margin-top: 20px;
+                font-weight: bold;
+            }
+
+            .form-editar input[type="datetime-local"],
+            .form-editar input[type="number"] {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 6px;
+                background-color: #333;
+                color: white;
+                font-size: 16px;
+                margin-top: 8px;
+            }
+
+            .form-editar input[type="checkbox"] {
+                margin-right: 8px;
+            }
+
+            .form-editar .botones {
+                margin-top: 30px;
+                display: flex;
+                justify-content: space-between;
+                gap: 20px;
+            }
+
+            .form-editar button {
+                padding: 12px 20px;
+                font-size: 16px;
+                font-weight: bold;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+            }
+
+        .guardar {
+            background-color: #2e8b57;
+            color: white;
+        }
+
+        .cancelar {
+            background-color: #9c4f2e;
+            color: white;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #6c757d;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+}
+
+<a href="/Cliente/VerReservaciones" class="btn-volver">← Volver a reservaciones</a>
+
+<div class="form-editar">
+    <h2>Reservar esta habitación:</h2>
+
+    <label>Fecha y hora de entrada:</label>
+    <input type="datetime-local" id="entrada" value="2025-04-03T07:30">
+
+    <label>Fecha y hora de salida:</label>
+    <input type="datetime-local" id="salida" value="2025-04-05T12:00">
+
+    <label>Cantidad de personas:</label>
+    <input type="number" id="personas" min="1" value="3">
+
+    <label style="margin-top: 20px;">
+        <input type="checkbox" id="vehiculo" checked>
+        ¿Posee vehículo?
+    </label>
+
+    <div class="botones">
+        <button class="guardar" onclick="guardar()">Guardar cambios</button>
+        <button class="cancelar" onclick="window.location.href='/Cliente/VerReservaciones'">Cancelar</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function guardar() {
+            // Simulación: podemos almacenar en localStorage si querés simular los cambios
+            alert("Cambios guardados (simulado).");
+            window.location.href = "/Cliente/VerReservaciones";
+        }
+    </script>
+}

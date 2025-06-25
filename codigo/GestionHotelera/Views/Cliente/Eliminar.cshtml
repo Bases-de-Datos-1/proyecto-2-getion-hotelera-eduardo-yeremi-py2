@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Eliminar reservación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .eliminar-contenedor {
+            max-width: 500px;
+            margin: auto;
+            background-color: #555;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+            .eliminar-contenedor h2 {
+                margin-bottom: 20px;
+            }
+
+            .eliminar-contenedor p {
+                margin-bottom: 25px;
+            }
+
+            .eliminar-contenedor .botones {
+                display: flex;
+                justify-content: center;
+                gap: 20px;
+            }
+
+                .eliminar-contenedor .botones button {
+                    padding: 10px 20px;
+                    font-weight: bold;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 6px;
+                    cursor: pointer;
+                }
+
+        .btn-confirmar {
+            background-color: #d9534f;
+            color: white;
+        }
+
+        .btn-cancelar {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #6c757d;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+}
+
+<a href="/Cliente/VerReservaciones" class="btn-volver">← Volver a reservaciones</a>
+
+<div class="eliminar-contenedor">
+    <h2>¿Eliminar esta reservación?</h2>
+    <p>Número de habitación: <strong>1</strong></p>
+    <p>Fecha de entrada: <strong>3 - 4 - 2025 7:30 am</strong></p>
+    <p>Fecha de salida: <strong>5 - 4 - 2025 12:00 pm</strong></p>
+    <div class="botones">
+        <button class="btn-confirmar" onclick="eliminarReserva()">Eliminar</button>
+        <button class="btn-cancelar" onclick="window.location.href='/Cliente/VerReservaciones'">Cancelar</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function eliminarReserva() {
+            // Simulación: eliminamos del localStorage el pago de la reserva 1
+            localStorage.removeItem("reserva_1_pago");
+            alert("Reservación eliminada (simulado)");
+            window.location.href = "/Cliente/VerReservaciones";
+        }
+    </script>
+}

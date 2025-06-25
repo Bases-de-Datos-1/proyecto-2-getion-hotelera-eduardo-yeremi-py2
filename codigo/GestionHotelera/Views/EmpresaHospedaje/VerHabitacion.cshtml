@@ -1,0 +1,190 @@
+﻿@model GestionHotelera.Models.VistasModel.HabitacionViewModel1;
+
+
+@{
+    ViewData["Title"] = "Detalle de Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var imagenBase64 = Model.DatosHabitacion.ListaFotosHabitacion?.FirstOrDefault()?.Imagen != null
+    ? $"data:image/jpeg;base64,{Convert.ToBase64String(Model.DatosHabitacion.ListaFotosHabitacion.First().Imagen)}"
+    : "https://via.placeholder.com/220x140?text=Sin+imagen";
+}
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<div style="font-family: 'Segoe UI', sans-serif; padding: 20px; background-color: #f0f0f0; border-radius: 10px; max-width: 1000px; margin: auto;">
+    
+    @* Esta parte de aqui seria de las que cambiaria dependiendo del tipo de sesion usada. *@
+    @if (Model.TipoCuenta == "Empresa")
+    {
+        <a href="/EmpresaHospedaje/Menu?idEmpresa=no" style="text-decoration: none; display: inline-block; margin-bottom: 20px; background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px;">← Atrás</a>
+
+    } else
+    {
+        <a href="/Cliente/Menu" style="text-decoration: none; display: inline-block; margin-bottom: 20px; background-color: #6c757d; color: white; padding: 8px 14px; border-radius: 6px;">← Atrás</a>
+                
+    }
+
+    <div style="background-color: #ddd; padding: 15px; border-radius: 8px;">
+        <h2 style="margin-top: 0;">@Model.DatosHabitacion.TipoHabitacionNombre</h2>
+        <p style="margin: 0;"><strong>Ubicacion:</strong> @Model.DatosHabitacion.Provincia,  @Model.DatosHabitacion.Canton,  @Model.DatosHabitacion.Distrito</p>
+
+
+
+        <img src="@imagenBase64" alt="Imagen de la habitacion" style="margin-top: 10px; width: 100%; border-radius: 8px;" />
+    </div>
+
+    <div style="display: flex; gap: 20px; margin-top: 20px;">
+        <div style="flex: 2;">
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Descripcion:</h3>
+                <p> @Model.DatosHabitacion.Descripcion </p>
+                <p><strong>Tipo de cama:</strong>  @Model.DatosHabitacion.NombreCama</p>
+                <p><strong>Precio:</strong>  @Model.DatosHabitacion.Precio colones / por noche</p>
+            </div>
+
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Comodidades:</h3>
+                @* <span style="display:inline-block; background-color:#27ae60; color:white; padding:6px 12px; margin:4px; border-radius:5px;">WIFI</span>
+                <span style="display:inline-block; background-color:#27ae60; color:white; padding:6px 12px; margin:4px; border-radius:5px;">Piscina</span>
+                <span style="display:inline-block; background-color:#27ae60; color:white; padding:6px 12px; margin:4px; border-radius:5px;">A/C</span> *@
+                @foreach (var comodidades in Model.DatosHabitacion.ListaDeComodidades)
+                {
+                    <span style="display:inline-block; background-color:#27ae60; color:white; padding:6px 12px; margin:4px; border-radius:5px;">@comodidades.NombreComodidad</span>
+                }                
+
+            </div>
+
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Ubicacion:</h3>
+                <p><strong>Provincia:</strong> @Model.DatosHabitacion.Provincia</p>
+                <p><strong>Cantón:</strong> @Model.DatosHabitacion.Canton</p>
+                <p><strong>Distrito:</strong> @Model.DatosHabitacion.Distrito</p>
+                <p><strong>Barrio:</strong> @Model.DatosHabitacion.Barrio</p>
+                <p><strong>Señas exactas:</strong> @Model.DatosHabitacion.DireccionExacta</p>
+                <p><strong>Numero de habitacion:</strong> @Model.DatosHabitacion.NumeroHabitacion</p>
+            </div>
+
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Ubicacion GPS:</h3>
+
+                <div id="map" style="height: 400px; margin-bottom: 1rem; border: 10px;"></div>
+            </div>
+
+            @* Esta seria otra seccion condicional para ver los datos de la empresa de hospedaje. *@
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Datos de la empresa de hospedaje:</h3>
+                <p><strong>Nombre de la empresa:</strong> @Model.DatosHabitacion.NombreHotel</p>
+                @if (Model.TipoCuenta != "Empresa")
+                {
+                    <a onclick="location.href='@Url.Action("Menu", "EmpresaHospedaje", new { idEmpresa = Model.DatosHabitacion.CedulaJuridica })'">Ver empresa de hospedaje</a>
+                    
+                }
+
+            </div>
+
+
+        </div>
+
+
+        @* Estas parte de aqui serian otras que se muestran condicionalmente, ya que tendria reservas para cliente y opciones para empresa.*@
+        @if (Model.TipoCuenta == "Empresa")
+        {
+            <div style="flex: 1;">
+                <div style="background-color: #ddd; padding: 15px; border-radius: 8px;">
+                    <h3>Opciones para esta habitacion:</h3>
+                    <a href="/EmpresaHospedaje/EditarHabitacion" style="display:block; text-align:center; background-color: #27ae60; color:white; padding:10px; margin-bottom:10px; border-radius:5px; text-decoration:none;">Editar</a>
+                    <a href="#" style="display:block; text-align:center; background-color: #c0392b; color:white; padding:10px; margin-bottom:10px; border-radius:5px; text-decoration:none;">Eliminar</a>
+                    <a href="#" style="display:block; text-align:center; background-color: #2980b9; color:white; padding:10px; border-radius:5px; text-decoration:none;">Ver tipo de habitación</a>
+                
+                    <input type="hidden" name="IdDatosHabitacionEmpresa" value="@Model.DatosHabitacion.IdDatosHabitacion"/>
+                    
+                </div>
+            </div>
+
+        } else if (Model.TipoCuenta == "Cliente")
+        {
+            
+            <div style="flex: 1;">
+                <div style="background-color: #ddd; padding: 15px; border-radius: 8px;">
+                    <h3 style="margin-top: 0;">Reservar esta habitación:</h3>
+
+                    <form id="reservacionForm">
+                        <label for="entrada">Fecha y hora de entrada:</label>
+                        <input type="datetime-local" id="entrada" name="FechaHoraEntrada" required style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                        <label for="salida">Fecha y hora de salida:</label>
+                        <input type="datetime-local" id="salida" name="FechaHoraSalida" required style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                        <label for="personas">Cantidad de personas:</label>
+                        <input type="number" id="personas" name="CantidadPersonas" min="1" required style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                        <div style="margin-bottom: 15px;">
+                            <input type="checkbox" id="vehiculo" name="PoseeVehiculo" value="Si" />
+                            <label for="vehiculo">¿Posee vehiculo?</label>
+                        </div>
+
+                        <input type="hidden" name="IdDatosHabitacion" value="@Model.DatosHabitacion.IdDatosHabitacion"/>
+
+                        <input type="hidden" name="CedulaJuridica" value="@Model.DatosHabitacion.CedulaJuridica" />
+
+                        <button type="submit"
+                                style="display: block; width: 100%; text-align: center; background-color: #27ae60; color: white; padding: 10px; border-radius: 5px; border: none;">
+                            Reservar
+                        </button>
+
+                    </form>
+                </div>
+            </div>
+
+        }
+
+
+        @* Apartado de reservacion para los clientes. *@
+        @* <div style="flex: 1;">
+            <div style="background-color: #ddd; padding: 15px; border-radius: 8px;">
+                <h3 style="margin-top: 0;">Reservar esta habitacion:</h3>
+
+                <form id="reservacionForm">
+                    <label>Fecha y hora de entrada: </label>
+                    <input type="datetime" name="FechaHoraEntrada" required style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                    <label>fecha y hora de salida: </label>
+                    <input type="datetime" name="FechaHoraSalida" required style="width: 100%; padding: 8px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                    <label>Cantidad de personas:</label>
+                    <input type="number" name="CantidadPersonas" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #ccc;" />
+
+                    <label>
+                        <input type="checkbox" name="Vehiculo" required/> ¿Posee Vehiculo?
+
+                    </label>
+
+                    <button type="submit" style="display:block; width:100%; text-align:center; background-color: #27ae60; color:white; padding:10px; margin-bottom:10px; border-radius:5px; border:none;">Reservas</button>
+                </form>
+
+            </div>
+        </div> *@
+
+
+
+
+
+
+
+    </div>
+</div>
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+<script>
+    window.latitudEmpresa = @Model.DatosHabitacion.DatosUbicacionGPS.Latitud.ToString(System.Globalization.CultureInfo.InvariantCulture);
+    window.longitudEmpresa = @Model.DatosHabitacion.DatosUbicacionGPS.Longitud.ToString(System.Globalization.CultureInfo.InvariantCulture);
+</script>
+
+<script src="~/js/VistaHabitacionesScript.js"></script>

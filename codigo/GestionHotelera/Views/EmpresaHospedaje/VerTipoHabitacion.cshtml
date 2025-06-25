@@ -1,0 +1,69 @@
+﻿@model GestionHotelera.Models.VistasModel.TipoHabitacionViewModel1;
+
+@{
+    ViewData["Title"] = "Ver Tipo de Habitación";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var imagenBase64 = Model.DatosTipoHabitacion.Imagenes?.FirstOrDefault()?.Imagen != null
+    ? $"data:image/jpeg;base64,{Convert.ToBase64String(Model.DatosTipoHabitacion.Imagenes.First().Imagen)}"
+    : "https://via.placeholder.com/220x140?text=Sin+imagen";
+
+}
+
+<link href="~/css/VerTipoHabitacionStyles.css" rel="stylesheet" />
+
+<div style="background-color: #2c2f36; font-family: 'Segoe UI', sans-serif; color: #ddd; padding: 20px; max-width: 900px; margin: auto; border-radius: 10px;">
+    <a href="/EmpresaHospedaje/Menu?idEmpresa=no" style="color: white; text-decoration: none;">← Atrás</a> @*"'@Url.Action("Menu", "EmpresaHospedaje", new { idEmpresa = "SesionIniciada" })'"*@
+
+    <div style="margin-top: 15px; background-color: #aaa; border-radius: 8px; overflow: hidden;">
+        <img src="@imagenBase64" alt="Imagen tipo habitación" style="width: 100%; height: auto;">
+    </div>
+
+    <div style="background-color: #888; padding: 15px; margin-top: 15px; border-radius: 8px;">
+        <h2 style="margin: 0; color: #2c2f36;">@Model.DatosTipoHabitacion.NombreTipoHabitacion</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-top: 5px;">
+            <div>
+                <img src="https://cdn-icons-png.flaticon.com/512/1050/1050043.png" alt="Cama" style="height: 20px; vertical-align: middle;">
+                <span style="margin-left: 5px;">Tipo de cama: <strong>@Model.DatosTipoHabitacion.NombreCama</strong></span>
+            </div>
+            <div style="color: #2c2f36;">$@Model.DatosTipoHabitacion.Precio USD / noche</div>
+        </div>
+        <p style="margin-top: 10px; color: #2c2f36;"><strong>Descripción:</strong><br>@Model.DatosTipoHabitacion.Descripcion </p>
+    </div>
+
+    <div style="background-color: #aaa; padding: 15px; margin-top: 15px; border-radius: 8px; text-align: center;">
+        <a href="#" style="background-color: #78c257; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none; margin-right: 10px;">• Editar tipo de habitación</a>
+        <a href="#" style="background-color: #a94438; color: white; padding: 10px 15px; border-radius: 6px; text-decoration: none;">• Eliminar tipo de habitación</a>
+    </div>
+
+    <div style="background-color: #aaa; padding: 15px; margin-top: 25px; border-radius: 8px;">
+        <h3 style="color: black; text-align: center;">Comodidades</h3>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
+            @foreach (var comodidades in Model.DatosTipoHabitacion.Comodidades)
+            {
+                <span style="display:inline-block; background-color:#27ae60; color:white; padding:6px 12px; margin:4px; border-radius:5px;">@comodidades.NombreComodidad</span>
+            }
+        </div>
+    </div>
+
+    <div style="background-color: #aaa; padding: 15px; margin-top: 25px; border-radius: 8px;">
+
+        <div class="room-gallery-bottom">
+            <h3>Galería de Fotos</h3>
+            <div class="gallery-grid">
+                @foreach (var imagenenes in Model.DatosTipoHabitacion.Imagenes)
+                {
+
+                    var imagenesDecodificadas = imagenenes?.Imagen != null
+                    ? $"data:image/jpeg;base64,{Convert.ToBase64String(imagenenes.Imagen)}"
+                    : "https://via.placeholder.com/220x140?text=Sin+foto";
+
+
+                    <img src="@imagenesDecodificadas" alt="Foto de la habitacion" />
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="/css/auth.css" />
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.7s ease;
+        }
+
+            .form-container h2 {
+                text-align: center;
+                margin-bottom: 25px;
+                color: #333;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        .register-link, .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+            .register-link a, .back-link a {
+                color: #555;
+                text-decoration: none;
+            }
+
+                .register-link a:hover, .back-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+}
+
+<div class="form-container">
+    <h2>Iniciar Sesion</h2>
+
+    <form method="post" action="/Cuenta/Login">
+        <div class="form-group">
+            <label for="correo">Correo Electrónico</label>
+            <input type="email" id="correo" name="CorreoElectronico" required placeholder="ejemplo@correo.com" />
+        </div>
+
+        <div class="form-group">
+            <label for="contraseña">Contraseña</label>
+            <input type="password" id="contraseña" name="Contrasena" required placeholder="********" />
+        </div>
+
+        <div class="form-group">
+            <label for="tipoUsuario">Tipo de Usuario</label>
+            <select id="tipoUsuario" name="TipoUsuario" required>
+                <option value="" disabled selected>Seleccione...</option>
+                <option value="Cliente">Cliente</option>
+                <option value="EmpresaHospedaje">Empresa de Hospedaje</option>
+                <option value="EmpresaRecreacion">Empresa de Recreación</option>
+            </select>
+        </div>
+
+        <button type="submit">Entrar</button>
+    </form>
+
+    <div class="register-link">
+        <p>¿No tienes cuenta? <a href="/Cuenta/Register">Regístrate aquí</a></p>
+    </div>
+
+    <div class="back-link">
+        <p><a href="/Home/Index">← Volver al inicio</a></p>
+    </div>
+</div>

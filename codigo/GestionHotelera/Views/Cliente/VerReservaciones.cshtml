@@ -1,0 +1,134 @@
+﻿@{
+    ViewData["Title"] = "Ver Reservaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .reserva-card {
+            display: flex;
+            gap: 20px;
+            background-color: #555;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            color: white;
+            align-items: center;
+        }
+
+            .reserva-card img {
+                width: 200px;
+                height: 150px;
+                object-fit: cover;
+                border-radius: 8px;
+            }
+
+        .reserva-info {
+            flex: 1;
+        }
+
+            .reserva-info .info-line {
+                margin-bottom: 6px;
+            }
+
+        .reserva-total {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .botones {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+            .botones a,
+            .botones button,
+            .estado {
+                padding: 8px 14px;
+                font-weight: bold;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                text-decoration: none;
+                color: white;
+            }
+
+        .facturar {
+            background-color: #3b6eea;
+        }
+
+        .editar {
+            background-color: #4CAF50;
+        }
+
+        .eliminar {
+            background-color: #a1432b;
+        }
+
+        .ver {
+            background-color: #388e3c;
+        }
+
+        .estado {
+            background-color: #777;
+            cursor: default;
+        }
+
+        .btn-volver {
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #6c757d;
+            padding: 8px 12px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+}
+
+<a href="/Cliente/Menu" class="btn-volver">← Volver al menú</a>
+
+<h2 style="color:white;">Reservaciones</h2>
+
+<!-- 🔽 Simulación de reservaciones (una sola, con ID 1) -->
+<div class="reserva-card" data-id="1">
+    <img src="https://images.unsplash.com/photo-1560347876-aeef00ee58a1" alt="Habitación" />
+    <div class="reserva-info">
+        <div class="info-line">Número de habitación: <strong>1</strong></div>
+        <div class="info-line">Fecha y hora de entrada: <strong>3 - 4 - 2025 7:30 am</strong></div>
+        <div class="info-line">Fecha y hora de salida: <strong>5 - 4 - 2025 12:00 pm</strong></div>
+        <div class="info-line">Cantidad de personas: <strong>3 personas</strong></div>
+        <div class="reserva-total">Total: 378 000</div>
+
+        <div class="botones" id="acciones-1">
+            <!-- Botones dinámicos según estado -->
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const id = 1;
+        const estadoPago = localStorage.getItem("reserva_" + id + "_pago");
+        const accionesDiv = document.getElementById("acciones-" + id);
+
+        if (!estadoPago) {
+            accionesDiv.innerHTML = `
+                <a href="/Cliente/Facturar" class="facturar">Facturar</a>
+                <a href="/Cliente/Editar" class="editar">Editar</a>
+                <a href="/Cliente/Eliminar" class="eliminar">Eliminar</a>
+                <a href="/Cliente/VerHabitacion" class="ver">Ver habitación</a>
+            `;
+        } else {
+            accionesDiv.innerHTML = `
+                <div class="estado">✅ ${estadoPago === 'Tarjeta' ? 'Pagado con Tarjeta' : 'Pago en Efectivo'}</div>
+                <a href="/Cliente/Editar" class="editar">Editar</a>
+                <a href="/Cliente/Eliminar" class="eliminar">Eliminar</a>
+                <a href="/Cliente/VerHabitacion" class="ver">Ver habitación</a>
+            `;
+        }
+    </script>
+}
