@@ -266,6 +266,21 @@
 
             </div>
 
+            @* La informacion de los tipos de hoteles disponibles *@
+            <div class="form-group">
+
+                <label for="alojamiento">Tipo de alojamiento: </label>
+                <select id="alojamiento">
+                    <option value="0">Seleccione Un tipo de instalacion:</option>
+                    @foreach (var tipo in Model.ListaTiposInstalaciones)
+                    {
+                        <option value="@tipo.IdTipoInstalacion">@tipo.NombreInstalacion</option>
+                    }
+                </select>
+
+            </div>
+
+
             <div class="form-group">
                 <label>Comodidades:</label>
                 <div class="tag-list">
@@ -288,18 +303,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
 
-                <label for="alojamiento">Tipo de alojamiento: </label>
-                <select id="alojamiento">
-                    <option value="0">Seleccione Un tipo de instalacion:</option>
-                    @foreach (var tipo in Model.ListaTiposInstalaciones)
-                    {
-                        <option value="@tipo.IdTipoInstalacion">@tipo.NombreInstalacion</option>
-                    }
-                </select>
-
-            </div>
         </div>
 
 

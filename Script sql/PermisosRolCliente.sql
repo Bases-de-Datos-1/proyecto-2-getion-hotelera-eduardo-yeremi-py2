@@ -7,7 +7,7 @@ GRANT EXECUTE ON OBJECT::sp_BuscarServiciosRecreacion TO Usuarios_GH_V1;
 
 -- >> Permisos para ver la informacion de entidades especificas.
 -- Datos de la empresa de Hospedaje.
-GRANT EXECUTE ON OBJECT::sp_ObtenerDatosEmpresaHospedaje_V2 TO Usuarios_GH_V1;
+GRANT EXECUTE ON OBJECT::sp_ObtenerDatosEmpresaHospedaje TO Usuarios_GH_V1;
 GRANT EXECUTE ON OBJECT::sp_ObtenerTelefonosEmpresaHospedaje TO Usuarios_GH_V1;
 GRANT EXECUTE ON OBJECT::sp_ObtenerRedesSocialesEmpresa TO Usuarios_GH_V1;
 GRANT EXECUTE ON OBJECT::sp_ObtenerDatosServiciosEmpresaHospedaje TO Usuarios_GH_V1;
@@ -56,9 +56,13 @@ GRANT EXECUTE ON OBJECT::sp_ObtenerComodidades TO Usuarios_GH_V1;
 
 -- >> Registrar clientes-> Para este estamos cambiando de ususario.
 -- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
--- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
--- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
--- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
--- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
+
+-- >> Registrar Reservacion Temporal.
+GRANT EXECUTE ON OBJECT::sp_InsertarReservaTemporal TO Usuarios_GH_V1;
+
+-- >> Verificar Cliente.
+GRANT EXECUTE ON OBJECT::sp_VerificarEmpresaHospedaje TO Usuarios_GH_V1;
+GRANT EXECUTE ON OBJECT::sp_VerificarCliente TO Usuarios_GH_V1;
+GRANT EXECUTE ON OBJECT::sp_VerificarEmpresaRecreacion TO Usuarios_GH_V1;
 -- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;
 -- GRANT EXECUTE ON OBJECT:: TO Usuarios_GH_V1;

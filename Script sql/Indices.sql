@@ -2,6 +2,13 @@
 -- estos fueron de los que se me ocurrieron, no necesariamente significa que sean todos o que sean los mas 
 -- indicados. Use NONCLUSTERED
 
+-- CREATE NONCLUSTERED INDEX I_
+-- ON  ();
+-- GO
+
+USE SistemaDeGestionHotelera;
+GO
+
 CREATE NONCLUSTERED INDEX I_EmpresaHospedaje_CedulaJuridica
 ON EmpresaHospedaje (CedulaJuridica);
 GO

@@ -81,7 +81,7 @@ function inciarListenerFormRegitroEmpresa() {
 function inicarConfiguracionMapa() {
 
     console.log("Iniciando configuracion del mapa.");
-    const map = L.map('map').setView([9.934739, -84.087502], 13); // San Jose.
+    const map = L.map('map').setView([9.995291, -83.047428], 13); // San Jose.
 
     // Mapa base.
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -219,14 +219,14 @@ async function enviarDatosRegistroEmpresa() {
             console.log("Datos del regitro de la empresa: ", resultado);
             let result = resultado.estadoGeneral;
 
-            if (result[0] === 1) {
+            if (result === 1) {
                 alert("Empresa hospedaje registrado exitosamente.");
                 //window.location.href = '@Url.Action("Cuenta", "Login")';
                 location.replace("/Cuenta/Login");
 
                 //window.location.href = '/Cliente/Informacion'; // Redirigir a la pagina de informacion del cliente.
             } else {
-                if (resultado.estado === -1) {
+                if (result === -1) {
                     alert("Cedula de la empresa o correo ya registrados, por favor reviselos. ");
 
                 } else {

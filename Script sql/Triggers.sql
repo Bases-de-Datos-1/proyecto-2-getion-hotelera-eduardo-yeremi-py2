@@ -1,3 +1,6 @@
+USE SistemaDeGestionHotelera;
+GO
+
 -- Este seria el trigger para generar la factura a la hora de cambiar el estado de la reserva a cerrado:
 
 CREATE TRIGGER try_GenerarFacturar

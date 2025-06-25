@@ -21,8 +21,8 @@ GRANT SELECT ON SCHEMA::dbo TO Usuarios_GH_V1; -- Esto es por que tenemos muchas
 GO
 
 -- > Permiso para ejecutar los procedures.
-GRANT EXECUTE ON SCHEMA::dbo TO Usuarios_GH_V1;
-GO
+-- GRANT EXECUTE ON SCHEMA::dbo TO Usuarios_GH_V1;
+-- GO
 
 -- > Para que pueda almacenar temporarlmente los datos de las reservas temporales. Permiso de Insert.
 GRANT INSERT ON dbo.ReservasTemporales TO Usuarios_GH_V1;

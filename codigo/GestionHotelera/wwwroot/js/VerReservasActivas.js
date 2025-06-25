@@ -3,7 +3,7 @@
     let datos = JSON.stringify({ IdReservaTemporalM: id });
     let resultado = enviarDatosCerrarReserva(datos);
 
-    if (resultado < 0) {
+    if (resultado > 0) {
         alert("Reserva cerrada con exito.");
         window.location.reload();
     } else {

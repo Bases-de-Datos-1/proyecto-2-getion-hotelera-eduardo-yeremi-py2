@@ -424,24 +424,24 @@ INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
 -- ('Puerto Cortés', 30), ('Palmar', 30), ('Sierpe', 30), ('Bahía Ballena', 30), ('Piedras Blancas', 30);
 
 -- Limón (31)
-INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
-('Limón', 31), ('Valle La Estrella', 31), ('Río Blanco', 31), ('Matama', 31);
+-- INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
+-- ('Limón', 31), ('Valle La Estrella', 31), ('Río Blanco', 31), ('Matama', 31);
 
--- Pococí (32)
-INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
-('Guápiles', 32), ('Jiménez', 32), ('La Rita', 32), ('Roxana', 32), ('Cariari', 32);
+-- -- Pococí (32)
+-- INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
+-- ('Guápiles', 32), ('Jiménez', 32), ('La Rita', 32), ('Roxana', 32), ('Cariari', 32);
 
--- Siquirres (33)
-INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
-('Siquirres', 33), ('Pacuarito', 33), ('Florida', 33), ('Germania', 33), ('El Cairo', 33);
+-- -- Siquirres (33)
+-- INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
+-- ('Siquirres', 33), ('Pacuarito', 33), ('Florida', 33), ('Germania', 33), ('El Cairo', 33);
 
--- Talamanca (34)
-INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
-('Bratsi', 34), ('Sixaola', 34), ('Cahuita', 34), ('Telire', 34);
+-- -- Talamanca (34)
+-- INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
+-- ('Bratsi', 34), ('Sixaola', 34), ('Cahuita', 34), ('Telire', 34);
 
--- Matina (35)
-INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
-('Matina', 35), ('Batán', 35), ('Carrandi', 35);
+-- -- Matina (35)
+-- INSERT INTO Distrito (NombreDistrito, IdCanton) VALUES
+-- ('Matina', 35), ('Batán', 35), ('Carrandi', 35);
 
 
 

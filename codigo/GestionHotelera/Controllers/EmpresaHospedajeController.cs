@@ -209,9 +209,9 @@ namespace GestionHotelera.Controllers
 
             ReportesServices _reportesServices = new ReportesServices(_dataBaseServices);
 
-            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorHabitacionBD(idEmpresaHospedaje, dataRquest.IdTipoHabitacion);
+            List<FacturasModel> facturaciones = _reportesServices.ObtenerFacturasPorTipoHabitacionBD(idEmpresaHospedaje, dataRquest.IdTipoHabitacion);
 
-            return Json(new { Estado = 1, Facturas = facturaciones });
+            return Json(new { Estado = 1, Facturas = facturaciones }); 
         }
 
         [HttpPost]

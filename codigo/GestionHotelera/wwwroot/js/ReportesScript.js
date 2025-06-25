@@ -515,7 +515,7 @@ function renderizarResultadosReservaEspecifica(reserva) {
     // Renderizar los datos que se recibieron.
 
     //if (!Array.isArray(datos) || datos.length === 0) {
-    //    contenedorResultados.innerHTML = '<p>No se encontraron resultados para esta búsqueda.</p>';
+    //    contenedorResultados.innerHTML = '<p>No se encontraron resultados para esta busqueda.</p>';
     //    return;
     //}
 
@@ -529,17 +529,17 @@ function renderizarResultadosReservaEspecifica(reserva) {
         tarjeta.style.backgroundColor = '#fff';
 
         tarjeta.innerHTML = `
-            <h4 style="margin-top: 0;">Reservación #${reserva.idReservacion}</h4>
-            <p><strong>Habitación:</strong> ${reserva.numeroHabitacion}</p>
+            <h4 style="margin-top: 0;">Reservacion #${reserva.idReservacion}</h4>
+            <p><strong>Habitacion:</strong> ${reserva.numeroHabitacion}</p>
             <p><strong>Cliente:</strong> ${reserva.cliente}</p>
             <p><strong>Entrada:</strong> ${formatearFecha(reserva.fechaHoraIngreso)}</p>
             <p><strong>Salida:</strong> ${formatearFecha(reserva.fechaHoraSalida)}</p>
             <p><strong>Personas:</strong> ${reserva.cantidadPersonas}</p>
             <p><strong>Vehiculo:</strong> ${reserva.vehiculo}</p>
-            <p><strong>Estadía total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Estadia total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
             <p><strong>Precio total:</strong> ₡${Number(reserva.precioTotal).toLocaleString()}</p>
             <p><strong>Estado:</strong> ${reserva.estado}</p>
-        `;
+        `;// Para saber si son mas de una noches
 
         contenedorResultados.appendChild(tarjeta);
     //});
@@ -1032,12 +1032,12 @@ function renderizarResultadosFacturas(facturas) {
 
         tarjeta.innerHTML = `
             <h4 style="margin-top: 0;">Factura #${factura.idFacturacion}</h4>
-            <p><strong>Reservación:</strong> ${factura.idReservacion}</p>
+            <p><strong>Reservacion:</strong> ${factura.idReservacion}</p>
             <p><strong>Fecha:</strong> ${formatearFechaCorta(factura.fechaFacturacion)}</p>
             <p><strong>Metodo de pago:</strong> ${factura.metodoPago}</p>
             <p><strong>Cliente:</strong> ${factura.cliente}</p>
-            <p><strong>Habitación:</strong> ${factura.numeroHabitacion} (Tipo ID: ${factura.idTipoHabitacion})</p>
-            <p><strong>Estadía:</strong> ${factura.estadiaTotal} noche${factura.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Habitacion:</strong> ${factura.numeroHabitacion} (Tipo ID: ${factura.idTipoHabitacion})</p>
+            <p><strong>Estadia:</strong> ${factura.estadiaTotal} noche${factura.estadiaTotal === 1 ? '' : 's'}</p>
             <p><strong>Personas:</strong> ${factura.cantidadPersonas}</p>
             <p><strong>Total:</strong> ₡${Number(factura.precioTotal).toLocaleString()}</p>
         `;
@@ -1070,14 +1070,14 @@ function renderizarResultadosReservaciones(datos) {
     tarjeta.style.backgroundColor = '#fff';
 
     tarjeta.innerHTML = `
-            <h4 style="margin-top: 0;">Reservación #${reserva.idReservacion}</h4>
-            <p><strong>Habitación:</strong> ${reserva.numeroHabitacion}</p>
+            <h4 style="margin-top: 0;">Reservacion #${reserva.idReservacion}</h4>
+            <p><strong>Habitacion:</strong> ${reserva.numeroHabitacion}</p>
             <p><strong>Cliente:</strong> ${reserva.cliente}</p>
             <p><strong>Entrada:</strong> ${formatearFecha(reserva.fechaHoraIngreso)}</p>
             <p><strong>Salida:</strong> ${formatearFecha(reserva.fechaHoraSalida)}</p>
             <p><strong>Personas:</strong> ${reserva.cantidadPersonas}</p>
             <p><strong>Vehiculo:</strong> ${reserva.vehiculo}</p>
-            <p><strong>Estadía total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
+            <p><strong>Estadia total:</strong> ${reserva.estadiaTotal} noche${reserva.estadiaTotal === 1 ? '' : 's'}</p>
             <p><strong>Precio total:</strong> ₡${Number(reserva.precioTotal).toLocaleString()}</p>
             <p><strong>Estado:</strong> ${reserva.estado}</p>
         `;
@@ -1138,7 +1138,7 @@ function renderizarDemandaHoteles(lista) {
             <tr>
                 <th style="padding: 10px; text-align: left;">#</th>
                 <th style="padding: 10px; text-align: left;">Nombre del Hotel</th>
-                <th style="padding: 10px; text-align: left;">Cédula Jurídica</th>
+                <th style="padding: 10px; text-align: left;">Cedula Juridica</th>
                 <th style="padding: 10px; text-align: left;">Reservas</th>
             </tr>
         </thead>

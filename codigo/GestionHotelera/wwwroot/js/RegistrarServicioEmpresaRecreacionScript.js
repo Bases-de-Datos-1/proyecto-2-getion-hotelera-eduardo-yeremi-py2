@@ -76,7 +76,7 @@ async function enviarDatosRegistroActividad() {
                 //alert("Servicio registrado exitodamente con el ID: ", resultado.estadoGeneral.toString());
                 alert(`Servicio registrado exitodamente con el ID: ${resultado.estado}`);
 
-                location.replace("/EmpresaHospedaje/Menu?idEmpresa=no");
+                location.replace("/EmpresaRecreacion/Menu?idEmpresa=no");
 
                 //window.location.href = "@Url.Action('EmpresaHospedaje','Menu')";
                 //window.location.href = `/Producto/Detalles?id=${id}`;
